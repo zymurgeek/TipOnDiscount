@@ -1,0 +1,17 @@
+Tip On Discount is an Android tip calculator.  It figures a tip based
+on the actual cost of a meal.  The actual cost is the amount paid on
+the bill, excluding sales tax, but including any discounts that were
+applied.  This insures your server gets tipped fairly.
+
+TOD will split a bill between multiple parties and let you round each
+share to, say, the nearest dollar.  It will show you the actual tip
+percentage after rounding.  TOD also supports bumping the tip up
+or down to the next rounded amount.
+
+There is no "calculate" button in TOD.  All calculations are performed
+on the fly as you type.
+
+The code makes full use of JUnit test cases and Android JUnit test
+cases.  Since it is a relatively small application, it should be
+useful to those who want to learn Android development and automated
+unit testing.
