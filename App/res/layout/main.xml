@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/tip_on_discount_layout" 
+	android:layout_height="fill_parent" 
+	android:layout_width="fill_parent" 
+	android:orientation="vertical"
+	>
+
+<!-- BILL TOTAL -->
+<RelativeLayout 
+	android:id="@+id/bill_total_layout" 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    >
+<TextView
+	android:id="@+id/bill_total_label"
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content" 
+    android:layout_alignParentLeft="true"
+    android:layout_alignBaseline="@+id/bill_total_entry"
+    android:text="@string/bill_total_label"
+    />
+<TextView
+	android:id="@+id/currency_symbol_label"
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content"
+    android:layout_toLeftOf="@+id/bill_total_entry"
+    android:layout_alignBaseline="@+id/bill_total_entry"
+    android:text="@string/currency_symbol"
+    />
+<EditText
+	android:id="@+id/bill_total_entry"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+    android:layout_alignParentRight="true"
+	android:layout_marginRight="10sp"
+	android:background="@android:drawable/editbox_background" 
+	android:inputType="number|numberDecimal"
+	android:gravity="right" 
+	android:selectAllOnFocus="true"
+	/>
+</RelativeLayout>
+
+<!-- TAX -->
+<RelativeLayout 
+	android:id="@+id/tax_layout" 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    >
+<TextView 
+	android:id="@+id/tax_label" 
+	android:layout_height="wrap_content" 
+	android:layout_width="wrap_content" 
+	android:layout_alignParentLeft="true" 
+	android:layout_alignBaseline="@+id/tax_percent_entry"
+	android:text="@string/tax_label"
+	/>
+<EditText
+	android:id="@+id/tax_percent_entry"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_centerHorizontal="true"
+	android:background="@android:drawable/editbox_background" 
+	android:inputType="number|numberDecimal"
+	android:gravity="right"
+	android:selectAllOnFocus="true"
+	/>
+<TextView
+	android:id="@+id/percent_symbol_label"
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content"
+    android:layout_toRightOf="@+id/tax_percent_entry" 
+    android:layout_alignBaseline="@+id/tax_percent_entry"
+    android:text="@string/percent_symbol"
+    />
+<TextView
+	android:id="@+id/tax_currency_symbol_label"
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content"
+    android:layout_toLeftOf="@+id/tax_amount_entry"
+    android:layout_alignBaseline="@+id/tax_amount_entry"
+    android:text="@string/currency_symbol"
+    />
+<EditText
+	android:id="@+id/tax_amount_entry"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+    android:layout_alignParentRight="true"
+	android:layout_marginRight="10sp"
+	android:background="@android:drawable/editbox_background" 
+	android:inputType="number|numberDecimal" 
+	android:gravity="right"
+	android:selectAllOnFocus="true"
+	/>
+</RelativeLayout>
+
+<!-- BILL SUBTOTAL -->
+<RelativeLayout 
+	android:id="@+id/bill_subtotal_layout" 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    >
+<TextView
+	android:id="@+id/bill_subtotal_label"
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content" 
+    android:layout_alignParentLeft="true"
+    android:layout_alignBaseline="@+id/bill_subtotal_text"
+    android:text="@string/bill_subtotal_label"
+    />
+<TextView
+	android:id="@+id/currency_symbol_label"
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content"
+    android:layout_toLeftOf="@+id/bill_subtotal_text"
+    android:layout_alignBaseline="@+id/bill_subtotal_text"
+    android:text="@string/currency_symbol"
+    />
+<TextView
+	android:id="@+id/bill_subtotal_text"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+    android:layout_alignParentRight="true"
+	android:layout_marginRight="10sp"
+    android:text="@string/zero"
+	android:gravity="right"
+/>
+</RelativeLayout>
+
+<!-- DISCOUNT -->
+<RelativeLayout 
+	android:id="@+id/discount_layout" 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    >
+<TextView 
+	android:id="@+id/discount_label" 
+	android:layout_height="wrap_content" 
+	android:layout_width="wrap_content" 
+	android:layout_alignParentLeft="true" 
+	android:layout_alignBaseline="@+id/discount_entry"
+	android:text="@string/discount_label"
+	/>
+<TextView
+	android:id="@+id/discount_currency_symbol_label"
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content"
+    android:layout_toLeftOf="@+id/discount_entry"
+    android:layout_alignBaseline="@+id/discount_entry"
+    android:text="@string/currency_symbol"
+    />
+<EditText
+	android:id="@+id/discount_entry"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+    android:layout_alignParentRight="true"
+	android:layout_marginRight="10sp"
+	android:background="@android:drawable/editbox_background" 
+	android:inputType="number|numberDecimal"
+	android:gravity="right"
+	android:selectAllOnFocus="true"
+	/>
+</RelativeLayout>
+
+<!-- BILL INFO SECTION BREAK -->
+<RelativeLayout 
+	android:id="@+id/bill_info_section_break_layout" 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="2sp"
+    android:layout_marginBottom="2sp">
+<View
+	android:layout_width="fill_parent"
+	android:layout_height="2dip"
+	android:background="#FF808080" 
+	/>
+</RelativeLayout>
+
+<!-- TIPPABLE AMOUNT -->
+<RelativeLayout 
+	android:id="@+id/tippable_amount_layout" 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    >
+<TextView
+	android:id="@+id/tippable_amount_label"
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content" 
+    android:layout_alignParentLeft="true"
+    android:layout_alignBaseline="@+id/tippable_amount_text"
+    android:text="@string/tippable_amount_label"
+    />
+<TextView
+	android:id="@+id/tippable_currency_symbol_label"
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content"
+    android:layout_toLeftOf="@+id/tippable_amount_text"
+    android:layout_alignBaseline="@+id/tippable_amount_text"
+    android:text="@string/currency_symbol"
+    />
+<TextView
+	android:id="@+id/tippable_amount_text"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+    android:layout_alignParentRight="true"
+	android:layout_marginRight="10sp"
+    android:text="@string/zero"
+	android:gravity="right" 
+	/>
+</RelativeLayout>
+
+<!-- PLANNED TIP -->
+<RelativeLayout 
+	android:id="@+id/planned_tip_layout" 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    >
+<TextView 
+	android:id="@+id/planned_tip_label" 
+	android:layout_height="wrap_content" 
+	android:layout_width="wrap_content" 
+	android:layout_alignParentLeft="true" 
+	android:layout_alignBaseline="@+id/planned_tip_percent_entry"
+	android:text="@string/planned_tip_label"
+	/>
+<EditText
+	android:id="@+id/planned_tip_percent_entry"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_centerHorizontal="true"
+	android:background="@android:drawable/editbox_background" 
+	android:inputType="number|numberDecimal"
+	android:gravity="right"
+	android:selectAllOnFocus="true"
+	/>
+<TextView
+	android:id="@+id/planned_tip_percent_entry_label"
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content"
+    android:layout_alignBaseline="@+id/planned_tip_percent_entry"
+    android:layout_toRightOf="@+id/planned_tip_percent_entry"
+    android:text="@string/percent_symbol"
+    />
+<TextView
+	android:id="@+id/planned_tip_currency_symbol_label"
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content"
+    android:layout_toLeftOf="@+id/planned_tip_amount_text"
+    android:layout_alignBaseline="@+id/planned_tip_amount_text"
+    android:text="@string/currency_symbol"
+    />
+<TextView
+	android:id="@+id/planned_tip_amount_text"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_alignParentRight="true"
+	android:layout_marginRight="10sp" 
+	android:gravity="right"
+    android:text="@string/zero"
+	android:layout_alignBottom="@+id/planned_tip_percent_entry"/>
+</RelativeLayout>
+
+<!-- TIP INFO SECTION BREAK -->
+<RelativeLayout 
+	android:id="@+id/tip_info_section_break_layout" 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="2sp"
+    android:layout_marginBottom="2sp">
+<View
+	android:layout_width="fill_parent"
+	android:layout_height="2dip"
+	android:background="#FF808080" 
+	/>
+</RelativeLayout>
+
+<!-- SPLIT BETWEEN -->
+<RelativeLayout 
+	android:id="@+id/split_between_tip_layout" 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    >
+<TextView 
+	android:id="@+id/split_between_label" 
+	android:layout_height="wrap_content" 
+	android:layout_width="wrap_content" 
+	android:layout_alignParentLeft="true" 
+	android:layout_alignBaseline="@+id/split_between_entry"
+	android:text="@string/split_between_label"
+	/>
+<EditText
+	android:id="@+id/split_between_entry"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+    android:layout_alignParentRight="true"
+	android:layout_marginRight="10sp"
+	android:background="@android:drawable/editbox_background" 
+    android:text="@string/zero"
+	android:gravity="right"
+	android:inputType="number|numberDecimal"
+	/>
+</RelativeLayout>
+
+<!-- ROUND UP TO AMOUNT -->
+<RelativeLayout 
+	android:id="@+id/round_up_to_nearest_layout" 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    >
+<TextView
+	android:id="@+id/round_up_to_nearest_label"
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content" 
+    android:layout_alignParentLeft="true"
+    android:layout_alignBaseline="@+id/round_up_to_nearest_spinner"
+    android:text="@string/round_up_to_nearest_text"
+    />
+<Spinner 
+	android:id="@+id/round_up_to_nearest_spinner"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+    android:layout_alignParentRight="true"
+	android:layout_marginRight="10sp"
+	android:prompt="@string/round_up_to_nearest_text"
+    />
+</RelativeLayout>
+
+<!-- BUMP UP/DOWN -->
+<RelativeLayout 
+	android:id="@+id/bump_layout" 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    >
+<Button 
+	android:id="@+id/bump_down_button" 
+	android:layout_alignParentLeft="true" 
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content" 
+	android:text="@string/bump_down_label"
+	/>
+<TextView
+	android:id="@+id/bumps_text"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+    android:text="@string/zero"
+	android:gravity="right" 
+	android:layout_centerHorizontal="true" android:layout_centerVertical="true" android:layout_centerInParent="true"/>
+<Button 
+	android:id="@+id/bump_up_button" 
+	android:layout_alignParentRight="true" 
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content" 
+	android:text="@string/bump_up_label"
+	/>
+</RelativeLayout>
+
+<!-- ROUNDING SECTION BREAK -->
+<RelativeLayout 
+	android:id="@+id/rounding_section_break_layout" 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="2sp"
+    android:layout_marginBottom="2sp">
+<View
+	android:layout_width="fill_parent"
+	android:layout_height="2dip"
+	android:background="#FF808080" 
+	/>
+</RelativeLayout>
+
+<!-- ACTUAL TIP -->
+<RelativeLayout 
+	android:id="@+id/actual_tip_layout" 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    >
+<TextView 
+	android:id="@+id/actual_tip_label" 
+	android:layout_height="wrap_content" 
+	android:layout_width="wrap_content" 
+	android:layout_alignParentLeft="true" 
+	android:text="@string/actual_tip_label"
+	/>
+<TextView
+	android:id="@+id/actual_tip_percent_text"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_centerHorizontal="true"
+	android:gravity="right"
+	/>
+<TextView
+	android:id="@+id/actual_tip_percent_text_label"
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content"
+    android:layout_alignBaseline="@+id/actual_tip_percent_text"
+    android:layout_toRightOf="@+id/actual_tip_percent_text"
+    android:text="@string/percent_symbol"
+    />
+<TextView
+	android:id="@+id/actual_tip_currency_symbol_label"
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content"
+    android:layout_toLeftOf="@+id/actual_tip_amount_text"
+    android:layout_alignBaseline="@+id/actual_tip_amount_text"
+    android:text="@string/currency_symbol"
+    />
+<TextView
+	android:id="@+id/actual_tip_amount_text"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+    android:layout_alignParentRight="true"
+	android:layout_marginRight="10sp"
+    android:text="@string/zero"
+	android:gravity="right"
+	/>
+</RelativeLayout>
+
+<!-- TOTAL DUE -->
+<RelativeLayout 
+	android:id="@+id/total_due_layout" 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    >
+<TextView 
+	android:id="@+id/total_due_label" 
+	android:layout_height="wrap_content" 
+	android:layout_width="wrap_content" 
+	android:layout_alignParentLeft="true" 
+	android:layout_alignBaseline="@+id/total_due_text"
+	android:text="@string/total_due_label"
+	/>
+<TextView
+	android:id="@+id/total_due_currency_symbol_label"
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content"
+    android:layout_toLeftOf="@+id/total_due_text"
+    android:layout_alignBaseline="@+id/total_due_text"
+    android:text="@string/currency_symbol"
+    />
+<TextView
+	android:id="@+id/total_due_text"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+    android:layout_alignParentRight="true"
+	android:layout_marginRight="10sp"
+    android:text="@string/zero"
+	android:gravity="right"
+	/>
+</RelativeLayout>
+
+<!-- SHARE DUE -->
+<RelativeLayout 
+	android:id="@+id/share_due_layout" 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    >
+<TextView 
+	android:id="@+id/share_due_label" 
+	android:layout_height="wrap_content" 
+	android:layout_width="wrap_content" 
+	android:layout_alignParentLeft="true" 
+	android:layout_alignBaseline="@+id/share_due_text"
+	android:text="@string/share_due_label"
+	/>
+<TextView
+	android:id="@+id/share_due_currency_symbol_label"
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content"
+    android:layout_toLeftOf="@+id/share_due_text"
+    android:layout_alignBaseline="@+id/share_due_text"
+    android:text="@string/currency_symbol"
+    />
+<TextView
+	android:id="@+id/share_due_text"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+    android:layout_alignParentRight="true"
+	android:layout_marginRight="10sp"
+    android:text="@string/zero"
+	android:gravity="right"
+	/>
+</RelativeLayout>
+
+
+</LinearLayout>
