@@ -1,0 +1,8 @@
+The target platform is API version 4, android 1.6.  The minimum API
+version is 3, android 1.5.  This application will run on API version
+3, however that is not the target because API versions prior to
+android 1.6 will add storage and phone state permissions even if they
+are not used.  This application does not require those permissions.
+
+For more information on this bug, see:
+http://code.google.com/p/android/issues/detail?id=4101
