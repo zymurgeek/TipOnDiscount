@@ -79,9 +79,10 @@ public class DataEntryFieldTests extends
 	private Instrumentation mInstrumentation;
     private TipOnDiscount mActivity;
     private EditText billTotalEntryView;
+    private TextView billTotalCurrencySymbolLabelView;
     private TextView billSubtotalLabelView;
     private String billSubtotalLabelString;
-    private TextView currencySymbolLabelView;
+    private TextView billSubtotalCurrencySymbolLabelView;
     private TextView billSubtotalView;
     private TextView discountEntryView;
     private TextView tippableAmountView;
@@ -122,12 +123,14 @@ public class DataEntryFieldTests extends
 
         billTotalEntryView = (EditText) mActivity.findViewById
     	(com.itllp.tipOnDiscount.R.id.bill_total_entry);
+        billTotalCurrencySymbolLabelView = (TextView)mActivity.findViewById
+            	(com.itllp.tipOnDiscount.R.id.bill_total_currency_symbol_label);
         billSubtotalLabelView = (TextView) mActivity.findViewById
         	(com.itllp.tipOnDiscount.R.id.bill_subtotal_label);
         billSubtotalLabelString = mActivity.getString
         	(com.itllp.tipOnDiscount.R.string.bill_subtotal_label);
-        currencySymbolLabelView = (TextView)mActivity.findViewById
-        	(com.itllp.tipOnDiscount.R.id.currency_symbol_label);
+        billSubtotalCurrencySymbolLabelView = (TextView)mActivity.findViewById
+        	(com.itllp.tipOnDiscount.R.id.bill_subtotal_currency_symbol_label);
         billSubtotalView = (TextView) mActivity.findViewById
         	(com.itllp.tipOnDiscount.R.id.bill_subtotal_text);
         discountEntryView = (TextView) mActivity.findViewById
@@ -172,9 +175,10 @@ public class DataEntryFieldTests extends
     
     public void testPreconditions() {
         assertNotNull(billTotalEntryView);
+        assertNotNull(billTotalCurrencySymbolLabelView);
         assertNotNull(billSubtotalLabelView);
         assertNotNull(billSubtotalLabelString);
-        assertNotNull(currencySymbolLabelView);
+        assertNotNull(billSubtotalCurrencySymbolLabelView);
         assertNotNull(billSubtotalView);
         assertNotNull(discountEntryView);
         assertNotNull(tippableAmountView);

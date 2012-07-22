@@ -22,7 +22,7 @@
     android:text="@string/bill_total_label"
     />
 <TextView
-	android:id="@+id/currency_symbol_label"
+	android:id="@+id/bill_total_currency_symbol_label"
     android:layout_width="wrap_content" 
     android:layout_height="wrap_content"
     android:layout_toLeftOf="@+id/bill_total_entry"
@@ -110,7 +110,7 @@
     android:text="@string/bill_subtotal_label"
     />
 <TextView
-	android:id="@+id/currency_symbol_label"
+	android:id="@+id/bill_subtotal_currency_symbol_label"
     android:layout_width="wrap_content" 
     android:layout_height="wrap_content"
     android:layout_toLeftOf="@+id/bill_subtotal_text"

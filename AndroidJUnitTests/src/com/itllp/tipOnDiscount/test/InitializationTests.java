@@ -48,9 +48,10 @@ public class InitializationTests extends
 	private Instrumentation mInstrumentation;
     private TipOnDiscount mActivity;
     private TextView billTotalEntryView;
+    private TextView billTotalCurrencySymbolLabelView;
     private TextView billSubtotalLabelView;
     private String billSubtotalLabelString;
-    private TextView currencySymbolLabelView;
+    private TextView billSubtotalCurrencySymbolLabelView;
     private TextView billSubtotalTextView;
     private TextView discountEntryView;
     private TextView tippableTextView;
@@ -84,12 +85,14 @@ public class InitializationTests extends
 
         billTotalEntryView = (TextView) mActivity.findViewById
     		(com.itllp.tipOnDiscount.R.id.bill_total_entry);
+        billTotalCurrencySymbolLabelView = (TextView)mActivity.findViewById
+            	(com.itllp.tipOnDiscount.R.id.bill_total_currency_symbol_label);
         billSubtotalLabelView = (TextView) mActivity.findViewById
         	(com.itllp.tipOnDiscount.R.id.bill_subtotal_label);
         billSubtotalLabelString = mActivity.getString
         	(com.itllp.tipOnDiscount.R.string.bill_subtotal_label);
-        currencySymbolLabelView = (TextView)mActivity.findViewById
-        	(com.itllp.tipOnDiscount.R.id.currency_symbol_label);
+        billSubtotalCurrencySymbolLabelView = (TextView)mActivity.findViewById
+        	(com.itllp.tipOnDiscount.R.id.bill_subtotal_currency_symbol_label);
         billSubtotalTextView = (TextView) mActivity.findViewById
         	(com.itllp.tipOnDiscount.R.id.bill_subtotal_text);
         discountEntryView = (TextView) mActivity.findViewById
@@ -143,6 +146,12 @@ public class InitializationTests extends
     }
 
 
+    public void testBillTotalCurrencySymbolText() {
+        assertEquals("Incorrect currency symbol", currency.getSymbol(),
+        		(String)billTotalCurrencySymbolLabelView.getText());    	
+    }
+    
+    
     public void testBillSubtotalLabelText() {
         assertEquals("Incorrect bill subtotal label", billSubtotalLabelString,
         		(String)billSubtotalLabelView.getText());
@@ -151,7 +160,7 @@ public class InitializationTests extends
     
     public void testBillSubtotalCurrencySymbolText() {
         assertEquals("Incorrect currency symbol", currency.getSymbol(),
-        		(String)currencySymbolLabelView.getText());    	
+        		(String)billSubtotalCurrencySymbolLabelView.getText());    	
     }
     
     
