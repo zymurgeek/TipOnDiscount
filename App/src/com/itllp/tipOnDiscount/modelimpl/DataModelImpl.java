@@ -615,15 +615,11 @@ public class DataModelImpl implements DataModel {
 
 	@Override
 	public void restoreState() {
-		// TODO Auto-generated method stub
-		
 	}
 
 
 	@Override
 	public void saveState() {
-		// TODO Auto-generated method stub
-		
 	}
 
 

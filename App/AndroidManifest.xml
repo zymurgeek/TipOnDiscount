@@ -3,8 +3,7 @@
       package="com.itllp.tipOnDiscount"
       android:versionName="1.0.4" 
       android:versionCode="5">
-	<uses-sdk android:minSdkVersion="3" android:targetSdkVersion="4" />
-	<uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
+	<uses-sdk android:minSdkVersion="5" android:targetSdkVersion="15" />
     <application android:label="@string/app_name" android:icon="@drawable/ic_launcher_tipondiscount">
         <activity android:name=".TipOnDiscount"
                   android:label="@string/app_name"

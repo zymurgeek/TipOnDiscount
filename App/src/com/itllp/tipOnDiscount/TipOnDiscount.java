@@ -31,6 +31,8 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.View.OnFocusChangeListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -258,7 +260,11 @@ public class TipOnDiscount extends Activity implements DataModelObserver {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
+        // Unlock screen for Android JUnit tests
+        Window window = getWindow();  
+        window.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+
         Bundle extras = getIntent().getExtras();
         if (null != extras) {
         String dataModelClassName = extras.getString(DATA_MODEL_KEY);

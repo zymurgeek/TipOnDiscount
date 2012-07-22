@@ -19,7 +19,6 @@ along with Tip On Discount.  If not, see <http://www.gnu.org/licenses/>.
 package com.itllp.tipOnDiscount.test;
 
 import android.app.Instrumentation;
-import android.app.KeyguardManager;
 import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
 import android.widget.Spinner;
@@ -68,21 +67,6 @@ public class DestroyTests extends
         
         mActivity = this.getActivity();
 
-        // TODO How to disable keylock without TipOnDiscount having DISABLE_KEYGUARD permission
-    	mActivity.runOnUiThread(
-    			new Runnable() {
-    				public void run() {
-    					KeyguardManager mKeyGuardManager 
-    						= (KeyguardManager) mActivity.getSystemService
-    						(android.content.Context.KEYGUARD_SERVICE);
-    					KeyguardManager.KeyguardLock mLock = mKeyGuardManager
-    						.newKeyguardLock("com.itllp.tipOnDiscount");
-    					mLock.disableKeyguard();
-    				}
-    			}
-        	);
-    	mInstrumentation.waitForIdleSync();
-        
         billTotalEntryView = (TextView) mActivity.findViewById
     		(com.itllp.tipOnDiscount.R.id.bill_total_entry);
         billSubtotalTextView = (TextView) mActivity.findViewById

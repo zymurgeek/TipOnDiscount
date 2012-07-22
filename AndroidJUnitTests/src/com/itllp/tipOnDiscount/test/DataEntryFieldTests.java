@@ -22,7 +22,6 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Currency;
 import android.app.Instrumentation;
-import android.app.KeyguardManager;
 import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.KeyEvent;
@@ -121,21 +120,6 @@ public class DataEntryFieldTests extends
         
         mActivity = this.getActivity();
 
-        // TODO How to disable keylock without TipOnDiscount having DISABLE_KEYGUARD permission
-    	mActivity.runOnUiThread(
-    			new Runnable() {
-    				public void run() {
-    					KeyguardManager mKeyGuardManager 
-    						= (KeyguardManager) mActivity.getSystemService
-    						(android.content.Context.KEYGUARD_SERVICE);
-    					KeyguardManager.KeyguardLock mLock = mKeyGuardManager
-    						.newKeyguardLock("com.itllp.tipOnDiscount");
-    					mLock.disableKeyguard();
-    				}
-    			}
-        	);
-    	mInstrumentation.waitForIdleSync();
-        
         billTotalEntryView = (EditText) mActivity.findViewById
     	(com.itllp.tipOnDiscount.R.id.bill_total_entry);
         billSubtotalLabelView = (TextView) mActivity.findViewById
