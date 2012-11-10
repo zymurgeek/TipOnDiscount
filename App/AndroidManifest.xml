@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="com.itllp.tipOnDiscount"
-      android:versionName="1.0.4" 
-      android:versionCode="5">
+      android:versionName="1.0.5" 
+      android:versionCode="6">
 	<uses-sdk android:minSdkVersion="5" android:targetSdkVersion="15" />
     <application android:label="@string/app_name" android:icon="@drawable/ic_launcher_tipondiscount">
         <activity android:name=".TipOnDiscount"

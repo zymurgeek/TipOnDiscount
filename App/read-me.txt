@@ -6,3 +6,7 @@ are not used.  This application does not require those permissions.
 
 For more information on this bug, see:
 http://code.google.com/p/android/issues/detail?id=4101
+
+This application is available from Google Play:
+https://play.google.com/store/apps/details?id=com.itllp.tipondiscount
+
