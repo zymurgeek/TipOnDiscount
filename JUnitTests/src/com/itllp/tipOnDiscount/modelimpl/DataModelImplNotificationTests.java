@@ -1,4 +1,4 @@
-// Copyright 2011-2012 David A. Greenbaum
+// Copyright 2011-2013 David A. Greenbaum
 /*
 This file is part of Tip On Discount.
 
@@ -24,14 +24,11 @@ package com.itllp.tipOnDiscount.modelimpl;
 
 import java.math.BigDecimal;
 import org.jmock.Expectations;
-import org.jmock.Mockery;
-import org.jmock.integration.junit4.JMock;
-import org.jmock.integration.junit4.JUnit4Mockery;
+import org.jmock.integration.junit4.JUnitRuleMockery;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-
 import com.itllp.tipOnDiscount.model.DataModel;
 import com.itllp.tipOnDiscount.model.DataModelObserver;
 import com.itllp.tipOnDiscount.model.update.ActualTipAmountUpdate;
@@ -50,9 +47,8 @@ import com.itllp.tipOnDiscount.model.update.TotalDueUpdate;
 import com.itllp.tipOnDiscount.model.update.Update;
 import com.itllp.tipOnDiscount.modelimpl.DataModelImpl;
 
-@RunWith(JMock.class)
 public class DataModelImplNotificationTests {
-	Mockery context = new JUnit4Mockery();
+	@Rule public JUnitRuleMockery context = new JUnitRuleMockery();
 	private DataModelImpl dataModel = null;
 	private final BigDecimal taxRate = new BigDecimal(".10000");
 	private final BigDecimal taxAmount = new BigDecimal("3.86");

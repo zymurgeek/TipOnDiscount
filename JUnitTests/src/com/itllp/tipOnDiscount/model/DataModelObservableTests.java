@@ -25,20 +25,16 @@ package com.itllp.tipOnDiscount.model;
 import java.math.BigDecimal;
 
 import org.jmock.Expectations;
-import org.jmock.Mockery;
-import org.jmock.integration.junit4.JMock;
-import org.jmock.integration.junit4.JUnit4Mockery;
+import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-
 import com.itllp.tipOnDiscount.model.update.BillTotalUpdate;
 import com.itllp.tipOnDiscount.model.update.Update;
 import com.itllp.tipOnDiscount.modelimpl.DataModelImpl;
 
-@RunWith(JMock.class)
 public class DataModelObservableTests {
-	Mockery context = new JUnit4Mockery();
+	@Rule public JUnitRuleMockery context = new JUnitRuleMockery();
 	private DataModelObservable observable = null;
 
 	

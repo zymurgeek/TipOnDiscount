@@ -510,7 +510,7 @@ public class TipOnDiscount extends Activity implements DataModelObserver {
          * All instances of an app share the same instance of this file 
          */
         SharedPreferences prefs = context.getSharedPreferences(
-        		PREFERENCES_FILE, MODE_WORLD_READABLE);
+        		PREFERENCES_FILE, MODE_PRIVATE);
         String value;
         BigDecimal amount;
         BigDecimal rate;
@@ -921,7 +921,7 @@ public class TipOnDiscount extends Activity implements DataModelObserver {
     	//TODO Move save to data model
     	SharedPreferences prefs =
                 context.getSharedPreferences(TipOnDiscount.PREFERENCES_FILE, 
-                		MODE_WORLD_READABLE);
+                		MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
         // Save application state
