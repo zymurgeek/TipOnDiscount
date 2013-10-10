@@ -51,7 +51,9 @@ public class PauseTests extends
     private TextView shareDueTextView;
 
     
+	@SuppressWarnings("deprecation")
 	public PauseTests() {
+		// Using the non-deprecated version of this constructor requires API 8
 		super("com.itllp.tipOnDiscount", TipOnDiscount.class);
 		setActivityInitialTouchMode(false);  // Enable sending key events
 	}
