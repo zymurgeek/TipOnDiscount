@@ -17,14 +17,21 @@ useful to those who want to learn Android development and automated
 unit testing.
 
 To build this software, you'll need the Android SDK.  See
-http://developer.android.com.  Once installed, import the code from
-the Elipse menu File -> Import.  Expand General and select Existing
-Projects into Workspace.  Select Browse next to "Select root
-directory" and select the TipOnDiscount top level directory.  Three
-projects, TipOnDiscount, TipOnDiscountAndroidJUnitTests and
-TipOnDiscountJUnitTests, will be selected.  Select Finish.
+http://developer.android.com.  
+
+If you haven't already, create the Android Support library project
+using the v7 appcompat library.  See
+http://developer.android.com/tools/support-library/setup.html.
+
+Once the support library is ready, import the code from the Elipse
+menu File -> Import.  Expand General and select Existing Projects into
+Workspace.  Select Browse next to "Select root directory" and select
+the TipOnDiscount top level directory.  Three projects, TipOnDiscount,
+TipOnDiscountAndroidJUnitTests and TipOnDiscountJUnitTests, will be
+selected.  Select Finish.
 
 To run the JUnit tests, you'll need JMock 2.6 (http://jmock.org/).
+This is optional, but recommended if you'll be modifying code.
 Download the Binary JARs and unzip them to a location of your choice.
 In Eclipse, set JMOCK_HOME to the new JMock directory, e.g.,
 /home/myuser/jmock-2.6.0.  To do this, from the Eclipse menu, select

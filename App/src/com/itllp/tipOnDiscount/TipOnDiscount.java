@@ -24,12 +24,15 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -62,7 +65,7 @@ import com.itllp.tipOnDiscount.modelimpl.DataModelImpl;
 // TODO Menu to clear bill
 // TODO Set defaults for TIP%, Tax and Rounding
 
-public class TipOnDiscount extends Activity implements DataModelObserver {
+public class TipOnDiscount extends ActionBarActivity implements DataModelObserver {
 	private DataModel model;
 	private TextView billTotalEntry;
 	private TextView billSubtotalText;
@@ -384,6 +387,32 @@ public class TipOnDiscount extends Activity implements DataModelObserver {
         	(com.itllp.tipOnDiscount.R.id.share_due_text);
     }
 
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.tipondiscount_actions, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.action_new:
+                openNew();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    
+    public void openNew() {
+    	reset();
+    }
+    
     
     /**
      * Store the current state of the app.

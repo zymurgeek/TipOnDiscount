@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Tip On Discount</string>
+    <string name="action_new">New Bill</string>
     <string name="bill_total_label">Bill Total</string>
     <string name="currency_symbol">$</string>
     <string name="tax_label">Tax</string>
