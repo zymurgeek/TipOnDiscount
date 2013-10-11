@@ -57,6 +57,9 @@ public class NewActionFieldTests extends
 	private BigDecimal zeroPercentRate;
 	private String onePercentRateText;
 	private BigDecimal onePercentRate;
+	private String fifteenPercentText;
+	private String fifteenPercentRateText;
+	private BigDecimal fifteenPercentRate;
     
     
 	@SuppressWarnings("deprecation")
@@ -81,7 +84,9 @@ public class NewActionFieldTests extends
     	zeroPercentRate = new BigDecimal(zeroPercentRateText);
         onePercentRateText = "0.01";
         onePercentRate = new BigDecimal(onePercentRateText);
-        
+        fifteenPercentText = "15";
+        fifteenPercentRateText = "0.15";
+        fifteenPercentRate = new BigDecimal(fifteenPercentRateText);
         mInstrumentation = getInstrumentation();
         
         mActivity = this.getActivity();
@@ -124,6 +129,7 @@ public class NewActionFieldTests extends
         assertTaxPercentFieldAndTaxRateInModelAreZero();    	
         assertTaxAmountFieldAndModelAreZero();
         assertDiscountFieldAndModelAreZero();
+        assertPlannedTipFieldAndModelAreFifteenPercent();
     }
 
 
@@ -147,6 +153,18 @@ public class NewActionFieldTests extends
     }
 
     
+	public void testNewActionWhenFocusIsInPlannedTipPercent() {
+    	// Preconditions
+    	setFocusToView(plannedTipPercentEntryView);
+
+    	// Method under test
+    	runOpenNewAction();
+    	
+    	// Postconditions
+    	assertPlannedTipFieldAndModelAreFifteenPercent();
+	}
+
+
 	public void testNewActionWhenFocusIsInTaxPercent() {
     	// Preconditions
     	setFocusToView(taxPercentEntryView);
@@ -190,9 +208,17 @@ public class NewActionFieldTests extends
 	}
 
 
+	private void assertPlannedTipFieldAndModelAreFifteenPercent() {
+		assertEquals("Wrong value in planned tip field", fifteenPercentText, 
+				plannedTipPercentEntryView.getText().toString());
+	    assertTrue("Wrong value for planned tip rate in data model", 
+	    		0 == fifteenPercentRate.compareTo(model.getPlannedTipRate()));
+	}
+
+
 	private void assertTaxPercentFieldAndTaxRateInModelAreZero() {
 		assertEquals("Wrong value in tax percent field", 
-	    		zeroPercentText, this.taxPercentEntryView.getText().toString());
+	    		zeroPercentText, taxPercentEntryView.getText().toString());
 	    assertTrue("Wrong value for tax rate in data model", 
 	    		0 == zeroPercentRate.compareTo(model.getTaxRate()));
 	}
@@ -222,6 +248,7 @@ public class NewActionFieldTests extends
 				    	model.setBillTotal(oneDollarAmount);
 				    	model.setTaxRate(onePercentRate);
 				    	model.setDiscount(oneDollarAmount);
+				    	model.setPlannedTipRate(onePercentRate);
 					}
 				}
 				);

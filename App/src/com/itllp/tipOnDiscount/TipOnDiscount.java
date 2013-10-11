@@ -54,6 +54,7 @@ import com.itllp.tipOnDiscount.model.update.BillSubtotalUpdate;
 import com.itllp.tipOnDiscount.model.update.BillTotalUpdate;
 import com.itllp.tipOnDiscount.model.update.BumpsUpdate;
 import com.itllp.tipOnDiscount.model.update.DiscountUpdate;
+import com.itllp.tipOnDiscount.model.update.PlannedTipRateUpdate;
 import com.itllp.tipOnDiscount.model.update.ShareDueUpdate;
 import com.itllp.tipOnDiscount.model.update.TaxAmountUpdate;
 import com.itllp.tipOnDiscount.model.update.TaxRateUpdate;
@@ -129,7 +130,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 				updateTaxAmountEntry(null);
 			}
 			if (view == tipPercentEntry) {
-		        updateTipPercentEntry();
+		        updateTipPercentEntry(null);
 	    	}
 			if (view == splitBetweenEntry) {
 		        updateSplitBetweenEntry();
@@ -480,6 +481,9 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 			if (updatedData instanceof BumpsUpdate) {
 				updateBumpsText((BumpsUpdate)updatedData);
 			}
+			if (updatedData instanceof PlannedTipRateUpdate) {
+				updateTipPercentEntry((PlannedTipRateUpdate)updatedData);
+			}
 			if (updatedData instanceof PlannedTipAmountUpdate) {
 				updateTipAmountEntry((PlannedTipAmountUpdate)updatedData);
 			}
@@ -671,7 +675,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 		updateBillSubtotalEntry(null);
 		updateDiscountEntry(null);
 		updateTippableEntry(null);
-		updateTipPercentEntry();
+		updateTipPercentEntry(null);
 		updateTipAmountEntry(null);
 		updateSplitBetweenEntry();
 		updateRoundUpToNearestEntry();
@@ -880,8 +884,8 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 	 * get changed by any means other than user input, so there's no
 	 * update notification.
 	 */
-	private void updateTipPercentEntry() {
-		if (!tipPercentEntry.isFocused()) { 
+	private void updateTipPercentEntry(PlannedTipRateUpdate updatedData) {
+		if (!tipPercentEntry.isFocused() || null==updatedData) { 
 			tipPercentEntry.setText(formatRateToPercent
 					(this.model.getPlannedTipRate()));
 		}
