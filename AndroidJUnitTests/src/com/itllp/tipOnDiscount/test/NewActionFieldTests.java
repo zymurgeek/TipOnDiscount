@@ -130,6 +130,7 @@ public class NewActionFieldTests extends
     	// Postconditions
         assertBillTotalFieldAndModelAreZero();    	
         assertTaxPercentFieldAndTaxRateInModelAreZero();    	
+        assertTaxAmountFieldAndModelAreZero();    	
     }
 
 
@@ -155,6 +156,18 @@ public class NewActionFieldTests extends
 	}
 
 
+	public void testNewActionWhenFocusIsInTaxAmount() {
+    	// Preconditions
+    	setFocusToView(taxAmountEntryView);
+
+    	// Method under test
+    	runOpenNewAction();
+    	
+    	// Postconditions
+    	assertTaxAmountFieldAndModelAreZero();
+	}
+
+
     // TODO finish tests
 
     
@@ -171,6 +184,14 @@ public class NewActionFieldTests extends
 	    		zeroPercentText, this.taxPercentEntryView.getText().toString());
 	    assertTrue("Wrong value for tax rate in data model", 
 	    		0 == zeroPercentRate.compareTo(model.getTaxRate()));
+	}
+
+
+	private void assertTaxAmountFieldAndModelAreZero() {
+		assertEquals("Wrong value in tax amount field", zeroAmountText, 
+	    		this.taxAmountEntryView.getText().toString());    	
+	    assertEquals("Wrong value for tax amount in data model", zeroAmount, 
+	    		model.getTaxAmount());
 	}
 
 

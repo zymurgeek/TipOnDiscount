@@ -37,6 +37,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.View.OnFocusChangeListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -410,6 +411,18 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
     
     public void openNew() {
     	reset();
+    	//TODO Set focus to bill total entry and activate soft keyboard
+    	/*
+       	billTotalEntry.requestFocus();
+    	billTotalEntry.post(new Runnable() {
+            @Override
+            public void run() {
+            	// Open the soft keyboard
+            	InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(billTotalEntry, InputMethodManager.SHOW_IMPLICIT);
+            }
+        });
+        */
     }
     
     
@@ -827,7 +840,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 	 * from the data model.
 	 */
 	private void updateTaxAmountEntry(TaxAmountUpdate updatedData) {
-		if (!taxAmountEntry.isFocused()) {
+		if (!taxAmountEntry.isFocused() || null==updatedData) {
 			BigDecimal newAmount;
 			if (updatedData != null) {
 				newAmount = updatedData.getAmount();
