@@ -19,55 +19,39 @@ along with Tip On Discount.  If not, see <http://www.gnu.org/licenses/>.
 package com.itllp.tipOnDiscount.test;
 
 import java.math.BigDecimal;
-import java.text.NumberFormat;
-import java.util.Currency;
 import android.app.Instrumentation;
-import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.itllp.tipOnDiscount.TipOnDiscount;
-import com.itllp.tipOnDiscount.test.model.MockDataModel;
+import com.itllp.tipOnDiscount.modelimpl.DataModelImpl;
 
 /* These test are related to the New menu action only. 
  */
 public class NewActionFieldTests extends
 		ActivityInstrumentationTestCase2<TipOnDiscount> {
-	private NumberFormat currencyNumberFormat 
-		= NumberFormat.getCurrencyInstance();
-	private NumberFormat percentNumberFormat 
-		= NumberFormat.getInstance();
-	private Currency currency = currencyNumberFormat.getCurrency();
-	String zeroCurrencyString = currencyNumberFormat.format(0).
-		replace(currency.getSymbol(), "");
-	String zeroPercentString = null;
-	BigDecimal ZERO = new BigDecimal("0.00");
 	// TODO pull up common stuff into BaseTest class
 	private Instrumentation mInstrumentation;
     private TipOnDiscount mActivity;
     private EditText billTotalEntryView;
-    private TextView billTotalCurrencySymbolLabelView;
-    private TextView billSubtotalLabelView;
-    private String billSubtotalLabelString;
-    private TextView billSubtotalCurrencySymbolLabelView;
-    private TextView billSubtotalView;
     private TextView discountEntryView;
-    private TextView tippableAmountView;
     private TextView taxPercentEntryView;
     private TextView taxAmountEntryView;
     private TextView plannedTipPercentEntryView;
-    private TextView plannedTipAmountView;
     private TextView splitBetweenEntryView;
     private Button bumpDownButton;
     private TextView bumpsTextView;
     private Button bumpUpButton;
-    private TextView actualTipAmountView;
-    private TextView totalDueTextView;
-    private TextView shareDueTextView;
 	private Spinner roundUpToNearestSpinner;
+	private DataModelImpl model;
+	private String zeroAmountText;
+	private BigDecimal zeroAmount;
+	private String oneDollarAmountText;
+	private BigDecimal oneDollarAmount;
     
     
 	@SuppressWarnings("deprecation")
@@ -76,47 +60,32 @@ public class NewActionFieldTests extends
 		super("com.itllp.tipOnDiscount", TipOnDiscount.class);
         
 		setActivityInitialTouchMode(false);  // Enable sending key events
-		percentNumberFormat.setMaximumFractionDigits(3);
-		zeroPercentString = percentNumberFormat.format(0);
 	}
 
 	
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        mInstrumentation = getInstrumentation();
         
-        Intent intent = new Intent();
-        intent.putExtra(TipOnDiscount.DATA_MODEL_KEY, 
-        		"com.itllp.tipOnDiscount.test.model.MockDataModel");
-        setActivityIntent(intent);
+        zeroAmountText = "0.00";
+        zeroAmount = new BigDecimal(zeroAmountText);
+        oneDollarAmountText = "1.00";
+        oneDollarAmount = new BigDecimal(oneDollarAmountText);
+        
+        mInstrumentation = getInstrumentation();
         
         mActivity = this.getActivity();
 
         billTotalEntryView = (EditText) mActivity.findViewById
     	(com.itllp.tipOnDiscount.R.id.bill_total_entry);
-        billTotalCurrencySymbolLabelView = (TextView)mActivity.findViewById
-            	(com.itllp.tipOnDiscount.R.id.bill_total_currency_symbol_label);
-        billSubtotalLabelView = (TextView) mActivity.findViewById
-        	(com.itllp.tipOnDiscount.R.id.bill_subtotal_label);
-        billSubtotalLabelString = mActivity.getString
-        	(com.itllp.tipOnDiscount.R.string.bill_subtotal_label);
-        billSubtotalCurrencySymbolLabelView = (TextView)mActivity.findViewById
-        	(com.itllp.tipOnDiscount.R.id.bill_subtotal_currency_symbol_label);
-        billSubtotalView = (TextView) mActivity.findViewById
-        	(com.itllp.tipOnDiscount.R.id.bill_subtotal_text);
         discountEntryView = (TextView) mActivity.findViewById
         	(com.itllp.tipOnDiscount.R.id.discount_entry);
-        tippableAmountView = (TextView) mActivity.findViewById(
-        		com.itllp.tipOnDiscount.R.id.tippable_amount_text);
         taxPercentEntryView = (TextView) mActivity.findViewById
         	(com.itllp.tipOnDiscount.R.id.tax_percent_entry);
         taxAmountEntryView = (TextView) mActivity.findViewById
         	(com.itllp.tipOnDiscount.R.id.tax_amount_entry);
         plannedTipPercentEntryView = (TextView) mActivity.findViewById
 			(com.itllp.tipOnDiscount.R.id.planned_tip_percent_entry);
-        plannedTipAmountView = (TextView) mActivity.findViewById
-			(com.itllp.tipOnDiscount.R.id.planned_tip_amount_text);
         splitBetweenEntryView = (TextView) mActivity.findViewById
 			(com.itllp.tipOnDiscount.R.id.split_between_entry);
         roundUpToNearestSpinner = (Spinner)mActivity.findViewById
@@ -127,13 +96,7 @@ public class NewActionFieldTests extends
 			(com.itllp.tipOnDiscount.R.id.bumps_text);
         bumpUpButton = (Button)mActivity.findViewById
 			(com.itllp.tipOnDiscount.R.id.bump_up_button);
-        actualTipAmountView = (TextView) mActivity.findViewById
-			(com.itllp.tipOnDiscount.R.id.actual_tip_amount_text);
-        totalDueTextView = (TextView) mActivity.findViewById
-			(com.itllp.tipOnDiscount.R.id.total_due_text);
-        shareDueTextView = (TextView) mActivity.findViewById
-			(com.itllp.tipOnDiscount.R.id.share_due_text);
-
+        model = (DataModelImpl)mActivity.getDataModel();
         mActivity.runOnUiThread(
     			new Runnable() {
     				public void run() {
@@ -147,29 +110,88 @@ public class NewActionFieldTests extends
     
     public void testPreconditions() {
         assertNotNull(billTotalEntryView);
-        assertNotNull(billTotalCurrencySymbolLabelView);
-        assertNotNull(billSubtotalLabelView);
-        assertNotNull(billSubtotalLabelString);
-        assertNotNull(billSubtotalCurrencySymbolLabelView);
-        assertNotNull(billSubtotalView);
         assertNotNull(discountEntryView);
-        assertNotNull(tippableAmountView);
         assertNotNull(taxPercentEntryView);
         assertNotNull(taxAmountEntryView);
         assertNotNull(plannedTipPercentEntryView);
-        assertNotNull(plannedTipAmountView);
         assertNotNull(splitBetweenEntryView);
         assertNotNull(roundUpToNearestSpinner);
         assertNotNull(bumpDownButton);
         assertNotNull(bumpsTextView);
         assertNotNull(bumpUpButton);
-        assertNotNull(actualTipAmountView);
-        assertNotNull(totalDueTextView);
-        assertNotNull(shareDueTextView);
       }
     
     
-	private void setFocusToView(final TextView view) {
+    /* Verify the new action resets the bill total when the
+     * bill total field is not in focus.
+     */
+    public void testNewActionWhenNotInBillTotal() {
+    	// Preconditions
+    	setFocusToView(bumpDownButton);
+    	setBillTotalAmount();
+
+    	// Method under test
+    	runOpenNewAction();
+    	
+    	// Postconditions
+        assertEquals("Incorrect value in field", zeroAmountText, 
+        		billTotalEntryView.getText().toString());    	
+        assertEquals("Incorrect value in data model", zeroAmount, 
+        		model.getBillTotal());    	
+    }
+
+
+    /* Verify the new action resets the bill total when the
+     * bill total field is in focus.
+     */
+    public void testNewActionWhenInBillTotal() {
+    	setBillTotalAmount();
+    	setFocusToView(billTotalEntryView);
+
+    	// Method under test
+		runOpenNewAction();
+    	
+    	// Postconditions
+        assertEquals("Incorrect value in field", zeroAmountText, 
+        		billTotalEntryView.getText().toString());    	
+        assertEquals("Incorrect value in data model", zeroAmount, 
+        		model.getBillTotal());    	
+    }
+
+    
+    // TODO finish tests
+
+    
+	private void runOpenNewAction() {
+		mActivity.runOnUiThread(
+    			new Runnable() {
+    				public void run() {
+    					mActivity.openNew();
+    				}
+    			}
+        	);
+    	mInstrumentation.waitForIdleSync();
+	}
+
+	
+	private void setBillTotalAmount() {
+		View originalFocus = mActivity.getCurrentFocus();
+		setFocusToView(this.bumpDownButton);
+    	mInstrumentation.waitForIdleSync();
+		mActivity.runOnUiThread(
+    			new Runnable() {
+    				public void run() {
+    			    	model.setBillTotal(oneDollarAmount);
+    				}
+    			}
+    			);
+    	mInstrumentation.waitForIdleSync();
+    	setFocusToView(originalFocus);
+    	mInstrumentation.waitForIdleSync();
+	}
+    
+    
+	private void setFocusToView(final View view) {
 		mActivity.runOnUiThread(
     			new Runnable() {
     				public void run() {
@@ -181,71 +203,4 @@ public class NewActionFieldTests extends
 	}
 
 
-    /* Verify the new action resets the bill total when the
-     * bill total field is not in focus.
-     */
-    public void testNewActionWhenNotInBillTotal() {
-    	// Preconditions
-    	MockDataModel model = (MockDataModel)mActivity.getDataModel();
-    	setFocusToView(actualTipAmountView);
-    	final String expectedAmountText = "0.00";
-    	final BigDecimal expectedAmount = new BigDecimal(expectedAmountText);
-    	final String amountText = "1.00";
-    	final BigDecimal amount = new BigDecimal(amountText);
-    	model.setBillTotal(amount);
-
-    	// Method under test
-		mActivity.runOnUiThread(
-    			new Runnable() {
-    				public void run() {
-    					mActivity.openNew();
-    				}
-    			}
-        	);
-    	mInstrumentation.waitForIdleSync();
-    	
-    	// Postconditions
-        assertEquals("Incorrect value in field", expectedAmountText, 
-        		billTotalEntryView.getText().toString());    	
-        assertEquals("Incorrect value in data model", expectedAmount, 
-        		model.getBillTotal());    	
-    }
-    
-    /* Verify the new action resets the bill total when the
-     * bill total field is in focus.
-     */
-    public void testNewActionWhenInBillTotal() {
-    	// Preconditions
-    	MockDataModel model = (MockDataModel)mActivity.getDataModel();
-    	setFocusToView(actualTipAmountView);
-    	mInstrumentation.waitForIdleSync();
-    	final String expectedAmountText = "0.00";
-    	final BigDecimal expectedAmount = new BigDecimal(expectedAmountText);
-    	final String initialAmountText = "1.00";
-    	final BigDecimal initialAmount = new BigDecimal(initialAmountText);
-    	model.setBillTotal(initialAmount);
-    	mActivity.updateAllFields();
-    	mInstrumentation.waitForIdleSync();
-    	setFocusToView(billTotalEntryView);
-    	mInstrumentation.waitForIdleSync();
-
-    	// Method under test
-		mActivity.runOnUiThread(
-    			new Runnable() {
-    				public void run() {
-//    					mActivity.openNew();
-    				}
-    			}
-        	);
-    	mInstrumentation.waitForIdleSync();
-    	
-    	// Postconditions
-        assertEquals("Incorrect value in field", expectedAmountText, 
-        		billTotalEntryView.getText().toString());    	
-        assertEquals("Incorrect value in data model", expectedAmount, 
-        		model.getBillTotal());    	
-    }
-    
-    
-    // TODO finish tests
 }

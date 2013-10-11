@@ -62,7 +62,6 @@ import com.itllp.tipOnDiscount.model.update.TotalDueUpdate;
 import com.itllp.tipOnDiscount.model.update.Update;
 import com.itllp.tipOnDiscount.modelimpl.DataModelImpl;
 
-// TODO Menu to clear bill
 // TODO Set defaults for TIP%, Tax and Rounding
 
 public class TipOnDiscount extends ActionBarActivity implements DataModelObserver {
