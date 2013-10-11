@@ -107,20 +107,12 @@ public class NewActionFieldTests extends
         bumpUpButton = (Button)mActivity.findViewById
 			(com.itllp.tipOnDiscount.R.id.bump_up_button);
         model = (DataModelImpl)mActivity.getDataModel();
-        mActivity.runOnUiThread(
-    			new Runnable() {
-    				public void run() {
-    			        mActivity.reset();
-    				}
-    			}
-        	);
-    	mInstrumentation.waitForIdleSync();
-    	setBillTotalAmount(oneDollarAmount);
-    	setTaxRate(onePercentRate);
+    	
+		initializeDataModel();
     }
-    
-    
-    public void testNewActionWhenFocusIsNotInAnyEntryField() {
+
+
+	public void testNewActionWhenFocusIsNotInAnyEntryField() {
     	// Preconditions
     	setFocusToView(bumpDownButton);
 
@@ -130,7 +122,8 @@ public class NewActionFieldTests extends
     	// Postconditions
         assertBillTotalFieldAndModelAreZero();    	
         assertTaxPercentFieldAndTaxRateInModelAreZero();    	
-        assertTaxAmountFieldAndModelAreZero();    	
+        assertTaxAmountFieldAndModelAreZero();
+        assertDiscountFieldAndModelAreZero();
     }
 
 
@@ -141,6 +134,16 @@ public class NewActionFieldTests extends
 		runOpenNewAction();
     	
     	assertBillTotalFieldAndModelAreZero();    	
+    }
+
+    
+	public void testNewActionWhenFocusIsInDiscount() {
+    	setFocusToView(discountEntryView);
+
+    	// Method under test
+		runOpenNewAction();
+    	
+    	assertDiscountFieldAndModelAreZero();    	
     }
 
     
@@ -179,6 +182,14 @@ public class NewActionFieldTests extends
 	}
 
 
+	private void assertDiscountFieldAndModelAreZero() {
+		assertEquals("Wrong value in discount field", zeroAmountText, 
+	    		discountEntryView.getText().toString());    	
+	    assertEquals("Wrong value for discount in data model", zeroAmount, 
+	    		model.getDiscount());
+	}
+
+
 	private void assertTaxPercentFieldAndTaxRateInModelAreZero() {
 		assertEquals("Wrong value in tax percent field", 
 	    		zeroPercentText, this.taxPercentEntryView.getText().toString());
@@ -195,6 +206,29 @@ public class NewActionFieldTests extends
 	}
 
 
+	private void initializeDataModel() {
+        mActivity.runOnUiThread(
+    			new Runnable() {
+    				public void run() {
+    			        mActivity.reset();
+    				}
+    			}
+        	);
+    	mInstrumentation.waitForIdleSync();
+
+		mActivity.runOnUiThread(
+				new Runnable() {
+					public void run() {
+				    	model.setBillTotal(oneDollarAmount);
+				    	model.setTaxRate(onePercentRate);
+				    	model.setDiscount(oneDollarAmount);
+					}
+				}
+				);
+		mInstrumentation.waitForIdleSync();
+	}
+
+
 	private void runOpenNewAction() {
 		mActivity.runOnUiThread(
     			new Runnable() {
@@ -207,40 +241,6 @@ public class NewActionFieldTests extends
 	}
 
 	
-	private void setBillTotalAmount(final BigDecimal amount) {
-		View originalFocus = mActivity.getCurrentFocus();
-		setFocusToView(bumpDownButton);
-    	mInstrumentation.waitForIdleSync();
-		mActivity.runOnUiThread(
-    			new Runnable() {
-    				public void run() {
-    			    	model.setBillTotal(amount);
-    				}
-    			}
-    			);
-    	mInstrumentation.waitForIdleSync();
-    	setFocusToView(originalFocus);
-    	mInstrumentation.waitForIdleSync();
-	}
-    
-    
-	private void setTaxRate(final BigDecimal rate) {
-		View originalFocus = mActivity.getCurrentFocus();
-		setFocusToView(bumpDownButton);
-    	mInstrumentation.waitForIdleSync();
-		mActivity.runOnUiThread(
-    			new Runnable() {
-    				public void run() {
-    			    	model.setTaxRate(rate);
-    				}
-    			}
-				);
-    	mInstrumentation.waitForIdleSync();
-    	setFocusToView(originalFocus);
-    	mInstrumentation.waitForIdleSync();
-	}
-    
-    
 	private void setFocusToView(final View view) {
 		mActivity.runOnUiThread(
     			new Runnable() {

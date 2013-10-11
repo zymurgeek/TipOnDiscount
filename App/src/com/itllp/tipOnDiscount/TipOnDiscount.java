@@ -757,7 +757,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 	 * from the data model.
 	 */
 	private void updateDiscountEntry(DiscountUpdate updatedData) {
-		if (!discountEntry.isFocused()) {
+		if (!discountEntry.isFocused() || null==updatedData) {
 			BigDecimal newAmount;
 			if (updatedData != null) {
 				newAmount = updatedData.getAmount();
