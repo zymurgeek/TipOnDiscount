@@ -52,6 +52,11 @@ public class NewActionFieldTests extends
 	private BigDecimal zeroAmount;
 	private String oneDollarAmountText;
 	private BigDecimal oneDollarAmount;
+	private String zeroPercentText;
+	private String zeroPercentRateText;
+	private BigDecimal zeroPercentRate;
+	private String onePercentRateText;
+	private BigDecimal onePercentRate;
     
     
 	@SuppressWarnings("deprecation")
@@ -71,6 +76,11 @@ public class NewActionFieldTests extends
         zeroAmount = new BigDecimal(zeroAmountText);
         oneDollarAmountText = "1.00";
         oneDollarAmount = new BigDecimal(oneDollarAmountText);
+        zeroPercentText = "0";
+        zeroPercentRateText = "0";
+    	zeroPercentRate = new BigDecimal(zeroPercentRateText);
+        onePercentRateText = "0.01";
+        onePercentRate = new BigDecimal(onePercentRateText);
         
         mInstrumentation = getInstrumentation();
         
@@ -105,63 +115,65 @@ public class NewActionFieldTests extends
     			}
         	);
     	mInstrumentation.waitForIdleSync();
+    	setBillTotalAmount(oneDollarAmount);
+    	setTaxRate(onePercentRate);
     }
     
     
-    public void testPreconditions() {
-        assertNotNull(billTotalEntryView);
-        assertNotNull(discountEntryView);
-        assertNotNull(taxPercentEntryView);
-        assertNotNull(taxAmountEntryView);
-        assertNotNull(plannedTipPercentEntryView);
-        assertNotNull(splitBetweenEntryView);
-        assertNotNull(roundUpToNearestSpinner);
-        assertNotNull(bumpDownButton);
-        assertNotNull(bumpsTextView);
-        assertNotNull(bumpUpButton);
-      }
-    
-    
-    /* Verify the new action resets the bill total when the
-     * bill total field is not in focus.
-     */
-    public void testNewActionWhenNotInBillTotal() {
+    public void testNewActionWhenFocusIsNotInAnyEntryField() {
     	// Preconditions
     	setFocusToView(bumpDownButton);
-    	setBillTotalAmount();
 
     	// Method under test
     	runOpenNewAction();
     	
     	// Postconditions
-        assertEquals("Incorrect value in field", zeroAmountText, 
-        		billTotalEntryView.getText().toString());    	
-        assertEquals("Incorrect value in data model", zeroAmount, 
-        		model.getBillTotal());    	
+        assertBillTotalFieldAndModelAreZero();    	
+        assertTaxPercentFieldAndTaxRateInModelAreZero();    	
     }
 
 
-    /* Verify the new action resets the bill total when the
-     * bill total field is in focus.
-     */
-    public void testNewActionWhenInBillTotal() {
-    	setBillTotalAmount();
+	public void testNewActionWhenFocusIsInBillTotal() {
     	setFocusToView(billTotalEntryView);
 
     	// Method under test
 		runOpenNewAction();
     	
-    	// Postconditions
-        assertEquals("Incorrect value in field", zeroAmountText, 
-        		billTotalEntryView.getText().toString());    	
-        assertEquals("Incorrect value in data model", zeroAmount, 
-        		model.getBillTotal());    	
+    	assertBillTotalFieldAndModelAreZero();    	
     }
 
     
+	public void testNewActionWhenFocusIsInTaxPercent() {
+    	// Preconditions
+    	setFocusToView(taxPercentEntryView);
+
+    	// Method under test
+    	runOpenNewAction();
+    	
+    	// Postconditions
+    	assertTaxPercentFieldAndTaxRateInModelAreZero();
+	}
+
+
     // TODO finish tests
 
     
+	private void assertBillTotalFieldAndModelAreZero() {
+		assertEquals("Wrong value in bill total field", zeroAmountText, 
+	    		billTotalEntryView.getText().toString());    	
+	    assertEquals("Wrong value for bill total in data model", zeroAmount, 
+	    		model.getBillTotal());
+	}
+
+
+	private void assertTaxPercentFieldAndTaxRateInModelAreZero() {
+		assertEquals("Wrong value in tax percent field", 
+	    		zeroPercentText, this.taxPercentEntryView.getText().toString());
+	    assertTrue("Wrong value for tax rate in data model", 
+	    		0 == zeroPercentRate.compareTo(model.getTaxRate()));
+	}
+
+
 	private void runOpenNewAction() {
 		mActivity.runOnUiThread(
     			new Runnable() {
@@ -174,17 +186,34 @@ public class NewActionFieldTests extends
 	}
 
 	
-	private void setBillTotalAmount() {
+	private void setBillTotalAmount(final BigDecimal amount) {
 		View originalFocus = mActivity.getCurrentFocus();
-		setFocusToView(this.bumpDownButton);
+		setFocusToView(bumpDownButton);
     	mInstrumentation.waitForIdleSync();
 		mActivity.runOnUiThread(
     			new Runnable() {
     				public void run() {
-    			    	model.setBillTotal(oneDollarAmount);
+    			    	model.setBillTotal(amount);
     				}
     			}
     			);
+    	mInstrumentation.waitForIdleSync();
+    	setFocusToView(originalFocus);
+    	mInstrumentation.waitForIdleSync();
+	}
+    
+    
+	private void setTaxRate(final BigDecimal rate) {
+		View originalFocus = mActivity.getCurrentFocus();
+		setFocusToView(bumpDownButton);
+    	mInstrumentation.waitForIdleSync();
+		mActivity.runOnUiThread(
+    			new Runnable() {
+    				public void run() {
+    			    	model.setTaxRate(rate);
+    				}
+    			}
+				);
     	mInstrumentation.waitForIdleSync();
     	setFocusToView(originalFocus);
     	mInstrumentation.waitForIdleSync();
