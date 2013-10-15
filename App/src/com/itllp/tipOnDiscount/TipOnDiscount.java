@@ -975,6 +975,8 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
     public boolean writeInstanceState(Context context) {
     	this.model.saveState();
     	//TODO Move save to data model
+    	//TODO Bumps is not saved when TOD is closed and reopened
+
     	SharedPreferences prefs =
                 context.getSharedPreferences(TipOnDiscount.PREFERENCES_FILE, 
                 		MODE_PRIVATE);

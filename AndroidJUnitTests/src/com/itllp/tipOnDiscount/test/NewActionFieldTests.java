@@ -255,10 +255,7 @@ public class NewActionFieldTests extends
 		// Verify postconditions
     	assertRoundUpToNearestFieldAndModelAreNone();    	
     }
-
     
-    // TODO finish tests
-//TODO Bumps is not saved when TOD is closed and reopened
     
 	private void assertActualTipAmountFieldAndModelAreZero() {
 		assertEquals("Wrong value in actual tip amount field", zeroAmountText, 
