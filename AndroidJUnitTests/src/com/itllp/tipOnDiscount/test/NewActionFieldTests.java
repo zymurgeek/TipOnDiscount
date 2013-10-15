@@ -185,6 +185,30 @@ public class NewActionFieldTests extends
     }
 
     
+	public void testNewActionWhenFocusIsInTaxPercent() {
+		// Set up preconditions
+		setFocusToView(taxPercentEntryView);
+	
+		// Run method under test
+		runOpenNewAction();
+		
+		// Verify postconditions
+		assertTaxPercentFieldAndTaxRateInModelAreZero();
+	}
+
+
+	public void testNewActionWhenFocusIsInTaxAmount() {
+		// Set up preconditions
+		setFocusToView(taxAmountEntryView);
+	
+		// Run method under test
+		runOpenNewAction();
+		
+		// Verify postconditions
+		assertTaxAmountFieldAndModelAreZero();
+	}
+
+
 	public void testNewActionWhenFocusIsInDiscount() {
 		// Set up preconditions
     	setFocusToView(discountEntryView);
@@ -209,30 +233,6 @@ public class NewActionFieldTests extends
 	}
 
 
-	public void testNewActionWhenFocusIsInTaxPercent() {
-    	// Set up preconditions
-    	setFocusToView(taxPercentEntryView);
-
-    	// Run method under test
-    	runOpenNewAction();
-    	
-    	// Verify postconditions
-    	assertTaxPercentFieldAndTaxRateInModelAreZero();
-	}
-
-
-	public void testNewActionWhenFocusIsInTaxAmount() {
-    	// Set up preconditions
-    	setFocusToView(taxAmountEntryView);
-
-    	// Run method under test
-    	runOpenNewAction();
-    	
-    	// Verify postconditions
-    	assertTaxAmountFieldAndModelAreZero();
-	}
-
-
 	public void testNewActionWhenFocusIsInSplitBetween() {
 		// Set up preconditions
     	setFocusToView(splitBetweenEntryView);
@@ -250,10 +250,10 @@ public class NewActionFieldTests extends
     	setFocusToView(roundUpToNearestSpinner);
 
     	// Run method under test
-		//runOpenNewAction();
+		runOpenNewAction();
     	
 		// Verify postconditions
-    	//TODO assertRoundUpToNearestFieldAndModelAreNone();    	
+    	assertRoundUpToNearestFieldAndModelAreNone();    	
     }
 
     
