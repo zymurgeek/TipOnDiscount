@@ -28,9 +28,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.itllp.tipOnDiscount.TipOnDiscount;
-import com.itllp.tipOnDiscount.model.update.ActualTipRateUpdate;
-import com.itllp.tipOnDiscount.model.update.BillSubtotalUpdate;
-import com.itllp.tipOnDiscount.model.update.TippableAmountUpdate;
 import com.itllp.tipOnDiscount.modelimpl.DataModelImpl;
 
 /* These test are related to the New menu action only. 
@@ -51,7 +48,6 @@ public class NewActionFieldTests extends
     private TextView splitBetweenEntryView;
     private Button bumpDownButton;
     private TextView bumpsTextView;
-    private Button bumpUpButton;
 	private Spinner roundUpToNearestSpinner;
 	private TextView actualTipPercentView;
 	private TextView actualTipAmountView;
@@ -131,8 +127,6 @@ public class NewActionFieldTests extends
 			(com.itllp.tipOnDiscount.R.id.bump_down_button);
         bumpsTextView = (TextView)mActivity.findViewById
 			(com.itllp.tipOnDiscount.R.id.bumps_text);
-        bumpUpButton = (Button)mActivity.findViewById
-			(com.itllp.tipOnDiscount.R.id.bump_up_button);
         actualTipPercentView = (TextView)mActivity.findViewById
         	(com.itllp.tipOnDiscount.R.id.actual_tip_percent_text);
         actualTipAmountView = (TextView)mActivity.findViewById

@@ -24,6 +24,7 @@ import java.math.RoundingMode;
 import com.itllp.tipOnDiscount.model.DataModel;
 import com.itllp.tipOnDiscount.model.DataModelObservable;
 import com.itllp.tipOnDiscount.model.DataModelObserver;
+import com.itllp.tipOnDiscount.model.Persister;
 import com.itllp.tipOnDiscount.model.update.ActualTipAmountUpdate;
 import com.itllp.tipOnDiscount.model.update.ActualTipRateUpdate;
 import com.itllp.tipOnDiscount.model.update.BillSubtotalUpdate;
@@ -48,6 +49,7 @@ public class DataModelImpl implements DataModel {
 	// TODO Support tip included, maybe with help screen advice
 
 	DataModelObservable observable = new DataModelObservable();
+	Persister persister;
 	/* 
 	 * The following data is calculated in the order it appears here.
 	 * When updating these items in the update methods, do not use a later 
@@ -74,7 +76,8 @@ public class DataModelImpl implements DataModel {
 	private BigDecimal actualTipRate = BigDecimal.ZERO.setScale(5);
 
 	
-	public DataModelImpl() {
+	public DataModelImpl(Persister persister) {
+		this.persister = persister;
 		initialize();
 	}
 	
@@ -639,6 +642,14 @@ public class DataModelImpl implements DataModel {
 
 	@Override
 	public void saveState() {
+        persister.save(Persister.BILL_TOTAL_KEY, getBillTotal());
+        persister.save(Persister.TAX_RATE_KEY, getTaxRate());
+        persister.save(Persister.DISCOUNT_KEY, getDiscount());
+        persister.save(Persister.PLANNED_TIP_RATE_KEY, getPlannedTipRate());
+        persister.save(Persister.SPLIT_BETWEEN_KEY, getSplitBetween());
+        persister.save(Persister.ROUND_UP_TO_NEAREST_AMOUNT, getRoundUpToAmount());
+        persister.save(Persister.BUMPS_KEY, getBumps());
+        // TODO in persistence impl, save BigDecimal.toPlainString()
 	}
 
 

@@ -81,7 +81,7 @@ public class DataModelImplNotificationTests {
 
 	@Before
 	public void initialize() {
-		dataModel = new DataModelImpl();
+		dataModel = new DataModelImpl(null);
 	}
 
 	

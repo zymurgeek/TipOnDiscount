@@ -25,19 +25,25 @@ package com.itllp.tipOnDiscount.modelimpl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import org.jmock.Expectations;
+import org.jmock.integration.junit4.JUnitRuleMockery;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import com.itllp.tipOnDiscount.model.DataModel;
+import com.itllp.tipOnDiscount.model.Persister;
 import com.itllp.tipOnDiscount.modelimpl.DataModelImpl;
 
 public class DataModelImplTests {
 	
+	@Rule public JUnitRuleMockery context = new JUnitRuleMockery();
 	private DataModel model = null;
+	private Persister mockPersister;
 	private BigDecimal AMOUNT_5_61 = new BigDecimal("5.61");
 	private BigDecimal AMOUNT_5_62 = new BigDecimal("5.62");
 	private BigDecimal AMOUNT_5_25 = new BigDecimal("5.25");
@@ -77,7 +83,8 @@ public class DataModelImplTests {
 	
 	@Before
 	public void initialize() {
-		model = new DataModelImpl();
+		mockPersister = context.mock(Persister.class);
+		model = new DataModelImpl(mockPersister);
 	}
 
 	/* Test the values fields have at start up. */
@@ -161,7 +168,46 @@ public class DataModelImplTests {
 				model.getShareDue());
 	}
 
+	
+	@Test
+	public void testSaveStateWhenUsingTaxRate() {
+		// Set up preconditions
+		final int EXPECTED_SPLITS = 3;
+		final int EXPECTED_BUMPS = 2;
+		model.setBillTotal(AMOUNT_10_00);
+		model.setDiscount(AMOUNT_5_61);
+		model.setPlannedTipRate(EIGHTEEN_PERCENT_RATE);
+		model.setRoundUpToAmount(ROUND_UP_TO_DIME);
+		model.setSplitBetween(EXPECTED_SPLITS);
+		//model.setTaxAmount(TAX_AMOUNT);
+		model.setTaxRate(FIFTEEN_PERCENT_RATE);
+		model.setBumps(EXPECTED_BUMPS);
+		
+		// Verify postconditions
+		context.checking(new Expectations() {{
+			oneOf (mockPersister).save(Persister.BILL_TOTAL_KEY, AMOUNT_10_00);			
+			oneOf (mockPersister).save(Persister.TAX_RATE_KEY,
+					FIFTEEN_PERCENT_RATE);
+			oneOf (mockPersister).save(Persister.DISCOUNT_KEY, AMOUNT_5_61);
+			oneOf (mockPersister).save(Persister.PLANNED_TIP_RATE_KEY,
+					EIGHTEEN_PERCENT_RATE);
+			oneOf (mockPersister).save(Persister.SPLIT_BETWEEN_KEY, EXPECTED_SPLITS);
+			oneOf (mockPersister).save(Persister.ROUND_UP_TO_NEAREST_AMOUNT,
+					ROUND_UP_TO_DIME);
+			oneOf (mockPersister).save(Persister.BUMPS_KEY, EXPECTED_BUMPS);
+		}});
+		
+		// Run method under test
+		model.saveState();
+	}
 
+	
+	// TODO test saveState when using Tax amount
+	
+	
+	// TODO test restore tax rate/amount depending on what was saved
+	
+	
 	private BigDecimal calculateBillSubtotal
 	(BigDecimal billTotal, BigDecimal taxRate) {
 		BigDecimal taxRatio = taxRate.add(new BigDecimal("1"));

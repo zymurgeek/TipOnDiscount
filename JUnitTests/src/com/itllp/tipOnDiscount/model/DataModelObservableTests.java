@@ -48,7 +48,7 @@ public class DataModelObservableTests {
 	public void testUpdateOfOneObserver() {
 		// Preconditions
 		final DataModelObserver observer = context.mock(DataModelObserver.class);
-		final DataModel model = new DataModelImpl();
+		final DataModel model = new DataModelImpl(null);
 		final Update update = new BillTotalUpdate(new BigDecimal("0.00"));
 		observable.addObserver(observer);
 		
@@ -85,7 +85,7 @@ public class DataModelObservableTests {
 		// Preconditions
 		final DataModelObserver observer1 = context.mock(DataModelObserver.class, "1");
 		final DataModelObserver observer2 = context.mock(DataModelObserver.class, "2");
-		final DataModel model = new DataModelImpl();
+		final DataModel model = new DataModelImpl(null);
 		final Update update = new BillTotalUpdate(new BigDecimal("0.00"));
 		observable.addObserver(observer1);
 		observable.addObserver(observer2);

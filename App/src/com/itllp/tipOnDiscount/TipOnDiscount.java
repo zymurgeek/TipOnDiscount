@@ -37,7 +37,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.View.OnFocusChangeListener;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -48,6 +47,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 
 import com.itllp.tipOnDiscount.model.DataModel;
 import com.itllp.tipOnDiscount.model.DataModelObserver;
+import com.itllp.tipOnDiscount.model.Persister;
 import com.itllp.tipOnDiscount.model.update.ActualTipAmountUpdate;
 import com.itllp.tipOnDiscount.model.update.ActualTipRateUpdate;
 import com.itllp.tipOnDiscount.model.update.BillSubtotalUpdate;
@@ -99,14 +99,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 	private TextView totalDueText;
 	private TextView shareDueText;
     public static final String PREFERENCES_FILE = "TipOnDiscountPrefs";
-    public static final String BILL_TOTAL_KEY = "BillTotal";
-    public static final String TAX_RATE_KEY = "TaxRate";
     public static final String TAX_AMOUNT_KEY = "TaxAmount";
-    public static final String DISCOUNT_KEY = "Discount";
-    public static final String TIP_RATE_KEY = "TipRate";
-    public static final String SPLIT_BETWEEN_KEY = "SplitBetween";
-    public static final String ROUND_UP_TO_NEAREST_AMOUNT 
-    	= "RoundUpToNearestSelectedItem";
     public static final String NO_VALUE = "";
     public static final String DATA_MODEL_KEY = "DataModel";
 	
@@ -286,7 +279,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
         	}
         }
         if (null == model) {
-        	model = new DataModelImpl();
+        	model = new DataModelImpl(null);
         }
         
         setContentView(R.layout.main);
@@ -568,7 +561,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
         BigDecimal amount;
         BigDecimal rate;
         
-        value = prefs.getString(BILL_TOTAL_KEY, NO_VALUE);
+        value = prefs.getString(Persister.BILL_TOTAL_KEY, NO_VALUE);
         try {
         	amount = new BigDecimal(value);
         	this.model.setBillTotal(amount);
@@ -576,7 +569,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
         	// Invalid number does not update model
         }
         
-        value = prefs.getString(TAX_RATE_KEY, NO_VALUE);
+        value = prefs.getString(Persister.TAX_RATE_KEY, NO_VALUE);
         try {
         	rate = new BigDecimal(value);
         	this.model.setTaxRate(rate);
@@ -592,7 +585,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
         	// Invalid number does not update model
         }
 
-        value = prefs.getString(DISCOUNT_KEY, NO_VALUE);
+        value = prefs.getString(Persister.DISCOUNT_KEY, NO_VALUE);
         try {
         	amount = new BigDecimal(value);
         	this.model.setDiscount(amount);
@@ -600,7 +593,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
         	// Invalid number does not update model
         }
 
-        value = prefs.getString(TIP_RATE_KEY, NO_VALUE);
+        value = prefs.getString(Persister.PLANNED_TIP_RATE_KEY, NO_VALUE);
         try {
         	rate = new BigDecimal(value);
         	this.model.setPlannedTipRate(rate);
@@ -608,7 +601,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
         	// Invalid number does not update model
         }
 
-        value = prefs.getString(SPLIT_BETWEEN_KEY, NO_VALUE);
+        value = prefs.getString(Persister.SPLIT_BETWEEN_KEY, NO_VALUE);
         try {
         	int splitBetween = Integer.parseInt(value); 
         	this.model.setSplitBetween(splitBetween);
@@ -616,7 +609,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
         	// Invalid number does not update model
         }
 
-        value = prefs.getString(ROUND_UP_TO_NEAREST_AMOUNT, NO_VALUE);
+        value = prefs.getString(Persister.ROUND_UP_TO_NEAREST_AMOUNT, NO_VALUE);
         try {
         	amount = new BigDecimal(value);
         	this.model.setRoundUpToAmount(amount);
@@ -629,7 +622,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
         /* SharedPreferences doesn't fail if it can't find a key, so just
          * return whether the bill total key was found.
          */
-        return (prefs.contains(BILL_TOTAL_KEY));
+        return (prefs.contains(Persister.BILL_TOTAL_KEY));
     }
 
     
@@ -986,25 +979,25 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
         String value;
         
         value = this.model.getBillTotal().toPlainString();
-        editor.putString(BILL_TOTAL_KEY, value);
+        editor.putString(Persister.BILL_TOTAL_KEY, value);
         
         value = this.model.getTaxRate().toPlainString();
-        editor.putString(TAX_RATE_KEY, value);
+        editor.putString(Persister.TAX_RATE_KEY, value);
         
         value = this.model.getTaxAmount().toPlainString();
         editor.putString(TAX_AMOUNT_KEY, value);
 
         value = this.model.getDiscount().toPlainString();
-        editor.putString(DISCOUNT_KEY, value);
+        editor.putString(Persister.DISCOUNT_KEY, value);
 
         value = this.model.getPlannedTipRate().toPlainString();
-        editor.putString(TIP_RATE_KEY, value);
+        editor.putString(Persister.PLANNED_TIP_RATE_KEY, value);
         
         value = Integer.toString(this.model.getSplitBetween());
-        editor.putString(SPLIT_BETWEEN_KEY, value);
+        editor.putString(Persister.SPLIT_BETWEEN_KEY, value);
         
         value = this.model.getRoundUpToAmount().toPlainString();
-        editor.putString(ROUND_UP_TO_NEAREST_AMOUNT, value);
+        editor.putString(Persister.ROUND_UP_TO_NEAREST_AMOUNT, value);
         
         return (editor.commit());
     }
