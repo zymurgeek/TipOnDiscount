@@ -56,6 +56,7 @@ public class NewActionFieldTests extends
 	private TextView actualTipPercentView;
 	private TextView actualTipAmountView;
 	private TextView totalDueView;
+	private TextView shareDueView;
 	private DataModelImpl model;
 	private String zeroText;
 	private String zeroAmountText;
@@ -138,6 +139,8 @@ public class NewActionFieldTests extends
             	(com.itllp.tipOnDiscount.R.id.actual_tip_amount_text);
         totalDueView = (TextView)mActivity.findViewById
             	(com.itllp.tipOnDiscount.R.id.total_due_text);
+        shareDueView = (TextView)mActivity.findViewById
+            	(com.itllp.tipOnDiscount.R.id.share_due_text);
         model = (DataModelImpl)mActivity.getDataModel();
     	
 		initializeDataModel();
@@ -166,19 +169,7 @@ public class NewActionFieldTests extends
         assertActualTipPercentFieldAndModelAreZero();
         assertActualTipAmountFieldAndModelAreZero();
         assertTotalDueFieldAndModelAreZero();
-    }
-
-
-	public void testTEMP_NewActionWhenFocusIsNotInAnyEntryField() {
-    	// Preconditions
-    	setFocusToView(bumpDownButton);
-
-    	// Method under test
-    	runOpenNewAction();
-    	
-    	// Postconditions
-    	//TODO Check these assertions and move them to the non-temp test
-        //TODO assertShareDueFieldAndModelAreZero
+        assertShareDueFieldAndModelAreZero();
     }
 
 
@@ -380,7 +371,14 @@ public class NewActionFieldTests extends
 	    		this.totalDueView.getText().toString());    	
 	    assertEquals("Wrong value for total due in data model", zeroAmount, 
 	    		model.getTotalDue());
-		
+	}
+	
+
+	private void assertShareDueFieldAndModelAreZero() {
+		assertEquals("Wrong value in share due field", zeroAmountText, 
+	    		this.shareDueView.getText().toString());    	
+	    assertEquals("Wrong value for share due in data model", zeroAmount, 
+	    		model.getShareDue());
 	}
 	
 	
