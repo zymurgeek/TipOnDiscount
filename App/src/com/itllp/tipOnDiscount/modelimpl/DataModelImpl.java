@@ -30,7 +30,9 @@ import com.itllp.tipOnDiscount.model.update.BillSubtotalUpdate;
 import com.itllp.tipOnDiscount.model.update.BillTotalUpdate;
 import com.itllp.tipOnDiscount.model.update.BumpsUpdate;
 import com.itllp.tipOnDiscount.model.update.DiscountUpdate;
+import com.itllp.tipOnDiscount.model.update.RoundUpToNearestUpdate;
 import com.itllp.tipOnDiscount.model.update.ShareDueUpdate;
+import com.itllp.tipOnDiscount.model.update.SplitBetweenUpdate;
 import com.itllp.tipOnDiscount.model.update.TaxAmountUpdate;
 import com.itllp.tipOnDiscount.model.update.TaxRateUpdate;
 import com.itllp.tipOnDiscount.model.update.PlannedTipAmountUpdate;
@@ -237,11 +239,19 @@ public class DataModelImpl implements DataModel {
 			// Do not allow roundUpToAmount <= 0
 			return;
 		}
-		this.roundUpToAmount = roundUpToAmount;
+		if (!EqualsUtil.areEqual(this.roundUpToAmount, roundUpToAmount)) {
+			this.roundUpToAmount = roundUpToAmount;
 		
-		UpdateSet updateSet = new UpdateSet();
-		updateShareDue(updateSet);
-		notifyObservers(updateSet);
+			UpdateSet updateSet = new UpdateSet();
+			RoundUpToNearestUpdate roundUpToNearestUpdate = 
+					new RoundUpToNearestUpdate(this.roundUpToAmount);
+			updateSet.add(roundUpToNearestUpdate);
+			
+			updateShareDue(updateSet);
+			
+			this.notifyObservers(updateSet);
+		}
+
 	}
 
 
@@ -266,10 +276,19 @@ public class DataModelImpl implements DataModel {
 	 * @see com.itllp.tipOnDiscount.model.DataModel#setSplitBetween(int)
 	 */
 	public void setSplitBetween(int parties) {
-		this.splitBetween = parties;
-		UpdateSet us = new UpdateSet();
-		updateShareDue(us);
-		notifyObservers(us);
+		if (!EqualsUtil.areEqual(this.splitBetween, parties)) {
+			this.splitBetween = parties;
+		
+			UpdateSet updateSet = new UpdateSet();
+			SplitBetweenUpdate splitBetweenUpdate = new 
+					SplitBetweenUpdate(this.splitBetween);
+			updateSet.add(splitBetweenUpdate);
+			
+			updateShareDue(updateSet);
+			
+			this.notifyObservers(updateSet);
+		}
+
 	}
 
 

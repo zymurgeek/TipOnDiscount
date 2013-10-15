@@ -28,6 +28,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.itllp.tipOnDiscount.TipOnDiscount;
+import com.itllp.tipOnDiscount.model.update.ActualTipRateUpdate;
+import com.itllp.tipOnDiscount.model.update.BillSubtotalUpdate;
+import com.itllp.tipOnDiscount.model.update.TippableAmountUpdate;
 import com.itllp.tipOnDiscount.modelimpl.DataModelImpl;
 
 /* These test are related to the New menu action only. 
@@ -39,17 +42,24 @@ public class NewActionFieldTests extends
     private TipOnDiscount mActivity;
     private EditText billTotalEntryView;
     private TextView discountEntryView;
+    private TextView tippableAmountView;
     private TextView taxPercentEntryView;
     private TextView taxAmountEntryView;
+	private TextView billSubtotalView;
     private TextView plannedTipPercentEntryView;
+    private TextView plannedTipAmountView;
     private TextView splitBetweenEntryView;
     private Button bumpDownButton;
     private TextView bumpsTextView;
     private Button bumpUpButton;
 	private Spinner roundUpToNearestSpinner;
+	private TextView actualTipPercentView;
 	private DataModelImpl model;
+	private String zeroText;
 	private String zeroAmountText;
 	private BigDecimal zeroAmount;
+	private BigDecimal oneCentAmount;
+	private String oneText;
 	private String oneDollarAmountText;
 	private BigDecimal oneDollarAmount;
 	private String zeroPercentText;
@@ -75,8 +85,11 @@ public class NewActionFieldTests extends
     protected void setUp() throws Exception {
         super.setUp();
         
+        zeroText = "0";
         zeroAmountText = "0.00";
         zeroAmount = new BigDecimal(zeroAmountText);
+        oneText = "1";
+        oneCentAmount = new BigDecimal("0.01");
         oneDollarAmountText = "1.00";
         oneDollarAmount = new BigDecimal(oneDollarAmountText);
         zeroPercentText = "0";
@@ -93,14 +106,20 @@ public class NewActionFieldTests extends
 
         billTotalEntryView = (EditText) mActivity.findViewById
     	(com.itllp.tipOnDiscount.R.id.bill_total_entry);
+        billSubtotalView = (TextView) mActivity.findViewById
+        		(com.itllp.tipOnDiscount.R.id.bill_subtotal_text);
         discountEntryView = (TextView) mActivity.findViewById
         	(com.itllp.tipOnDiscount.R.id.discount_entry);
+        tippableAmountView = (TextView) mActivity.findViewById
+        		(com.itllp.tipOnDiscount.R.id.tippable_amount_text);
         taxPercentEntryView = (TextView) mActivity.findViewById
         	(com.itllp.tipOnDiscount.R.id.tax_percent_entry);
         taxAmountEntryView = (TextView) mActivity.findViewById
         	(com.itllp.tipOnDiscount.R.id.tax_amount_entry);
         plannedTipPercentEntryView = (TextView) mActivity.findViewById
 			(com.itllp.tipOnDiscount.R.id.planned_tip_percent_entry);
+        plannedTipAmountView = (TextView) mActivity.findViewById
+			(com.itllp.tipOnDiscount.R.id.planned_tip_amount_text);
         splitBetweenEntryView = (TextView) mActivity.findViewById
 			(com.itllp.tipOnDiscount.R.id.split_between_entry);
         roundUpToNearestSpinner = (Spinner)mActivity.findViewById
@@ -111,6 +130,8 @@ public class NewActionFieldTests extends
 			(com.itllp.tipOnDiscount.R.id.bumps_text);
         bumpUpButton = (Button)mActivity.findViewById
 			(com.itllp.tipOnDiscount.R.id.bump_up_button);
+        actualTipPercentView = (TextView)mActivity.findViewById
+        	(com.itllp.tipOnDiscount.R.id.actual_tip_percent_text);
         model = (DataModelImpl)mActivity.getDataModel();
     	
 		initializeDataModel();
@@ -128,67 +149,117 @@ public class NewActionFieldTests extends
         assertBillTotalFieldAndModelAreZero();    	
         assertTaxPercentFieldAndTaxRateInModelAreZero();    	
         assertTaxAmountFieldAndModelAreZero();
+        assertBillSubtotalFieldAndModelAreZero();
         assertDiscountFieldAndModelAreZero();
-        assertPlannedTipFieldAndModelAreFifteenPercent();
+        assertTippableAmountFieldAndModelAreZero();
+        assertPlannedTipPercentFieldAndModelAreFifteenPercent();
+        assertPlannedTipAmountFieldAndModelAreZero();
+        assertSplitBetweenFieldAndModelAreOne();
+        assertRoundUpToNearestFieldAndModelAreNone();
+        assertBumpsFieldAndModelAreZero();
+        assertActualTipPercentFieldAndModelAreZero();
+    }
+
+
+	public void testTEMP_NewActionWhenFocusIsNotInAnyEntryField() {
+    	// Preconditions
+    	setFocusToView(bumpDownButton);
+
+    	// Method under test
+    	runOpenNewAction();
+    	
+    	// Postconditions
+    	//TODO Check these assertions and move them to the non-temp test
+        //TODO assertActualTipAmountAndModelAreZero
+        //TODO assertTotalDueFieldAndModelAreZero
+        //TODO assertShareDueFieldAndModelAreZero
     }
 
 
 	public void testNewActionWhenFocusIsInBillTotal() {
+		// Set up preconditions
     	setFocusToView(billTotalEntryView);
 
-    	// Method under test
+    	// Run method under test
 		runOpenNewAction();
     	
+		// Verify postconditions
     	assertBillTotalFieldAndModelAreZero();    	
     }
 
     
 	public void testNewActionWhenFocusIsInDiscount() {
+		// Set up preconditions
     	setFocusToView(discountEntryView);
 
-    	// Method under test
+    	// Run method under test
 		runOpenNewAction();
     	
+		// Verify postconditions
     	assertDiscountFieldAndModelAreZero();    	
     }
 
     
 	public void testNewActionWhenFocusIsInPlannedTipPercent() {
-    	// Preconditions
+    	// Set up preconditions
     	setFocusToView(plannedTipPercentEntryView);
 
-    	// Method under test
+    	// Run method under test
     	runOpenNewAction();
     	
-    	// Postconditions
-    	assertPlannedTipFieldAndModelAreFifteenPercent();
+    	// Verify postconditions
+    	assertPlannedTipPercentFieldAndModelAreFifteenPercent();
 	}
 
 
 	public void testNewActionWhenFocusIsInTaxPercent() {
-    	// Preconditions
+    	// Set up preconditions
     	setFocusToView(taxPercentEntryView);
 
-    	// Method under test
+    	// Run method under test
     	runOpenNewAction();
     	
-    	// Postconditions
+    	// Verify postconditions
     	assertTaxPercentFieldAndTaxRateInModelAreZero();
 	}
 
 
 	public void testNewActionWhenFocusIsInTaxAmount() {
-    	// Preconditions
+    	// Set up preconditions
     	setFocusToView(taxAmountEntryView);
 
-    	// Method under test
+    	// Run method under test
     	runOpenNewAction();
     	
-    	// Postconditions
+    	// Verify postconditions
     	assertTaxAmountFieldAndModelAreZero();
 	}
 
 
+	public void testNewActionWhenFocusIsInSplitBetween() {
+		// Set up preconditions
+    	setFocusToView(splitBetweenEntryView);
+
+    	// Run method under test
+		runOpenNewAction();
+    	
+		// Verify postconditions
+    	assertSplitBetweenFieldAndModelAreOne();    	
+    }
+
+    
+	public void testNewActionWhenFocusIsInRoundUpToNearest() {
+		// Set up preconditions
+    	setFocusToView(roundUpToNearestSpinner);
+
+    	// Run method under test
+		//runOpenNewAction();
+    	
+		// Verify postconditions
+    	//TODO assertRoundUpToNearestFieldAndModelAreNone();    	
+    }
+
+    
     // TODO finish tests
 
     
@@ -200,6 +271,30 @@ public class NewActionFieldTests extends
 	}
 
 
+	private void assertBillSubtotalFieldAndModelAreZero() {
+		assertEquals("Wrong value in bill subtotal field", zeroAmountText, 
+	    		billSubtotalView.getText().toString());    	
+	    assertEquals("Wrong value for bill subtotal in data model", zeroAmount, 
+	    		model.getBillSubtotal());
+	}
+
+
+	private void assertBumpsFieldAndModelAreZero() {
+		assertEquals("Wrong value in bumps field", zeroText, 
+	    		bumpsTextView.getText().toString());    	
+	    assertEquals("Wrong value for bumps in data model", 0, 
+	    		model.getBumps());
+	}
+
+	
+	private void assertActualTipPercentFieldAndModelAreZero() {
+		assertEquals("Wrong value in actual tip percent field", zeroPercentText,
+				actualTipPercentView.getText().toString());
+	    assertTrue("Wrong value for actual tip rate in data model", 
+	    		0 == zeroPercentRate.compareTo(model.getActualTipRate()));
+	}
+	
+	
 	private void assertDiscountFieldAndModelAreZero() {
 		assertEquals("Wrong value in discount field", zeroAmountText, 
 	    		discountEntryView.getText().toString());    	
@@ -208,7 +303,16 @@ public class NewActionFieldTests extends
 	}
 
 
-	private void assertPlannedTipFieldAndModelAreFifteenPercent() {
+	private void assertPlannedTipAmountFieldAndModelAreZero() {
+		assertEquals("Wrong value in planned tip amount field", zeroAmountText, 
+	    		plannedTipAmountView.getText().toString());    	
+	    assertEquals("Wrong value for tippable amount in data model", zeroAmount, 
+	    		model.getPlannedTipAmount());
+		
+	}
+	
+	
+	private void assertPlannedTipPercentFieldAndModelAreFifteenPercent() {
 		assertEquals("Wrong value in planned tip field", fifteenPercentText, 
 				plannedTipPercentEntryView.getText().toString());
 	    assertTrue("Wrong value for planned tip rate in data model", 
@@ -216,6 +320,31 @@ public class NewActionFieldTests extends
 	}
 
 
+	private void assertSplitBetweenFieldAndModelAreOne() {
+		assertEquals("Wrong value in split between field", oneText, 
+	    		splitBetweenEntryView.getText().toString());    	
+	    assertEquals("Wrong value for split between in data model", 1, 
+	    		model.getSplitBetween());
+	}
+
+	
+	private void assertRoundUpToNearestFieldAndModelAreNone() {
+		assertEquals("Wrong value in round up to nearest spinner", "None", 
+	    	roundUpToNearestSpinner.getSelectedItem().toString());
+	    assertEquals("Wrong value for round up to nearest in data model", oneCentAmount, 
+	    		model.getRoundUpToAmount());
+	}
+
+	
+	private void assertTippableAmountFieldAndModelAreZero() {
+		assertEquals("Wrong value in tippable amount field", zeroAmountText, 
+	    		tippableAmountView.getText().toString());    	
+	    assertEquals("Wrong value for tippable amount in data model", zeroAmount, 
+	    		model.getTippableAmount());
+		
+	}
+	
+	
 	private void assertTaxPercentFieldAndTaxRateInModelAreZero() {
 		assertEquals("Wrong value in tax percent field", 
 	    		zeroPercentText, taxPercentEntryView.getText().toString());
@@ -249,6 +378,9 @@ public class NewActionFieldTests extends
 				    	model.setTaxRate(onePercentRate);
 				    	model.setDiscount(oneDollarAmount);
 				    	model.setPlannedTipRate(onePercentRate);
+				    	model.setSplitBetween(2);
+				    	model.setRoundUpToAmount(oneDollarAmount);
+				    	model.setBumps(-1);
 					}
 				}
 				);

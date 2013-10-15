@@ -55,7 +55,9 @@ import com.itllp.tipOnDiscount.model.update.BillTotalUpdate;
 import com.itllp.tipOnDiscount.model.update.BumpsUpdate;
 import com.itllp.tipOnDiscount.model.update.DiscountUpdate;
 import com.itllp.tipOnDiscount.model.update.PlannedTipRateUpdate;
+import com.itllp.tipOnDiscount.model.update.RoundUpToNearestUpdate;
 import com.itllp.tipOnDiscount.model.update.ShareDueUpdate;
+import com.itllp.tipOnDiscount.model.update.SplitBetweenUpdate;
 import com.itllp.tipOnDiscount.model.update.TaxAmountUpdate;
 import com.itllp.tipOnDiscount.model.update.TaxRateUpdate;
 import com.itllp.tipOnDiscount.model.update.PlannedTipAmountUpdate;
@@ -133,7 +135,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 		        updateTipPercentEntry(null);
 	    	}
 			if (view == splitBetweenEntry) {
-		        updateSplitBetweenEntry();
+		        updateSplitBetweenEntry(null);
 	    	}
 		}
 	};
@@ -511,6 +513,12 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 			if (updatedData instanceof ShareDueUpdate) {
 				updateShareDueText((ShareDueUpdate)updatedData);
 			}
+			if (updatedData instanceof SplitBetweenUpdate) {
+				updateSplitBetweenEntry((SplitBetweenUpdate)updatedData);
+			}
+			if (updatedData instanceof RoundUpToNearestUpdate) {
+				updateRoundUpToNearestEntry((RoundUpToNearestUpdate)updatedData);
+			}
 		}
 	}
 	
@@ -677,8 +685,8 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 		updateTippableEntry(null);
 		updateTipPercentEntry(null);
 		updateTipAmountEntry(null);
-		updateSplitBetweenEntry();
-		updateRoundUpToNearestEntry();
+		updateSplitBetweenEntry(null);
+		updateRoundUpToNearestEntry(null);
 		updateBumpsText(null);
 		updateActualTipAmountText(null);
 		updateActualTipPercentText(null);
@@ -913,12 +921,10 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 
 	
 	/**
-	 * Updates the value in the Split Between field.  This field does not
-	 * get changed by any means other than user input, so there's no
-	 * update notification.
+	 * Updates the value in the Split Between field.
 	 */
-	private void updateSplitBetweenEntry() {
-		if (!splitBetweenEntry.isFocused()) { 
+	private void updateSplitBetweenEntry(SplitBetweenUpdate updatedData) {
+		if (!splitBetweenEntry.isFocused() || null==updatedData) { 
 			splitBetweenEntry.setText			
 				(String.valueOf(this.model.getSplitBetween()));
 		}
@@ -930,8 +936,13 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 	 * get changed by any means other than user input, so there's no
 	 * update notification.
 	 */
-	private void updateRoundUpToNearestEntry() {
-		BigDecimal roundUpToAmount = this.model.getRoundUpToAmount();
+	private void updateRoundUpToNearestEntry(RoundUpToNearestUpdate update) {
+		BigDecimal roundUpToAmount;
+		if (null == update) {
+			roundUpToAmount = this.model.getRoundUpToAmount();
+		} else {
+			roundUpToAmount = update.getAmount();
+		}
 		
 		Iterator<Entry<String, BigDecimal>> iterator 
 			= roundUpToNearestValues.entrySet().iterator();

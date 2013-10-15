@@ -37,7 +37,9 @@ import com.itllp.tipOnDiscount.model.update.BillSubtotalUpdate;
 import com.itllp.tipOnDiscount.model.update.BillTotalUpdate;
 import com.itllp.tipOnDiscount.model.update.BumpsUpdate;
 import com.itllp.tipOnDiscount.model.update.DiscountUpdate;
+import com.itllp.tipOnDiscount.model.update.RoundUpToNearestUpdate;
 import com.itllp.tipOnDiscount.model.update.ShareDueUpdate;
+import com.itllp.tipOnDiscount.model.update.SplitBetweenUpdate;
 import com.itllp.tipOnDiscount.model.update.TaxAmountUpdate;
 import com.itllp.tipOnDiscount.model.update.TaxRateUpdate;
 import com.itllp.tipOnDiscount.model.update.PlannedTipAmountUpdate;
@@ -57,6 +59,8 @@ public class DataModelImplNotificationTests {
 	private final BigDecimal plannedTipRate = new BigDecimal(".20000");
 	private final BigDecimal roundUpToAmount = new BigDecimal("0.25");
 	private final BigDecimal zeroAmount = new BigDecimal("0.00");
+	private final BigDecimal oneDollarAmount = new BigDecimal("1.00");
+	private final BigDecimal oneCentAmount = new BigDecimal("0.01");
 		
 	private BillTotalUpdate expectedBillTotalUpdate;
 	private BillSubtotalUpdate expectedBillSubtotalUpdate;
@@ -67,6 +71,8 @@ public class DataModelImplNotificationTests {
 	private BumpsUpdate expectedBumpsUpdate;
 	private ActualTipAmountUpdate expectedActualTipAmountUpdate;
 	private ActualTipRateUpdate expectedActualTipRateUpdate;
+	private SplitBetweenUpdate expectedSplitBetweenUpdate;
+	private RoundUpToNearestUpdate expectedRoundUpToNearestUpdate;
 	private TaxAmountUpdate	expectedTaxAmountUpdate;
 	private TaxRateUpdate expectedTaxRateUpdate;
 	private ShareDueUpdate expectedShareDueUpdate;
@@ -92,6 +98,10 @@ public class DataModelImplNotificationTests {
 			= new PlannedTipAmountUpdate(dataModel.getPlannedTipAmount());
 		expectedPlannedTipRateUpdate 
 			= new PlannedTipRateUpdate(dataModel.getPlannedTipRate());
+		expectedSplitBetweenUpdate = new SplitBetweenUpdate
+				(dataModel.getSplitBetween());
+		expectedRoundUpToNearestUpdate = new RoundUpToNearestUpdate
+				(dataModel.getRoundUpToAmount());
 		expectedBumpsUpdate
 			= new BumpsUpdate(dataModel.getBumps());
 		expectedActualTipAmountUpdate
@@ -322,12 +332,45 @@ public class DataModelImplNotificationTests {
 	}
 	
 	
+	/* When "round up to nearest" is changed, an update notification 
+	 * should be sent out for round up to nearest, actual tip percent,
+	 * actual tip amount, total due and share due.
+	 */
+	@Test 
+	public void testRoundUpToNearestChange() {
+		// Set up preconditions
+		dataModel.setBillTotal(new BigDecimal("3.00"));
+		dataModel.setSplitBetween(2);
+		dataModel.setRoundUpToAmount(oneDollarAmount);
+
+		setExpectedUpdateValuesFromDataModel();
+		
+		dataModel.setRoundUpToAmount(oneCentAmount);  // reset so change kicks off notification
+
+		final DataModelObserver observer = context.mock(DataModelObserver.class);
+
+		// Verify postconditions
+		context.checking(new Expectations() {{
+			oneOf (observer).update(dataModel, expectedRoundUpToNearestUpdate);
+			oneOf (observer).update(dataModel, expectedActualTipRateUpdate);
+			oneOf (observer).update(dataModel, expectedActualTipAmountUpdate);
+		    oneOf (observer).update(dataModel, expectedTotalDueUpdate);
+		    oneOf (observer).update(dataModel, expectedShareDueUpdate);
+		}});
+		
+		// Run method under test
+		dataModel.addObserver(observer);
+		dataModel.setRoundUpToAmount(oneDollarAmount);
+		dataModel.setRoundUpToAmount(oneDollarAmount);  // test no-change
+	}
+
+	
 	/* When split between is changed, an update notification 
-	 * should be sent out for share due.
+	 * should be sent out for split between and share due.
 	 */
 	@Test 
 	public void testSplitBetweenChange() {
-		// Preconditions
+		// Set up preconditions
 		dataModel.setBillTotal(new BigDecimal("50.00"));
 		dataModel.setSplitBetween(2);
 
@@ -337,12 +380,13 @@ public class DataModelImplNotificationTests {
 
 		final DataModelObserver observer = context.mock(DataModelObserver.class);
 
-		// Postconditions
+		// Verify postconditions
 		context.checking(new Expectations() {{
 		    oneOf (observer).update(dataModel, expectedShareDueUpdate);
+		    oneOf (observer).update(dataModel, expectedSplitBetweenUpdate);
 		}});
 		
-		// Method under test
+		// Run method under test
 		dataModel.addObserver(observer);
 		dataModel.setSplitBetween(2);
 		dataModel.setSplitBetween(2);  // test no-change
