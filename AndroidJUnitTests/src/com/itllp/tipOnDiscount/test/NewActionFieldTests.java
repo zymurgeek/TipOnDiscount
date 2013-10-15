@@ -55,6 +55,7 @@ public class NewActionFieldTests extends
 	private Spinner roundUpToNearestSpinner;
 	private TextView actualTipPercentView;
 	private TextView actualTipAmountView;
+	private TextView totalDueView;
 	private DataModelImpl model;
 	private String zeroText;
 	private String zeroAmountText;
@@ -135,6 +136,8 @@ public class NewActionFieldTests extends
         	(com.itllp.tipOnDiscount.R.id.actual_tip_percent_text);
         actualTipAmountView = (TextView)mActivity.findViewById
             	(com.itllp.tipOnDiscount.R.id.actual_tip_amount_text);
+        totalDueView = (TextView)mActivity.findViewById
+            	(com.itllp.tipOnDiscount.R.id.total_due_text);
         model = (DataModelImpl)mActivity.getDataModel();
     	
 		initializeDataModel();
@@ -162,6 +165,7 @@ public class NewActionFieldTests extends
         assertBumpsFieldAndModelAreZero();
         assertActualTipPercentFieldAndModelAreZero();
         assertActualTipAmountFieldAndModelAreZero();
+        assertTotalDueFieldAndModelAreZero();
     }
 
 
@@ -174,7 +178,6 @@ public class NewActionFieldTests extends
     	
     	// Postconditions
     	//TODO Check these assertions and move them to the non-temp test
-        //TODO assertTotalDueFieldAndModelAreZero
         //TODO assertShareDueFieldAndModelAreZero
     }
 
@@ -372,6 +375,15 @@ public class NewActionFieldTests extends
 	}
 
 
+	private void assertTotalDueFieldAndModelAreZero() {
+		assertEquals("Wrong value in total due field", zeroAmountText, 
+	    		this.totalDueView.getText().toString());    	
+	    assertEquals("Wrong value for total due in data model", zeroAmount, 
+	    		model.getTotalDue());
+		
+	}
+	
+	
 	private void initializeDataModel() {
         mActivity.runOnUiThread(
     			new Runnable() {
@@ -391,7 +403,7 @@ public class NewActionFieldTests extends
 				    	model.setPlannedTipRate(onePercentRate);
 				    	model.setSplitBetween(2);
 				    	model.setRoundUpToAmount(oneDollarAmount);
-				    	model.setBumps(-1);
+				    	model.setBumps(4);
 					}
 				}
 				);
