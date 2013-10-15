@@ -54,6 +54,7 @@ public class NewActionFieldTests extends
     private Button bumpUpButton;
 	private Spinner roundUpToNearestSpinner;
 	private TextView actualTipPercentView;
+	private TextView actualTipAmountView;
 	private DataModelImpl model;
 	private String zeroText;
 	private String zeroAmountText;
@@ -132,6 +133,8 @@ public class NewActionFieldTests extends
 			(com.itllp.tipOnDiscount.R.id.bump_up_button);
         actualTipPercentView = (TextView)mActivity.findViewById
         	(com.itllp.tipOnDiscount.R.id.actual_tip_percent_text);
+        actualTipAmountView = (TextView)mActivity.findViewById
+            	(com.itllp.tipOnDiscount.R.id.actual_tip_amount_text);
         model = (DataModelImpl)mActivity.getDataModel();
     	
 		initializeDataModel();
@@ -158,6 +161,7 @@ public class NewActionFieldTests extends
         assertRoundUpToNearestFieldAndModelAreNone();
         assertBumpsFieldAndModelAreZero();
         assertActualTipPercentFieldAndModelAreZero();
+        assertActualTipAmountFieldAndModelAreZero();
     }
 
 
@@ -170,7 +174,6 @@ public class NewActionFieldTests extends
     	
     	// Postconditions
     	//TODO Check these assertions and move them to the non-temp test
-        //TODO assertActualTipAmountAndModelAreZero
         //TODO assertTotalDueFieldAndModelAreZero
         //TODO assertShareDueFieldAndModelAreZero
     }
@@ -261,8 +264,16 @@ public class NewActionFieldTests extends
 
     
     // TODO finish tests
-
+//TODO Bumps is not saved when TOD is closed and reopened
     
+	private void assertActualTipAmountFieldAndModelAreZero() {
+		assertEquals("Wrong value in actual tip amount field", zeroAmountText, 
+	    		actualTipAmountView.getText().toString());    	
+	    assertEquals("Wrong value for actual tip amount in data model", zeroAmount, 
+	    		model.getActualTipAmount());
+	}
+	
+	
 	private void assertBillTotalFieldAndModelAreZero() {
 		assertEquals("Wrong value in bill total field", zeroAmountText, 
 	    		billTotalEntryView.getText().toString());    	
