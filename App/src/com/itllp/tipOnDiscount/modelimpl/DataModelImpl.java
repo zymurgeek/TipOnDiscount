@@ -649,20 +649,20 @@ public class DataModelImpl implements DataModel {
 
 	@Override
 	public void restoreState() {
-		BigDecimal billTotal = persister.retrieveBigDecimal(BILL_TOTAL_KEY);
-		setBillTotal(billTotal);
+		setBillTotal(persister.retrieveBigDecimal(BILL_TOTAL_KEY));
 		BigDecimal taxRate = persister.retrieveBigDecimal(TAX_RATE_KEY);
-		setTaxRate(taxRate);
-		BigDecimal discount = persister.retrieveBigDecimal(DISCOUNT_KEY);
-		setDiscount(discount);
-		BigDecimal tipRate = persister.retrieveBigDecimal(PLANNED_TIP_RATE_KEY);
-		setPlannedTipRate(tipRate);
+		if (null != taxRate) {
+			setTaxRate(taxRate);
+		} else {
+			setTaxAmount(persister.retrieveBigDecimal(TAX_AMOUNT_KEY));
+		}
+		setDiscount(persister.retrieveBigDecimal(DISCOUNT_KEY));
+		setPlannedTipRate(persister.retrieveBigDecimal(PLANNED_TIP_RATE_KEY));
 		Integer splits = persister.retrieveInt(SPLIT_BETWEEN_KEY);
 		if (null != splits) {
 			setSplitBetween(splits.intValue());
 		}
-		BigDecimal roundTo = persister.retrieveBigDecimal(ROUND_UP_TO_NEAREST_AMOUNT);
-		setRoundUpToAmount(roundTo);
+		setRoundUpToAmount(persister.retrieveBigDecimal(ROUND_UP_TO_NEAREST_AMOUNT));
 		Integer bumps = persister.retrieveInt(BUMPS_KEY);
 		if (null != bumps) {
 			setBumps(bumps.intValue());

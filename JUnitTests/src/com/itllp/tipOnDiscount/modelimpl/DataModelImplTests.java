@@ -304,7 +304,45 @@ public class DataModelImplTests {
 	}
 	
 	
-	// TODO test restore tax amount
+	@Test
+	public void testRestoreStateWhenUsingTaxAmount() {
+		// Set up preconditions
+		context.checking(new Expectations() {{
+			allowing (mockPersister).retrieveBigDecimal
+			(DataModel.BILL_TOTAL_KEY); 
+				will(returnValue(expectedBillTotal));			
+			allowing (mockPersister).retrieveBigDecimal
+			(DataModel.TAX_AMOUNT_KEY);
+				will(returnValue(expectedTaxAmount));
+			allowing (mockPersister).retrieveBigDecimal(DataModel.TAX_RATE_KEY);
+				will(returnValue(null));
+			allowing (mockPersister).retrieveBigDecimal(DataModel.DISCOUNT_KEY); 
+				will(returnValue(expectedDiscount));
+			allowing (mockPersister).retrieveBigDecimal
+			(DataModel.PLANNED_TIP_RATE_KEY);
+				will(returnValue(expectedTipRate));
+			allowing (mockPersister).retrieveInt(DataModel.SPLIT_BETWEEN_KEY); 
+				will(returnValue(expectedSplits));
+			allowing (mockPersister).retrieveBigDecimal
+			(DataModel.ROUND_UP_TO_NEAREST_AMOUNT);
+				will(returnValue(expectedRoundTo));
+			allowing (mockPersister).retrieveInt(DataModel.BUMPS_KEY);
+				will(returnValue(expectedBumps));
+		}});
+		
+		// Run method under test
+		model.restoreState();
+		
+		// Verify postconditions
+		assertEquals("Incorrect bill total", expectedBillTotal, model.getBillTotal());
+		assertFalse("Incorrect using tax rate", model.isUsingTaxRate());
+		assertEquals("Incorrect tax amount", expectedTaxAmount, model.getTaxAmount());
+		assertEquals("Incorrect discount", expectedDiscount, model.getDiscount());
+		assertEquals("Incorrect tip rate", expectedTipRate, model.getPlannedTipRate());
+		assertEquals("Incorrect split between", expectedSplits, model.getSplitBetween());
+		assertEquals("Incorrect round up to", expectedRoundTo, model.getRoundUpToAmount());
+		assertEquals("Incorrect bumps", expectedBumps, model.getBumps());
+	}
 
 	
 	private BigDecimal calculateBillSubtotal
