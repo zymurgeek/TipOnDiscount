@@ -159,6 +159,8 @@ public class DataModelImpl implements DataModel {
 	 * @see com.itllp.tipOnDiscount.model.DataModel#setBillTotal(java.math.BigDecimal)
 	 */
 	public void setBillTotal(BigDecimal newAmount) {
+		if (null == newAmount) return;
+		
 		BigDecimal formerBillTotal = this.billTotal;
 		
 		this.billTotal = newAmount;
@@ -213,6 +215,8 @@ public class DataModelImpl implements DataModel {
 	 * @see com.itllp.tipOnDiscount.model.DataModel#setDiscount(java.math.BigDecimal)
 	 */
 	public void setDiscount(BigDecimal newAmount) {
+		if (null == newAmount) return;
+		
 		if (!EqualsUtil.areEqual(this.discount, newAmount)) { 
 			this.discount = newAmount;
 			UpdateSet updateSet = new UpdateSet();
@@ -238,6 +242,8 @@ public class DataModelImpl implements DataModel {
 	 * @see com.itllp.tipOnDiscount.model.DataModel#setRoundUpToAmount(java.math.BigDecimal)
 	 */
 	public void setRoundUpToAmount(BigDecimal roundUpToAmount) {
+		if (null == roundUpToAmount) return;
+		
 		if (roundUpToAmount.compareTo(new BigDecimal("0.00")) < 1) {
 			// Do not allow roundUpToAmount <= 0
 			return;
@@ -307,6 +313,8 @@ public class DataModelImpl implements DataModel {
 	 * @see com.itllp.tipOnDiscount.model.DataModel#setTaxAmount(java.math.BigDecimal)
 	 */
 	public void setTaxAmount(BigDecimal newAmount) {
+		if (null == newAmount) return;
+		
 		if (!EqualsUtil.areEqual(this.taxAmount, newAmount)) {
 			this.taxAmount = newAmount;
 			this.usingTaxRate = false;
@@ -334,6 +342,8 @@ public class DataModelImpl implements DataModel {
 	 * @see com.itllp.tipOnDiscount.model.DataModel#setTaxRate(java.math.BigDecimal)
 	 */
 	public void setTaxRate(BigDecimal newRate) {
+		if (null == newRate) return;
+		
 		if (!EqualsUtil.areEqual(this.taxRate, newRate)) {
 			this.taxRate = newRate;
 			this.usingTaxRate = true;
@@ -377,6 +387,8 @@ public class DataModelImpl implements DataModel {
 	 * @see com.itllp.tipOnDiscount.model.DataModel#setTipRate(java.math.BigDecimal)
 	 */
 	public void setPlannedTipRate(BigDecimal newRate) {
+		if (null == newRate) return;
+		
 		if (!EqualsUtil.areEqual(this.plannedTipRate, newRate)) {
 			this.plannedTipRate = newRate;
 			UpdateSet us = new UpdateSet();
@@ -637,22 +649,40 @@ public class DataModelImpl implements DataModel {
 
 	@Override
 	public void restoreState() {
+		BigDecimal billTotal = persister.retrieveBigDecimal(BILL_TOTAL_KEY);
+		setBillTotal(billTotal);
+		BigDecimal taxRate = persister.retrieveBigDecimal(TAX_RATE_KEY);
+		setTaxRate(taxRate);
+		BigDecimal discount = persister.retrieveBigDecimal(DISCOUNT_KEY);
+		setDiscount(discount);
+		BigDecimal tipRate = persister.retrieveBigDecimal(PLANNED_TIP_RATE_KEY);
+		setPlannedTipRate(tipRate);
+		Integer splits = persister.retrieveInt(SPLIT_BETWEEN_KEY);
+		if (null != splits) {
+			setSplitBetween(splits.intValue());
+		}
+		BigDecimal roundTo = persister.retrieveBigDecimal(ROUND_UP_TO_NEAREST_AMOUNT);
+		setRoundUpToAmount(roundTo);
+		Integer bumps = persister.retrieveInt(BUMPS_KEY);
+		if (null != bumps) {
+			setBumps(bumps.intValue());
+		}
 	}
 
 
 	@Override
 	public void saveState() {
-        persister.save(Persister.BILL_TOTAL_KEY, getBillTotal());
+        persister.save(DataModel.BILL_TOTAL_KEY, getBillTotal());
         if (isUsingTaxRate()) {
-        	persister.save(Persister.TAX_RATE_KEY, getTaxRate());
+        	persister.save(DataModel.TAX_RATE_KEY, getTaxRate());
         } else {
-        	persister.save(Persister.TAX_AMOUNT_KEY, getTaxAmount());
+        	persister.save(DataModel.TAX_AMOUNT_KEY, getTaxAmount());
         }
-        persister.save(Persister.DISCOUNT_KEY, getDiscount());
-        persister.save(Persister.PLANNED_TIP_RATE_KEY, getPlannedTipRate());
-        persister.save(Persister.SPLIT_BETWEEN_KEY, getSplitBetween());
-        persister.save(Persister.ROUND_UP_TO_NEAREST_AMOUNT, getRoundUpToAmount());
-        persister.save(Persister.BUMPS_KEY, getBumps());
+        persister.save(DataModel.DISCOUNT_KEY, getDiscount());
+        persister.save(DataModel.PLANNED_TIP_RATE_KEY, getPlannedTipRate());
+        persister.save(DataModel.SPLIT_BETWEEN_KEY, getSplitBetween());
+        persister.save(DataModel.ROUND_UP_TO_NEAREST_AMOUNT, getRoundUpToAmount());
+        persister.save(DataModel.BUMPS_KEY, getBumps());
         // TODO in persistence impl, save BigDecimal.toPlainString()
 	}
 

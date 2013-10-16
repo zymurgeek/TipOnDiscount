@@ -18,4 +18,16 @@ public class DataModelPersister implements Persister {
 
 	}
 
+	@Override
+	public BigDecimal retrieveBigDecimal(String key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Integer retrieveInt(String key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
