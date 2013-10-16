@@ -12,6 +12,7 @@ public interface Persister {
 	public static final String BUMPS_KEY = "Bumps";
 	public static final String ROUND_UP_TO_NEAREST_AMOUNT 
 	= "RoundUpToNearestSelectedItem";
+	public static final String TAX_AMOUNT_KEY = "TaxAmount";
 	public void save(String key, BigDecimal value);
 	public void save(String key, int value);
 

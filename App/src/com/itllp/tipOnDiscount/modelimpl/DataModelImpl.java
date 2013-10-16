@@ -643,7 +643,11 @@ public class DataModelImpl implements DataModel {
 	@Override
 	public void saveState() {
         persister.save(Persister.BILL_TOTAL_KEY, getBillTotal());
-        persister.save(Persister.TAX_RATE_KEY, getTaxRate());
+        if (isUsingTaxRate()) {
+        	persister.save(Persister.TAX_RATE_KEY, getTaxRate());
+        } else {
+        	persister.save(Persister.TAX_AMOUNT_KEY, getTaxAmount());
+        }
         persister.save(Persister.DISCOUNT_KEY, getDiscount());
         persister.save(Persister.PLANNED_TIP_RATE_KEY, getPlannedTipRate());
         persister.save(Persister.SPLIT_BETWEEN_KEY, getSplitBetween());

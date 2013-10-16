@@ -31,6 +31,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import com.itllp.tipOnDiscount.model.DataModel;
 import com.itllp.tipOnDiscount.model.DataModelObserver;
+import com.itllp.tipOnDiscount.model.Persister;
 import com.itllp.tipOnDiscount.model.update.ActualTipAmountUpdate;
 import com.itllp.tipOnDiscount.model.update.ActualTipRateUpdate;
 import com.itllp.tipOnDiscount.model.update.BillSubtotalUpdate;
@@ -81,7 +82,8 @@ public class DataModelImplNotificationTests {
 
 	@Before
 	public void initialize() {
-		dataModel = new DataModelImpl(null);
+		Persister persister = new DataModelPersister();
+		dataModel = new DataModelImpl(persister);
 	}
 
 	

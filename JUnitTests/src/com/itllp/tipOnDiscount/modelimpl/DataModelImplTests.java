@@ -80,6 +80,14 @@ public class DataModelImplTests {
 	private BigDecimal ONE_CENT = new BigDecimal("0.01");
 	private BigDecimal ZERO_RATE = BigDecimal.ZERO.setScale(5);
 	private BigDecimal ZERO_AMOUNT = BigDecimal.ZERO.setScale(2);
+	private BigDecimal expectedBillTotal = AMOUNT_10_00;
+	private BigDecimal expectedTaxRate = FIFTEEN_PERCENT_RATE;
+	private BigDecimal expectedTaxAmount = TAX_AMOUNT;
+	private BigDecimal expectedDiscount = AMOUNT_5_61;
+	private BigDecimal expectedTipRate = EIGHTEEN_PERCENT_RATE;
+	private BigDecimal expectedRoundTo = ROUND_UP_TO_DIME;
+	private int expectedSplits = 3;
+	private int expectedBumps = 2;
 	
 	@Before
 	public void initialize() {
@@ -171,39 +179,68 @@ public class DataModelImplTests {
 	
 	@Test
 	public void testSaveStateWhenUsingTaxRate() {
-		// Set up preconditions
-		final int EXPECTED_SPLITS = 3;
-		final int EXPECTED_BUMPS = 2;
-		model.setBillTotal(AMOUNT_10_00);
-		model.setDiscount(AMOUNT_5_61);
-		model.setPlannedTipRate(EIGHTEEN_PERCENT_RATE);
-		model.setRoundUpToAmount(ROUND_UP_TO_DIME);
-		model.setSplitBetween(EXPECTED_SPLITS);
-		//model.setTaxAmount(TAX_AMOUNT);
-		model.setTaxRate(FIFTEEN_PERCENT_RATE);
-		model.setBumps(EXPECTED_BUMPS);
+		populateDataModel();
+		model.setTaxRate(expectedTaxRate);
 		
 		// Verify postconditions
 		context.checking(new Expectations() {{
-			oneOf (mockPersister).save(Persister.BILL_TOTAL_KEY, AMOUNT_10_00);			
+			oneOf (mockPersister).save(Persister.BILL_TOTAL_KEY, 
+					expectedBillTotal);			
 			oneOf (mockPersister).save(Persister.TAX_RATE_KEY,
-					FIFTEEN_PERCENT_RATE);
-			oneOf (mockPersister).save(Persister.DISCOUNT_KEY, AMOUNT_5_61);
+					expectedTaxRate);
+			oneOf (mockPersister).save(Persister.DISCOUNT_KEY, 
+					expectedDiscount);
 			oneOf (mockPersister).save(Persister.PLANNED_TIP_RATE_KEY,
-					EIGHTEEN_PERCENT_RATE);
-			oneOf (mockPersister).save(Persister.SPLIT_BETWEEN_KEY, EXPECTED_SPLITS);
+					expectedTipRate);
+			oneOf (mockPersister).save(Persister.SPLIT_BETWEEN_KEY, 
+					expectedSplits);
 			oneOf (mockPersister).save(Persister.ROUND_UP_TO_NEAREST_AMOUNT,
-					ROUND_UP_TO_DIME);
-			oneOf (mockPersister).save(Persister.BUMPS_KEY, EXPECTED_BUMPS);
+					expectedRoundTo);
+			oneOf (mockPersister).save(Persister.BUMPS_KEY, expectedBumps);
 		}});
 		
 		// Run method under test
 		model.saveState();
 	}
 
+	private void populateDataModel() {
+		model.setBillTotal(expectedBillTotal);
+		model.setDiscount(expectedDiscount);
+		model.setPlannedTipRate(expectedTipRate);
+		model.setRoundUpToAmount(expectedRoundTo);
+		model.setSplitBetween(expectedSplits);
+		model.setTaxRate(expectedTaxRate);
+		model.setTaxAmount(expectedTaxAmount);
+		model.setBumps(expectedBumps);
+	}
+
 	
-	// TODO test saveState when using Tax amount
-	
+	@Test
+	public void testSaveStateWhenUsingTaxAmount() {
+		// Set up preconditions
+		populateDataModel();
+		model.setTaxAmount(TAX_AMOUNT);
+		
+		// Verify postconditions
+		context.checking(new Expectations() {{
+			oneOf (mockPersister).save(Persister.BILL_TOTAL_KEY, 
+					expectedBillTotal);			
+			oneOf (mockPersister).save(Persister.TAX_AMOUNT_KEY, expectedTaxAmount);
+			oneOf (mockPersister).save(Persister.DISCOUNT_KEY, 
+					expectedDiscount);
+			oneOf (mockPersister).save(Persister.PLANNED_TIP_RATE_KEY,
+					expectedTipRate);
+			oneOf (mockPersister).save(Persister.SPLIT_BETWEEN_KEY, 
+					expectedSplits);
+			oneOf (mockPersister).save(Persister.ROUND_UP_TO_NEAREST_AMOUNT,
+					expectedRoundTo);
+			oneOf (mockPersister).save(Persister.BUMPS_KEY, expectedBumps);
+		}});
+		
+		// Run method under test
+		model.saveState();
+	}
+
 	
 	// TODO test restore tax rate/amount depending on what was saved
 	

@@ -65,6 +65,7 @@ import com.itllp.tipOnDiscount.model.update.TippableAmountUpdate;
 import com.itllp.tipOnDiscount.model.update.TotalDueUpdate;
 import com.itllp.tipOnDiscount.model.update.Update;
 import com.itllp.tipOnDiscount.modelimpl.DataModelImpl;
+import com.itllp.tipOnDiscount.modelimpl.DataModelPersister;
 
 // TODO Set defaults for TIP%, Tax and Rounding
 
@@ -99,7 +100,6 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 	private TextView totalDueText;
 	private TextView shareDueText;
     public static final String PREFERENCES_FILE = "TipOnDiscountPrefs";
-    public static final String TAX_AMOUNT_KEY = "TaxAmount";
     public static final String NO_VALUE = "";
     public static final String DATA_MODEL_KEY = "DataModel";
 	
@@ -279,7 +279,8 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
         	}
         }
         if (null == model) {
-        	model = new DataModelImpl(null);
+        	Persister persister = new DataModelPersister();
+        	model = new DataModelImpl(persister);
         }
         
         setContentView(R.layout.main);
@@ -577,7 +578,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
         	// Invalid number does not update model
         }
         
-        value = prefs.getString(TAX_AMOUNT_KEY, NO_VALUE);
+        value = prefs.getString(Persister.TAX_AMOUNT_KEY, NO_VALUE);
         try {
         	amount = new BigDecimal(value);
         	this.model.setTaxAmount(amount);
@@ -985,7 +986,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
         editor.putString(Persister.TAX_RATE_KEY, value);
         
         value = this.model.getTaxAmount().toPlainString();
-        editor.putString(TAX_AMOUNT_KEY, value);
+        editor.putString(Persister.TAX_AMOUNT_KEY, value);
 
         value = this.model.getDiscount().toPlainString();
         editor.putString(Persister.DISCOUNT_KEY, value);
