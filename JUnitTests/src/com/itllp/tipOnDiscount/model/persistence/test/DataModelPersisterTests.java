@@ -18,116 +18,57 @@ public class DataModelPersisterTests {
 	@Rule public JUnitRuleMockery context = new JUnitRuleMockery();
 	private BigDecimal expectedBillTotal = new BigDecimal("10.00");
 	private BigDecimal expectedTaxRate = new BigDecimal("0.15000");
+	private BigDecimal expectedTaxAmount = new BigDecimal(".71");
 	private BigDecimal expectedDiscount = new BigDecimal("5.61");
 	private BigDecimal expectedPlannedTipRate = new BigDecimal("0.18000");
 	private int expectedSplitBetween = 3;
 	private BigDecimal expectedRoundUpToNearestAmount = new BigDecimal("0.10");
 	private int expectedBumps = 2;
+	private DataModel mockDataModel;
+	private Persister mockPersister;
+	private DataModelPersister dataModelPersister;
+	private final android.content.Context mockAndroidContext = new android.content.Context();
 	
 	@Before
 	public void initialize() {
+		mockDataModel = context.mock(DataModel.class);
+		mockPersister = context.mock(Persister.class);
+		dataModelPersister = new DataModelPersister();
 	}
 
 
-	@Test
-	public void testInitialize() {
-		// Call method under test
-		DataModelPersister persister = new DataModelPersister();
-		
-		// Verify postconditions
-		assertNotNull(persister);
-	}
-
-	
 	@Test
 	public void testSaveStateWhenUsingTaxRate() {
-		// Set up preconditions and verify postconditions
-		final DataModel mockDataModel = context.mock(DataModel.class);
-		final Persister mockPersister = context.mock(Persister.class);
-		DataModelPersister dataModelPersister = new DataModelPersister();
-		final android.content.Context mockAndroidContext = new android.content.Context();
-
+		// Set up preconditions and postcondition expectations
+		setAllDataModelExpectationsExceptForTax();
+		setDataModelExpectationsForTaxRate();
 		final Sequence saveSequence = context.sequence("saveSequence");
-		context.checking(new Expectations() {{
-			allowing (mockDataModel).getBillTotal(); 
-			will(returnValue(expectedBillTotal));
-			allowing(mockDataModel).isUsingTaxRate();
-			will(returnValue(true));
-			allowing (mockDataModel).getTaxRate();
-			will(returnValue(expectedTaxRate));
-			allowing (mockDataModel).getDiscount(); 
-			will(returnValue(expectedDiscount));
-			allowing (mockDataModel).getPlannedTipRate();
-			will(returnValue(expectedPlannedTipRate));
-			allowing (mockDataModel).getSplitBetween(); 
-			will(returnValue(expectedSplitBetween));
-			allowing (mockDataModel).getRoundUpToAmount();
-			will(returnValue(expectedRoundUpToNearestAmount));
-			allowing (mockDataModel).getBumps();
-			will(returnValue(expectedBumps));
-				
-			oneOf (mockPersister).beginSave(mockAndroidContext);
-			inSequence(saveSequence);
-			try {
-				oneOf (mockPersister).save(DataModel.BILL_TOTAL_KEY, 
-						expectedBillTotal);
-				oneOf (mockPersister).save(DataModel.TAX_RATE_KEY, 
-						expectedTaxRate);
-				oneOf (mockPersister).save(DataModel.DISCOUNT_KEY,
-						expectedDiscount);
-				oneOf (mockPersister).save(DataModel.PLANNED_TIP_RATE_KEY, 
-						expectedPlannedTipRate);
-				oneOf (mockPersister).save(DataModel.SPLIT_BETWEEN_KEY, 
-						expectedSplitBetween);
-				oneOf (mockPersister).save(DataModel.ROUND_UP_TO_NEAREST_AMOUNT,
-						expectedRoundUpToNearestAmount);
-				oneOf (mockPersister).save(DataModel.BUMPS_KEY, expectedBumps);
-				oneOf (mockPersister).endSave();
-				inSequence(saveSequence);
-			} catch (Exception e) {
-				fail("Persister save threw exception");
-			}
-
-		}});
+		setPersisterExpectationForBeginSave(saveSequence);
+		setPersisterExpectationsForAllDataModelFieldsExceptTax();
+		setPersisterExpectationsForDataModelTaxRate();
+		setPersisterExpectationForEndSave(saveSequence);
 
 		// Call method under test
 		dataModelPersister.saveState(mockDataModel, mockPersister, mockAndroidContext);
 	}
-	
-	//FIXME Update test
+
+
 	@Test
 	public void testSaveStateWhenUsingTaxAmount() {
-		// Set up preconditions
-//		populateDataModel();  //See DataModelImplTests
-//		model.setTaxAmount(TAX_AMOUNT);
-		
-		// Verify postconditions
-		//TODO Move this to DataModelPersisterTests
-		/*
+		// Set up preconditions and postcondition expectations
+		setAllDataModelExpectationsExceptForTax();
+		setDataModelExpectationsForTaxAmount();
 		final Sequence saveSequence = context.sequence("saveSequence");
-		context.checking(new Expectations() {{
-			oneOf (mockPersister).beginSave(); inSequence(saveSequence);
-			oneOf (mockPersister).save(DataModel.BILL_TOTAL_KEY, 
-					expectedBillTotal);			
-			oneOf (mockPersister).save(DataModel.TAX_AMOUNT_KEY, expectedTaxAmount);
-			oneOf (mockPersister).save(DataModel.DISCOUNT_KEY, 
-					expectedDiscount);
-			oneOf (mockPersister).save(DataModel.PLANNED_TIP_RATE_KEY,
-					expectedTipRate);
-			oneOf (mockPersister).save(DataModel.SPLIT_BETWEEN_KEY, 
-					expectedSplits);
-			oneOf (mockPersister).save(DataModel.ROUND_UP_TO_NEAREST_AMOUNT,
-					expectedRoundTo);
-			oneOf (mockPersister).save(DataModel.BUMPS_KEY, expectedBumps);
-			oneOf (mockPersister).endSave(); inSequence(saveSequence);
-		}});
-		*/
-		
-		// Run method under test
-//		model.saveState();
+		setPersisterExpectationForBeginSave(saveSequence);
+		setPersisterExpectationsForAllDataModelFieldsExceptTax();
+		setPersisterExpectationsForDataModelTaxAmount();
+		setPersisterExpectationForEndSave(saveSequence);
+
+		// Call method under test
+		dataModelPersister.saveState(mockDataModel, mockPersister, mockAndroidContext);
 	}
 
-	
+
 	//FIXME Update test
 	@Test
 	public void testRestoreWhenNoSavedDataIsAvailable() {
@@ -249,6 +190,109 @@ public class DataModelPersisterTests {
 //		assertEquals("Incorrect split between", expectedSplits, model.getSplitBetween());
 //		assertEquals("Incorrect round up to", expectedRoundTo, model.getRoundUpToAmount());
 //		assertEquals("Incorrect bumps", expectedBumps, model.getBumps());
+	}
+
+	
+	private void setAllDataModelExpectationsExceptForTax() {
+		context.checking(new Expectations() {{
+			allowing (mockDataModel).getBillTotal(); 
+			will(returnValue(expectedBillTotal));
+			allowing (mockDataModel).getDiscount(); 
+			will(returnValue(expectedDiscount));
+			allowing (mockDataModel).getPlannedTipRate();
+			will(returnValue(expectedPlannedTipRate));
+			allowing (mockDataModel).getSplitBetween(); 
+			will(returnValue(expectedSplitBetween));
+			allowing (mockDataModel).getRoundUpToAmount();
+			will(returnValue(expectedRoundUpToNearestAmount));
+			allowing (mockDataModel).getBumps();
+			will(returnValue(expectedBumps));
+		}});
+	}
+	
+
+	private void setDataModelExpectationsForTaxRate() {
+		context.checking(new Expectations() {{
+			allowing(mockDataModel).isUsingTaxRate();
+			will(returnValue(true));
+			allowing (mockDataModel).getTaxRate();
+			will(returnValue(expectedTaxRate));
+		}});
+	}
+
+
+	private void setDataModelExpectationsForTaxAmount() {
+		context.checking(new Expectations() {{
+			allowing(mockDataModel).isUsingTaxRate();
+			will(returnValue(false));
+			allowing (mockDataModel).getTaxAmount();
+			will(returnValue(expectedTaxAmount));
+		}});
+	}
+
+	
+	private void setPersisterExpectationForBeginSave(final Sequence saveSequence) {
+		context.checking(new Expectations() {{
+			oneOf (mockPersister).beginSave(mockAndroidContext);
+			inSequence(saveSequence);
+		}});
+	}
+
+
+	private void setPersisterExpectationsForAllDataModelFieldsExceptTax() {
+		context.checking(new Expectations() {{
+			try {
+				oneOf (mockPersister).save(DataModel.BILL_TOTAL_KEY, 
+						expectedBillTotal);
+				oneOf (mockPersister).save(DataModel.DISCOUNT_KEY,
+						expectedDiscount);
+				oneOf (mockPersister).save(DataModel.PLANNED_TIP_RATE_KEY, 
+						expectedPlannedTipRate);
+				oneOf (mockPersister).save(DataModel.SPLIT_BETWEEN_KEY, 
+						expectedSplitBetween);
+				oneOf (mockPersister).save(DataModel.ROUND_UP_TO_NEAREST_AMOUNT,
+						expectedRoundUpToNearestAmount);
+				oneOf (mockPersister).save(DataModel.BUMPS_KEY, expectedBumps);
+			} catch (Exception e) {
+				fail("Persister save threw exception");
+			}
+		}});
+	}
+
+
+	private void setPersisterExpectationsForDataModelTaxRate() {
+		context.checking(new Expectations() {{
+			try {
+				oneOf (mockPersister).save(DataModel.TAX_RATE_KEY, 
+						expectedTaxRate);
+			} catch (Exception e) {
+				fail("Persister save threw exception");
+			}
+		}});
+	}
+
+
+	private void setPersisterExpectationsForDataModelTaxAmount() {
+		context.checking(new Expectations() {{
+			try {
+				oneOf (mockPersister).save(DataModel.TAX_AMOUNT_KEY, 
+						expectedTaxAmount);
+			} catch (Exception e) {
+				fail("Persister save threw exception");
+			}
+		}});
+	}
+
+
+	private void setPersisterExpectationForEndSave(final Sequence saveSequence) {
+		context.checking(new Expectations() {{
+			try {
+				oneOf (mockPersister).endSave();
+				inSequence(saveSequence);
+			} catch (Exception e) {
+				fail("Persister save threw exception");
+			}
+		}});
 	}
 
 

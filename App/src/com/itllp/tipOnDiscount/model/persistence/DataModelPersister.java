@@ -10,9 +10,11 @@ public class DataModelPersister {
 		persister.beginSave(context);
 		try {
 			persister.save(DataModel.BILL_TOTAL_KEY, model.getBillTotal());
-//			if (model.isUsingTaxRate()) {
+			if (model.isUsingTaxRate()) {
 				persister.save(DataModel.TAX_RATE_KEY, model.getTaxRate());
-//			}
+			} else {
+				persister.save(DataModel.TAX_AMOUNT_KEY, model.getTaxAmount());
+			}
 			persister.save(DataModel.DISCOUNT_KEY, model.getDiscount());
 			persister.save(DataModel.PLANNED_TIP_RATE_KEY, 
 					model.getPlannedTipRate());
