@@ -1,4 +1,4 @@
-// Copyright 2011-2012 David A. Greenbaum
+// Copyright 2011-2013 David A. Greenbaum
 /*
 This file is part of Tip On Discount.
 
@@ -25,7 +25,6 @@ package com.itllp.tipOnDiscount.modelimpl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 
 import java.math.BigDecimal;
@@ -36,14 +35,12 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import com.itllp.tipOnDiscount.model.DataModel;
-import com.itllp.tipOnDiscount.model.Persister;
-import com.itllp.tipOnDiscount.modelimpl.DataModelImpl;
+import com.itllp.tipOnDiscount.model.impl.DataModelImpl;
 
 public class DataModelImplTests {
 	
 	@Rule public JUnitRuleMockery context = new JUnitRuleMockery();
 	private DataModel model = null;
-	private Persister mockPersister;
 	private BigDecimal AMOUNT_5_61 = new BigDecimal("5.61");
 	private BigDecimal AMOUNT_5_62 = new BigDecimal("5.62");
 	private BigDecimal AMOUNT_5_25 = new BigDecimal("5.25");
@@ -107,8 +104,7 @@ public class DataModelImplTests {
 	
 	@Before
 	public void setUp() {
-		mockPersister = context.mock(Persister.class);
-		model = new DataModelImpl(mockPersister);
+		model = new DataModelImpl();
 	}
 
 	/* Test the values fields have at start up. */
@@ -160,33 +156,6 @@ public class DataModelImplTests {
 	}
 	
 	
-
-	@Test
-	public void testSaveStateWhenUsingTaxRate() {
-		populateDataModel();
-		model.setTaxRate(expectedTaxRate);
-		
-		// Verify postconditions
-		context.checking(new Expectations() {{
-			oneOf (mockPersister).save(DataModel.BILL_TOTAL_KEY, 
-					expectedBillTotal);			
-			oneOf (mockPersister).save(DataModel.TAX_RATE_KEY,
-					expectedTaxRate);
-			oneOf (mockPersister).save(DataModel.DISCOUNT_KEY, 
-					expectedDiscount);
-			oneOf (mockPersister).save(DataModel.PLANNED_TIP_RATE_KEY,
-					expectedTipRate);
-			oneOf (mockPersister).save(DataModel.SPLIT_BETWEEN_KEY, 
-					expectedSplits);
-			oneOf (mockPersister).save(DataModel.ROUND_UP_TO_NEAREST_AMOUNT,
-					expectedRoundTo);
-			oneOf (mockPersister).save(DataModel.BUMPS_KEY, expectedBumps);
-		}});
-		
-		// Run method under test
-		model.saveState();
-	}
-
 	private void populateDataModel() {
 		model.setBillTotal(expectedBillTotal);
 		model.setDiscount(expectedDiscount);
@@ -196,152 +165,6 @@ public class DataModelImplTests {
 		model.setTaxRate(expectedTaxRate);
 		model.setTaxAmount(expectedTaxAmount);
 		model.setBumps(expectedBumps);
-	}
-
-	
-	@Test
-	public void testSaveStateWhenUsingTaxAmount() {
-		// Set up preconditions
-		populateDataModel();
-		model.setTaxAmount(TAX_AMOUNT);
-		
-		// Verify postconditions
-		context.checking(new Expectations() {{
-			oneOf (mockPersister).save(DataModel.BILL_TOTAL_KEY, 
-					expectedBillTotal);			
-			oneOf (mockPersister).save(DataModel.TAX_AMOUNT_KEY, expectedTaxAmount);
-			oneOf (mockPersister).save(DataModel.DISCOUNT_KEY, 
-					expectedDiscount);
-			oneOf (mockPersister).save(DataModel.PLANNED_TIP_RATE_KEY,
-					expectedTipRate);
-			oneOf (mockPersister).save(DataModel.SPLIT_BETWEEN_KEY, 
-					expectedSplits);
-			oneOf (mockPersister).save(DataModel.ROUND_UP_TO_NEAREST_AMOUNT,
-					expectedRoundTo);
-			oneOf (mockPersister).save(DataModel.BUMPS_KEY, expectedBumps);
-		}});
-		
-		// Run method under test
-		model.saveState();
-	}
-
-	
-	@Test
-	public void testRestoreWhenNoSavedDataIsAvailable() {
-		// Set up preconditions
-		context.checking(new Expectations() {{
-			allowing (mockPersister).retrieveBigDecimal
-			(DataModel.BILL_TOTAL_KEY); 
-				will(returnValue(null));			
-			allowing (mockPersister).retrieveBigDecimal
-			(DataModel.TAX_AMOUNT_KEY);
-				will(returnValue(null));
-			allowing (mockPersister).retrieveBigDecimal(DataModel.TAX_RATE_KEY);
-				will(returnValue(null));
-			allowing (mockPersister).retrieveBigDecimal
-			(DataModel.TAX_AMOUNT_KEY);
-				will(returnValue(null));
-			allowing (mockPersister).retrieveBigDecimal(DataModel.DISCOUNT_KEY); 
-				will(returnValue(null));
-			allowing (mockPersister).retrieveBigDecimal
-			(DataModel.PLANNED_TIP_RATE_KEY);
-				will(returnValue(null));
-			allowing (mockPersister).retrieveInt(DataModel.SPLIT_BETWEEN_KEY); 
-				will(returnValue(null));
-			allowing (mockPersister).retrieveBigDecimal
-			(DataModel.ROUND_UP_TO_NEAREST_AMOUNT);
-				will(returnValue(null));
-			allowing (mockPersister).retrieveInt(DataModel.BUMPS_KEY);
-				will(returnValue(null));
-		}});
-		
-		// Run method under test
-		model.restoreState();
-		
-		// Verify postconditions
-		verifyDataModelContainsInitialValues();
-	}
-
-	
-	@Test
-	public void testRestoreStateWhenUsingTaxRate() {
-		// Set up preconditions
-		context.checking(new Expectations() {{
-			allowing (mockPersister).retrieveBigDecimal
-			(DataModel.BILL_TOTAL_KEY); 
-				will(returnValue(expectedBillTotal));			
-			allowing (mockPersister).retrieveBigDecimal
-			(DataModel.TAX_AMOUNT_KEY);
-				will(returnValue(null));
-			allowing (mockPersister).retrieveBigDecimal(DataModel.TAX_RATE_KEY);
-				will(returnValue(expectedTaxRate));
-			allowing (mockPersister).retrieveBigDecimal(DataModel.DISCOUNT_KEY); 
-				will(returnValue(expectedDiscount));
-			allowing (mockPersister).retrieveBigDecimal
-			(DataModel.PLANNED_TIP_RATE_KEY);
-				will(returnValue(expectedTipRate));
-			allowing (mockPersister).retrieveInt(DataModel.SPLIT_BETWEEN_KEY); 
-				will(returnValue(expectedSplits));
-			allowing (mockPersister).retrieveBigDecimal
-			(DataModel.ROUND_UP_TO_NEAREST_AMOUNT);
-				will(returnValue(expectedRoundTo));
-			allowing (mockPersister).retrieveInt(DataModel.BUMPS_KEY);
-				will(returnValue(expectedBumps));
-		}});
-		
-		// Run method under test
-		model.restoreState();
-		
-		// Verify postconditions
-		assertEquals("Incorrect bill total", expectedBillTotal, model.getBillTotal());
-		assertTrue("Incorrect using tax rate", model.isUsingTaxRate());
-		assertEquals("Incorrect tax rate", expectedTaxRate, model.getTaxRate());
-		assertEquals("Incorrect discount", expectedDiscount, model.getDiscount());
-		assertEquals("Incorrect tip rate", expectedTipRate, model.getPlannedTipRate());
-		assertEquals("Incorrect split between", expectedSplits, model.getSplitBetween());
-		assertEquals("Incorrect round up to", expectedRoundTo, model.getRoundUpToAmount());
-		assertEquals("Incorrect bumps", expectedBumps, model.getBumps());
-	}
-	
-	
-	@Test
-	public void testRestoreStateWhenUsingTaxAmount() {
-		// Set up preconditions
-		context.checking(new Expectations() {{
-			allowing (mockPersister).retrieveBigDecimal
-			(DataModel.BILL_TOTAL_KEY); 
-				will(returnValue(expectedBillTotal));			
-			allowing (mockPersister).retrieveBigDecimal
-			(DataModel.TAX_AMOUNT_KEY);
-				will(returnValue(expectedTaxAmount));
-			allowing (mockPersister).retrieveBigDecimal(DataModel.TAX_RATE_KEY);
-				will(returnValue(null));
-			allowing (mockPersister).retrieveBigDecimal(DataModel.DISCOUNT_KEY); 
-				will(returnValue(expectedDiscount));
-			allowing (mockPersister).retrieveBigDecimal
-			(DataModel.PLANNED_TIP_RATE_KEY);
-				will(returnValue(expectedTipRate));
-			allowing (mockPersister).retrieveInt(DataModel.SPLIT_BETWEEN_KEY); 
-				will(returnValue(expectedSplits));
-			allowing (mockPersister).retrieveBigDecimal
-			(DataModel.ROUND_UP_TO_NEAREST_AMOUNT);
-				will(returnValue(expectedRoundTo));
-			allowing (mockPersister).retrieveInt(DataModel.BUMPS_KEY);
-				will(returnValue(expectedBumps));
-		}});
-		
-		// Run method under test
-		model.restoreState();
-		
-		// Verify postconditions
-		assertEquals("Incorrect bill total", expectedBillTotal, model.getBillTotal());
-		assertFalse("Incorrect using tax rate", model.isUsingTaxRate());
-		assertEquals("Incorrect tax amount", expectedTaxAmount, model.getTaxAmount());
-		assertEquals("Incorrect discount", expectedDiscount, model.getDiscount());
-		assertEquals("Incorrect tip rate", expectedTipRate, model.getPlannedTipRate());
-		assertEquals("Incorrect split between", expectedSplits, model.getSplitBetween());
-		assertEquals("Incorrect round up to", expectedRoundTo, model.getRoundUpToAmount());
-		assertEquals("Incorrect bumps", expectedBumps, model.getBumps());
 	}
 
 	

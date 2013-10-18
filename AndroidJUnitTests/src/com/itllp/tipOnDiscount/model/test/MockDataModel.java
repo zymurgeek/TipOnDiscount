@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with Tip On Discount.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.itllp.tipOnDiscount.test.model;
+package com.itllp.tipOnDiscount.model.test;
 
 import java.math.BigDecimal;
 import java.util.Observable;

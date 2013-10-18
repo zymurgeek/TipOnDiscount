@@ -22,7 +22,6 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Currency;
 import android.app.Instrumentation;
-import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.KeyEvent;
 import android.widget.Button;
@@ -31,7 +30,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.itllp.tipOnDiscount.TipOnDiscount;
-import com.itllp.tipOnDiscount.test.model.MockDataModel;
+import com.itllp.tipOnDiscount.model.DataModel;
+import com.itllp.tipOnDiscount.model.DataModelFactory;
+import com.itllp.tipOnDiscount.model.test.MockDataModel;
 
 /* These test are related to user interface operation only, such as
  * data formatting and widget operations. 
@@ -116,10 +117,9 @@ public class DataEntryFieldTests extends
         super.setUp();
         mInstrumentation = getInstrumentation();
         
-        Intent intent = new Intent();
-        intent.putExtra(TipOnDiscount.DATA_MODEL_KEY, 
-        		"com.itllp.tipOnDiscount.test.model.MockDataModel");
-        setActivityIntent(intent);
+        DataModel mockDataModel = new MockDataModel();
+        DataModelFactory.clearDataModel();
+        DataModelFactory.setDataModel(mockDataModel);
         
         mActivity = this.getActivity();
 

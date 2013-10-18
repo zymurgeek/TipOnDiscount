@@ -29,20 +29,18 @@ import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import com.itllp.tipOnDiscount.model.impl.DataModelImpl;
 import com.itllp.tipOnDiscount.model.update.BillTotalUpdate;
 import com.itllp.tipOnDiscount.model.update.Update;
-import com.itllp.tipOnDiscount.modelimpl.DataModelImpl;
-import com.itllp.tipOnDiscount.modelimpl.DataModelPersister;
 
 public class DataModelObservableTests {
 	@Rule public JUnitRuleMockery context = new JUnitRuleMockery();
 	private DataModelObservable observable = null;
-	private Persister persister = null;
 
 	
 	@Before
 	public void initialize() {
-		persister = new DataModelPersister();
 		observable = new DataModelObservable();
 	}
 
@@ -51,7 +49,7 @@ public class DataModelObservableTests {
 	public void testUpdateOfOneObserver() {
 		// Preconditions
 		final DataModelObserver observer = context.mock(DataModelObserver.class);
-		final DataModel model = new DataModelImpl(persister);
+		final DataModel model = new DataModelImpl();
 		final Update update = new BillTotalUpdate(new BigDecimal("0.00"));
 		observable.addObserver(observer);
 		
@@ -88,7 +86,7 @@ public class DataModelObservableTests {
 		// Preconditions
 		final DataModelObserver observer1 = context.mock(DataModelObserver.class, "1");
 		final DataModelObserver observer2 = context.mock(DataModelObserver.class, "2");
-		final DataModel model = new DataModelImpl(persister);
+		final DataModel model = new DataModelImpl();
 		final Update update = new BillTotalUpdate(new BigDecimal("0.00"));
 		observable.addObserver(observer1);
 		observable.addObserver(observer2);

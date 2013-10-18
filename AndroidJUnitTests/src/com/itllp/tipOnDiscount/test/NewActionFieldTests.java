@@ -28,7 +28,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.itllp.tipOnDiscount.TipOnDiscount;
-import com.itllp.tipOnDiscount.modelimpl.DataModelImpl;
+import com.itllp.tipOnDiscount.model.DataModel;
+import com.itllp.tipOnDiscount.model.DataModelFactory;
+import com.itllp.tipOnDiscount.model.impl.DataModelImpl;
 
 /* These test are related to the New menu action only. 
  */
@@ -53,7 +55,7 @@ public class NewActionFieldTests extends
 	private TextView actualTipAmountView;
 	private TextView totalDueView;
 	private TextView shareDueView;
-	private DataModelImpl model;
+	private DataModel model;
 	private String zeroText;
 	private String zeroAmountText;
 	private BigDecimal zeroAmount;
@@ -101,6 +103,10 @@ public class NewActionFieldTests extends
         fifteenPercentRate = new BigDecimal(fifteenPercentRateText);
         mInstrumentation = getInstrumentation();
         
+        DataModel dataModel = new DataModelImpl();
+        DataModelFactory.clearDataModel();
+        DataModelFactory.setDataModel(dataModel);
+
         mActivity = this.getActivity();
 
         billTotalEntryView = (EditText) mActivity.findViewById
@@ -135,7 +141,7 @@ public class NewActionFieldTests extends
             	(com.itllp.tipOnDiscount.R.id.total_due_text);
         shareDueView = (TextView)mActivity.findViewById
             	(com.itllp.tipOnDiscount.R.id.share_due_text);
-        model = (DataModelImpl)mActivity.getDataModel();
+        model = mActivity.getDataModel();
     	
 		initializeDataModel();
     }

@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with Tip On Discount.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.itllp.tipOnDiscount.modelimpl;
+package com.itllp.tipOnDiscount.model.impl;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -24,7 +24,6 @@ import java.math.RoundingMode;
 import com.itllp.tipOnDiscount.model.DataModel;
 import com.itllp.tipOnDiscount.model.DataModelObservable;
 import com.itllp.tipOnDiscount.model.DataModelObserver;
-import com.itllp.tipOnDiscount.model.Persister;
 import com.itllp.tipOnDiscount.model.update.ActualTipAmountUpdate;
 import com.itllp.tipOnDiscount.model.update.ActualTipRateUpdate;
 import com.itllp.tipOnDiscount.model.update.BillSubtotalUpdate;
@@ -42,6 +41,7 @@ import com.itllp.tipOnDiscount.model.update.TippableAmountUpdate;
 import com.itllp.tipOnDiscount.model.update.TotalDueUpdate;
 import com.itllp.tipOnDiscount.model.update.Update;
 import com.itllp.tipOnDiscount.model.update.UpdateSet;
+import com.itllp.tipOnDiscount.persistence.Persister;
 import com.itllp.tipOnDiscount.util.EqualsUtil;
 
 public class DataModelImpl implements DataModel {
@@ -76,8 +76,7 @@ public class DataModelImpl implements DataModel {
 	private BigDecimal actualTipRate = BigDecimal.ZERO.setScale(5);
 
 	
-	public DataModelImpl(Persister persister) {
-		this.persister = persister;
+	public DataModelImpl() {
 		initialize();
 	}
 	
@@ -649,6 +648,8 @@ public class DataModelImpl implements DataModel {
 
 	@Override
 	public void restoreState() {
+		// TODO move this to DataModelPersister
+		/*
 		setBillTotal(persister.retrieveBigDecimal(BILL_TOTAL_KEY));
 		BigDecimal taxRate = persister.retrieveBigDecimal(TAX_RATE_KEY);
 		if (null != taxRate) {
@@ -658,20 +659,23 @@ public class DataModelImpl implements DataModel {
 		}
 		setDiscount(persister.retrieveBigDecimal(DISCOUNT_KEY));
 		setPlannedTipRate(persister.retrieveBigDecimal(PLANNED_TIP_RATE_KEY));
-		Integer splits = persister.retrieveInt(SPLIT_BETWEEN_KEY);
+		Integer splits = persister.retrieveInteger(SPLIT_BETWEEN_KEY);
 		if (null != splits) {
 			setSplitBetween(splits.intValue());
 		}
 		setRoundUpToAmount(persister.retrieveBigDecimal(ROUND_UP_TO_NEAREST_AMOUNT));
-		Integer bumps = persister.retrieveInt(BUMPS_KEY);
+		Integer bumps = persister.retrieveInteger(BUMPS_KEY);
 		if (null != bumps) {
 			setBumps(bumps.intValue());
 		}
+		*/
 	}
 
 
 	@Override
 	public void saveState() {
+		//TODO Move this to DataModelPersister
+		/*
         persister.save(DataModel.BILL_TOTAL_KEY, getBillTotal());
         if (isUsingTaxRate()) {
         	persister.save(DataModel.TAX_RATE_KEY, getTaxRate());
@@ -684,6 +688,7 @@ public class DataModelImpl implements DataModel {
         persister.save(DataModel.ROUND_UP_TO_NEAREST_AMOUNT, getRoundUpToAmount());
         persister.save(DataModel.BUMPS_KEY, getBumps());
         // TODO in persistence impl, save BigDecimal.toPlainString()
+		 */
 	}
 
 

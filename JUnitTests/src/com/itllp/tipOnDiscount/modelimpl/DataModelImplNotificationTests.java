@@ -31,7 +31,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import com.itllp.tipOnDiscount.model.DataModel;
 import com.itllp.tipOnDiscount.model.DataModelObserver;
-import com.itllp.tipOnDiscount.model.Persister;
+import com.itllp.tipOnDiscount.model.impl.DataModelImpl;
 import com.itllp.tipOnDiscount.model.update.ActualTipAmountUpdate;
 import com.itllp.tipOnDiscount.model.update.ActualTipRateUpdate;
 import com.itllp.tipOnDiscount.model.update.BillSubtotalUpdate;
@@ -48,7 +48,6 @@ import com.itllp.tipOnDiscount.model.update.PlannedTipRateUpdate;
 import com.itllp.tipOnDiscount.model.update.TippableAmountUpdate;
 import com.itllp.tipOnDiscount.model.update.TotalDueUpdate;
 import com.itllp.tipOnDiscount.model.update.Update;
-import com.itllp.tipOnDiscount.modelimpl.DataModelImpl;
 
 public class DataModelImplNotificationTests {
 	@Rule public JUnitRuleMockery context = new JUnitRuleMockery();
@@ -82,8 +81,7 @@ public class DataModelImplNotificationTests {
 
 	@Before
 	public void initialize() {
-		Persister persister = new DataModelPersister();
-		dataModel = new DataModelImpl(persister);
+		dataModel = new DataModelImpl();
 	}
 
 	

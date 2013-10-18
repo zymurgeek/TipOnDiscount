@@ -1,4 +1,4 @@
-// Copyright 2011-2012 David A. Greenbaum
+// Copyright 2011-2013 David A. Greenbaum
 /*
 This file is part of Tip On Discount.
 
@@ -15,25 +15,29 @@ General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Tip On Discount.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 package com.itllp.tipOnDiscount.test;
+//TODO Remove all debug log messages
 
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Currency;
 import android.app.Instrumentation;
 import android.test.SingleLaunchActivityTestCase;
+import android.util.Log;
 import android.view.Gravity;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.itllp.tipOnDiscount.TipOnDiscount;
+import com.itllp.tipOnDiscount.model.DataModel;
+import com.itllp.tipOnDiscount.model.DataModelFactory;
+import com.itllp.tipOnDiscount.model.impl.DataModelImpl;
 
 /* These tests cover the initial values displayed in each field.
  * 
  */
 public class InitializationTests extends
 		SingleLaunchActivityTestCase<TipOnDiscount> {
-		//ActivityInstrumentationTestCase2<TipOnDiscount> {
 
 	private NumberFormat currencyNumberFormat 
 		= NumberFormat.getCurrencyInstance();
@@ -63,25 +67,32 @@ public class InitializationTests extends
     private Spinner roundUpToNearestSpinner;
     private TextView actualTipAmountTextView;
     private TextView shareDueTextView;
-    //private Button bumpUpButton;
     private TextView bumpsTextView;
-    //private Button bumpDownButton;
     private TextView actualTipPercentTextView;
     private TextView totalDueTextView;
+    private DataModel dataModel;
     
     
 	public InitializationTests() {
 		super("com.itllp.tipOnDiscount", TipOnDiscount.class);
 		percentNumberFormat.setMaximumFractionDigits(3);
 		zeroPercentString = percentNumberFormat.format(0);
+        DataModel dataModel = new DataModelImpl();
+		Log.d("TipOnDiscount", "Setting debug data model");
+        DataModelFactory.clearDataModel();
+        DataModelFactory.setDataModel(dataModel);
 	}
 
 	
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        Log.d("TipOnDiscount", "after super.setUp");
         mInstrumentation = getInstrumentation();
+        Log.d("TipOnDiscount", "got instrumentation");
+        
         mActivity = this.getActivity();
+        Log.d("TipOnDiscount", "got activity");
 
         billTotalEntryView = (TextView) mActivity.findViewById
     		(com.itllp.tipOnDiscount.R.id.bill_total_entry);
@@ -111,12 +122,8 @@ public class InitializationTests extends
         	(com.itllp.tipOnDiscount.R.id.split_between_entry);
         roundUpToNearestSpinner = (Spinner)mActivity.findViewById
     		(com.itllp.tipOnDiscount.R.id.round_up_to_nearest_spinner);
-        //bumpUpButton = (Button)mActivity.findViewById
-    	//	(com.itllp.tipOnDiscount.R.id.bump_up_button);
         bumpsTextView  = (TextView)mActivity.findViewById
     		(com.itllp.tipOnDiscount.R.id.bumps_text);
-        //bumpDownButton = (Button)mActivity.findViewById
-		//	(com.itllp.tipOnDiscount.R.id.bump_down_button);
         actualTipPercentTextView = (TextView) mActivity.findViewById
 			(com.itllp.tipOnDiscount.R.id.actual_tip_percent_text);
         actualTipAmountTextView = (TextView) mActivity.findViewById
@@ -126,7 +133,6 @@ public class InitializationTests extends
         shareDueTextView = (TextView) mActivity.findViewById
 			(com.itllp.tipOnDiscount.R.id.share_due_text);
         
-        // TODO Delete the prefs file before starting test
     	mActivity.runOnUiThread(
     			new Runnable() {
     				public void run() {
@@ -138,6 +144,8 @@ public class InitializationTests extends
     			}
         	);
     	mInstrumentation.waitForIdleSync();
+    	
+    	dataModel = DataModelFactory.getDataModel();
     }
     
     public void testInitialBillTotal() {
@@ -194,8 +202,15 @@ public class InitializationTests extends
     }
 
     
+    // TODO Update tests to get initial value from data model.  Also initialize
+    // data model with unusual values to prevent any tests from 
+    // accidentally passing.
     public void testInitialPlannedTipPercentage() {
-        assertEquals("Incorrect percentage format", "15", 
+    			
+    	String expectedPlannedTipPercentage = 
+    			TipOnDiscount.formatRateToPercent(dataModel.getPlannedTipRate());
+        assertEquals("Incorrect percentage format", 
+        		expectedPlannedTipPercentage, 
         		plannedTipPercentEntryView.getText().toString());    	
     }
 
@@ -276,7 +291,6 @@ public class InitializationTests extends
     	verifyRightGravity(totalDueTextView);
     	verifyRightGravity(shareDueTextView);
     }
-    
     
 
 }

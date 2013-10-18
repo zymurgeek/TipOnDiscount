@@ -30,6 +30,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -46,8 +47,8 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemSelectedListener;
 
 import com.itllp.tipOnDiscount.model.DataModel;
+import com.itllp.tipOnDiscount.model.DataModelFactory;
 import com.itllp.tipOnDiscount.model.DataModelObserver;
-import com.itllp.tipOnDiscount.model.Persister;
 import com.itllp.tipOnDiscount.model.update.ActualTipAmountUpdate;
 import com.itllp.tipOnDiscount.model.update.ActualTipRateUpdate;
 import com.itllp.tipOnDiscount.model.update.BillSubtotalUpdate;
@@ -64,8 +65,6 @@ import com.itllp.tipOnDiscount.model.update.PlannedTipAmountUpdate;
 import com.itllp.tipOnDiscount.model.update.TippableAmountUpdate;
 import com.itllp.tipOnDiscount.model.update.TotalDueUpdate;
 import com.itllp.tipOnDiscount.model.update.Update;
-import com.itllp.tipOnDiscount.modelimpl.DataModelImpl;
-import com.itllp.tipOnDiscount.modelimpl.DataModelPersister;
 
 // TODO Set defaults for TIP%, Tax and Rounding
 
@@ -99,9 +98,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 	private TextView actualTipPercentText;
 	private TextView totalDueText;
 	private TextView shareDueText;
-    public static final String PREFERENCES_FILE = "TipOnDiscountPrefs";
     public static final String NO_VALUE = "";
-    public static final String DATA_MODEL_KEY = "DataModel";
 	
 
 	// Create an anonymous implementation of OnFocusListener to detect when a view
@@ -264,25 +261,8 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
         Window window = getWindow();  
         window.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
 
-        Bundle extras = getIntent().getExtras();
-        if (null != extras) {
-        String dataModelClassName = extras.getString(DATA_MODEL_KEY);
-        	if (null != dataModelClassName) {
-        		try {
-        			Class<?> dataModelClass 
-        				= Class.forName(dataModelClassName);
-        			model = (DataModel)dataModelClass.newInstance();
-        		} catch (Exception e) {
-        			e.printStackTrace();
-        			// Do nothing--the default model will be loaded below
-        		}
-        	}
-        }
-        if (null == model) {
-        	Persister persister = new DataModelPersister();
-        	model = new DataModelImpl(persister);
-        }
-        
+        Log.d("TipOnDiscount", "getting data model");
+        model = DataModelFactory.getDataModel();
         setContentView(R.layout.main);
 
         model.addObserver(this);
@@ -433,7 +413,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
     @Override
     public void onPause() {
         super.onPause();
-        if (!writeInstanceState(this)) {
+        if (!saveInstanceState(this)) {
              Toast.makeText(this,
             		 "Failed to save state", Toast.LENGTH_LONG).show();
           }
@@ -550,14 +530,14 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
      * Read the previous state of the app from the preferences file
      * @param context - The Activity's Context
      */
-    public boolean restoreInstanceState(Context context) {
-    	this.model.restoreState();
+    public void restoreInstanceState(Context context) {
     	//TODO Move restore to data model
         /* The preferences are stored in a SharedPreferences file. 
          * All instances of an app share the same instance of this file 
          */
+    	
         SharedPreferences prefs = context.getSharedPreferences(
-        		PREFERENCES_FILE, MODE_PRIVATE);
+        		TipOnDiscountApplication.PREFERENCES_FILE, MODE_PRIVATE);
         String value;
         BigDecimal amount;
         BigDecimal rate;
@@ -623,7 +603,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
         /* SharedPreferences doesn't fail if it can't find a key, so just
          * return whether the bill total key was found.
          */
-        return (prefs.contains(DataModel.BILL_TOTAL_KEY));
+//        return (prefs.contains(DataModel.BILL_TOTAL_KEY));
     }
 
     
@@ -966,13 +946,12 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
      * @param context - The Activity's Context
      *
      */
-    public boolean writeInstanceState(Context context) {
-    	this.model.saveState();
-    	//TODO Move save to data model
+    public boolean saveInstanceState(Context context) {
+    	//TODO Move save to data model persister
     	//TODO Bumps is not saved when TOD is closed and reopened
 
     	SharedPreferences prefs =
-                context.getSharedPreferences(TipOnDiscount.PREFERENCES_FILE, 
+                context.getSharedPreferences(TipOnDiscountApplication.PREFERENCES_FILE, 
                 		MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
