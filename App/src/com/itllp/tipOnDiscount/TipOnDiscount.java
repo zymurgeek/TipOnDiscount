@@ -531,10 +531,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
      * @param context - The Activity's Context
      */
     public void restoreInstanceState(Context context) {
-    	//TODO Move restore to data model
-        /* The preferences are stored in a SharedPreferences file. 
-         * All instances of an app share the same instance of this file 
-         */
+    	//FIXME Write test to replace the contents of this method with a call to the DataModelPersister
     	
         SharedPreferences prefs = context.getSharedPreferences(
         		TipOnDiscountApplication.PREFERENCES_FILE, MODE_PRIVATE);

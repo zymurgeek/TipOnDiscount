@@ -7,6 +7,9 @@ import android.content.SharedPreferences;
 
 import com.itllp.tipOnDiscount.persistence.Persister;
 
+/* The preferences are stored in a SharedPreferences file. 
+ * All instances of an app share the same instance of this file 
+ */
 public class PreferencesFilePersister implements Persister {
 
 	private String preferencesFileName = null;
