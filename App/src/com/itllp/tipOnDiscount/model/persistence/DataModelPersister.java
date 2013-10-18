@@ -1,5 +1,7 @@
 package com.itllp.tipOnDiscount.model.persistence;
 
+import java.math.BigDecimal;
+
 import android.content.Context;
 
 import com.itllp.tipOnDiscount.model.DataModel;
@@ -31,5 +33,10 @@ public class DataModelPersister {
 		} catch (Exception e) {
 			// TODO toast if failed
 		}
+	}
+
+	
+	public void restoreState(DataModel dataModel, Persister persister,
+			Context context) {
 	}
 }

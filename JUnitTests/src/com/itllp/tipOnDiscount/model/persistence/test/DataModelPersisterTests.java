@@ -69,42 +69,42 @@ public class DataModelPersisterTests {
 	}
 
 
-	//FIXME Update test
 	@Test
 	public void testRestoreWhenNoSavedDataIsAvailable() {
 		// Set up preconditions
-		/*
 		context.checking(new Expectations() {{
 			allowing (mockPersister).retrieveBigDecimal
-			(DataModel.BILL_TOTAL_KEY); 
-				will(returnValue(null));			
+			(mockAndroidContext, DataModel.BILL_TOTAL_KEY); 
+			will(returnValue(null));			
 			allowing (mockPersister).retrieveBigDecimal
-			(DataModel.TAX_AMOUNT_KEY);
-				will(returnValue(null));
-			allowing (mockPersister).retrieveBigDecimal(DataModel.TAX_RATE_KEY);
-				will(returnValue(null));
+			(mockAndroidContext, DataModel.TAX_AMOUNT_KEY);
+			will(returnValue(null));
 			allowing (mockPersister).retrieveBigDecimal
-			(DataModel.TAX_AMOUNT_KEY);
-				will(returnValue(null));
-			allowing (mockPersister).retrieveBigDecimal(DataModel.DISCOUNT_KEY); 
-				will(returnValue(null));
+			(mockAndroidContext, DataModel.TAX_RATE_KEY);
+			will(returnValue(null));
 			allowing (mockPersister).retrieveBigDecimal
-			(DataModel.PLANNED_TIP_RATE_KEY);
-				will(returnValue(null));
-			allowing (mockPersister).retrieveInteger(DataModel.SPLIT_BETWEEN_KEY); 
-				will(returnValue(null));
+			(mockAndroidContext, DataModel.TAX_AMOUNT_KEY);
+			will(returnValue(null));
 			allowing (mockPersister).retrieveBigDecimal
-			(DataModel.ROUND_UP_TO_NEAREST_AMOUNT);
-				will(returnValue(null));
-			allowing (mockPersister).retrieveInteger(DataModel.BUMPS_KEY);
-				will(returnValue(null));
+			(mockAndroidContext, DataModel.DISCOUNT_KEY); 
+			will(returnValue(null));
+			allowing (mockPersister).retrieveBigDecimal
+			(mockAndroidContext, DataModel.PLANNED_TIP_RATE_KEY);
+			will(returnValue(null));
+			allowing (mockPersister).retrieveInteger
+			(mockAndroidContext, DataModel.SPLIT_BETWEEN_KEY); 
+			will(returnValue(null));
+			allowing (mockPersister).retrieveBigDecimal
+			(mockAndroidContext, DataModel.ROUND_UP_TO_NEAREST_AMOUNT);
+			will(returnValue(null));
+			allowing (mockPersister).retrieveInteger
+			(mockAndroidContext, DataModel.BUMPS_KEY);
+			will(returnValue(null));
 		}});
-		*/
-		// Run method under test
-//		model.restoreState();
 		
-		// Verify postconditions
-//		verifyDataModelContainsInitialValues();
+		// Run method under test
+		dataModelPersister.restoreState(mockDataModel, mockPersister, 
+				mockAndroidContext);
 	}
 
 	
