@@ -17,11 +17,23 @@ useful to those who want to learn Android development and automated
 unit testing.
 
 To build this software, you'll need the Android SDK.  See
-http://developer.android.com.  
+http://developer.android.com
 
 If you haven't already, create the Android Support library project
-using the v7 appcompat library.  See
-http://developer.android.com/tools/support-library/setup.html.
+using the v7 appcompat library.  See:
+http://developer.android.com/tools/support-library/setup.html
+
+If you have your SDK in a different location than in your home
+directory, or you have a different version of the SDK, you'll need to
+update that location in App/project.properties.  You can do this in
+Eclipse using the instructions in "Adding libraries with resources"
+(expand "Using Eclipse"):
+http://developer.android.com/tools/support-library/setup.html#libs-with-res
+
+Note that the "library pane" the instructions reference is listed
+under the "Android" category in the list on the left of the Properties
+dialog.  This documentation issue has been reported:
+http://code.google.com/p/android/issues/detail?id=61239
 
 Once the support library is ready, import the code from the Elipse
 menu File -> Import.  Expand General and select Existing Projects into
@@ -34,8 +46,8 @@ To run the JUnit tests, you'll need JMock 2.6 (http://jmock.org/).
 This is optional, but recommended if you'll be modifying code.
 Download the Binary JARs and unzip them to a location of your choice.
 In Eclipse, set JMOCK_HOME to the new JMock directory, e.g.,
-/home/myuser/jmock-2.6.0.  To do this, from the Eclipse menu, select
-Window -> Preferences.  In the left pane, expand Java and then Build
-Path.  Select Classpath Variables.  On the right, select New.  Set the
-Name to JMOCK_HOME and select Folder next to Path.  Select the new
-JMock directory.
+/home/myuser/jmock-2.6.0 for Linux or c:\jmock-2.6.0 for Windows.  To
+do this, from the Eclipse menu, select Window -> Preferences.  In the
+left pane, expand Java and then Build Path.  Select Classpath
+Variables.  On the right, select New.  Set the Name to JMOCK_HOME and
+select Folder next to Path.  Select the new JMock directory.
