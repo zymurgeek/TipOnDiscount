@@ -13,6 +13,10 @@ public class StubDataModelPersister implements Persister {
 	}
 
 	@Override
+	public void save(String key, boolean value) throws Exception {
+	}
+
+	@Override
 	public void save(String key, int value) {
 	}
 

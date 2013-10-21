@@ -30,7 +30,6 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -49,6 +48,8 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import com.itllp.tipOnDiscount.model.DataModel;
 import com.itllp.tipOnDiscount.model.DataModelFactory;
 import com.itllp.tipOnDiscount.model.DataModelObserver;
+import com.itllp.tipOnDiscount.model.persistence.DataModelPersister;
+import com.itllp.tipOnDiscount.model.persistence.DataModelPersisterFactory;
 import com.itllp.tipOnDiscount.model.update.ActualTipAmountUpdate;
 import com.itllp.tipOnDiscount.model.update.ActualTipRateUpdate;
 import com.itllp.tipOnDiscount.model.update.BillSubtotalUpdate;
@@ -65,11 +66,15 @@ import com.itllp.tipOnDiscount.model.update.PlannedTipAmountUpdate;
 import com.itllp.tipOnDiscount.model.update.TippableAmountUpdate;
 import com.itllp.tipOnDiscount.model.update.TotalDueUpdate;
 import com.itllp.tipOnDiscount.model.update.Update;
+import com.itllp.tipOnDiscount.persistence.Persister;
+import com.itllp.tipOnDiscount.persistence.PersisterFactory;
 
 // TODO Set defaults for TIP%, Tax and Rounding
 
 public class TipOnDiscount extends ActionBarActivity implements DataModelObserver {
-	private DataModel model;
+	private DataModel dataModel;
+	private DataModelPersister dataModelPersister;
+	private Persister persister;
 	private TextView billTotalEntry;
 	private TextView billSubtotalText;
 	private TextView bumpsText;
@@ -148,13 +153,13 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 	    		// Invalid numbers use default amount above
 	    	}
 	    	if (textView == discountEntry) {
-	    		model.setDiscount(amount);
+	    		dataModel.setDiscount(amount);
 	    	}
 			if (textView == billTotalEntry) {
-	    		model.setBillTotal(amount);
+	    		dataModel.setBillTotal(amount);
 	    	}
 			if (textView == taxAmountEntry) {
-	    		model.setTaxAmount(amount);
+	    		dataModel.setTaxAmount(amount);
 	    	}
 			
 		}
@@ -185,7 +190,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 	    		// Invalid numbers use default amount above
 	    	}
 	    	if (textView == splitBetweenEntry) {
-	    		model.setSplitBetween(integer);
+	    		dataModel.setSplitBetween(integer);
 	    	}
 		}
 		
@@ -214,10 +219,10 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 	    		// Invalid numbers use default rate above
 	    	}
 			if (textView == taxPercentEntry) {
-	    		model.setTaxRate(rate);
+	    		dataModel.setTaxRate(rate);
 	    	}
 			if (textView == tipPercentEntry) {
-	    		model.setPlannedTipRate(rate);
+	    		dataModel.setPlannedTipRate(rate);
 	    	}
 		}
 		
@@ -234,7 +239,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 			long id) {
 			String key = parent.getItemAtPosition(pos).toString();
 			BigDecimal amount = roundUpToNearestValues.get(key);
-			model.setRoundUpToAmount(amount);
+			dataModel.setRoundUpToAmount(amount);
 		}
 
 		@Override
@@ -249,7 +254,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 	 * 
 	 */
 	public DataModel getDataModel() {
-		return model;
+		return dataModel;
 	}
 	
 	/** Called when the activity is first created. */
@@ -261,11 +266,13 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
         Window window = getWindow();  
         window.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
 
-        Log.d("TipOnDiscount", "getting data model");
-        model = DataModelFactory.getDataModel();
+        dataModel = DataModelFactory.getDataModel();
+        dataModelPersister = DataModelPersisterFactory.getDataModelPersister();
+        persister = PersisterFactory.getPersister();
+        
         setContentView(R.layout.main);
 
-        model.addObserver(this);
+        dataModel.addObserver(this);
         
         billTotalEntry = (TextView)this.findViewById
         	(com.itllp.tipOnDiscount.R.id.bill_total_entry);
@@ -338,7 +345,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 			(com.itllp.tipOnDiscount.R.id.bump_down_button);
         bumpDownButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                model.bumpDown();
+                dataModel.bumpDown();
             }
         });
         bumpsText = (TextView)this.findViewById
@@ -347,7 +354,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 			(com.itllp.tipOnDiscount.R.id.bump_up_button);
         bumpUpButton.setOnClickListener(new View.OnClickListener() {
         	public void onClick(View v) {
-        		model.bumpUp();
+        		dataModel.bumpUp();
         	}
         });
 
@@ -447,7 +454,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
      * @param updatedData contains the updated value
      */
 	public void update(DataModel updatedModel, Update updatedData) {
-		if (updatedModel == this.model) {
+		if (updatedModel == this.dataModel) {
 			if (updatedData instanceof BillTotalUpdate) {
 				updateBillTotalEntry((BillTotalUpdate)updatedData);
 			}
@@ -520,7 +527,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 	 * all fields in the UI.
 	 */
 	public void reset() {
-		this.model.initialize();
+		this.dataModel.initialize();
 		this.updateAllFields();
 	}
 	
@@ -531,76 +538,8 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
      * @param context - The Activity's Context
      */
     public void restoreInstanceState(Context context) {
-    	//FIXME Write test to replace the contents of this method with a call to the DataModelPersister
-    	
-        SharedPreferences prefs = context.getSharedPreferences(
-        		TipOnDiscountApplication.PREFERENCES_FILE, MODE_PRIVATE);
-        String value;
-        BigDecimal amount;
-        BigDecimal rate;
-        
-        value = prefs.getString(DataModel.BILL_TOTAL_KEY, NO_VALUE);
-        try {
-        	amount = new BigDecimal(value);
-        	this.model.setBillTotal(amount);
-        } catch (NumberFormatException x) {
-        	// Invalid number does not update model
-        }
-        
-        value = prefs.getString(DataModel.TAX_RATE_KEY, NO_VALUE);
-        try {
-        	rate = new BigDecimal(value);
-        	this.model.setTaxRate(rate);
-        } catch (NumberFormatException x) {
-        	// Invalid number does not update model
-        }
-        
-        value = prefs.getString(DataModel.TAX_AMOUNT_KEY, NO_VALUE);
-        try {
-        	amount = new BigDecimal(value);
-        	this.model.setTaxAmount(amount);
-        } catch (NumberFormatException x) {
-        	// Invalid number does not update model
-        }
-
-        value = prefs.getString(DataModel.DISCOUNT_KEY, NO_VALUE);
-        try {
-        	amount = new BigDecimal(value);
-        	this.model.setDiscount(amount);
-        } catch (NumberFormatException x) {
-        	// Invalid number does not update model
-        }
-
-        value = prefs.getString(DataModel.PLANNED_TIP_RATE_KEY, NO_VALUE);
-        try {
-        	rate = new BigDecimal(value);
-        	this.model.setPlannedTipRate(rate);
-        } catch (NumberFormatException x) {
-        	// Invalid number does not update model
-        }
-
-        value = prefs.getString(DataModel.SPLIT_BETWEEN_KEY, NO_VALUE);
-        try {
-        	int splitBetween = Integer.parseInt(value); 
-        	this.model.setSplitBetween(splitBetween);
-        } catch (NumberFormatException x) {
-        	// Invalid number does not update model
-        }
-
-        value = prefs.getString(DataModel.ROUND_UP_TO_NEAREST_AMOUNT, NO_VALUE);
-        try {
-        	amount = new BigDecimal(value);
-        	this.model.setRoundUpToAmount(amount);
-        } catch (NumberFormatException x) {
-        	// Invalid number does not update model
-        }
-
+    	dataModelPersister.restoreState(dataModel, persister, context);
         updateAllFields();
-        
-        /* SharedPreferences doesn't fail if it can't find a key, so just
-         * return whether the bill total key was found.
-         */
-//        return (prefs.contains(DataModel.BILL_TOTAL_KEY));
     }
 
     
@@ -618,7 +557,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 		if (updatedData != null) {
 			rate = updatedData.getRate();
 		} else {
-			rate = this.model.getActualTipRate();
+			rate = this.dataModel.getActualTipRate();
 		}
 		actualTipPercentText.setText(formatRateToPercent(rate));
 	}
@@ -638,7 +577,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 		if (updatedData != null) {
 			amount = updatedData.getAmount();
 		} else {
-			amount = this.model.getActualTipAmount();
+			amount = this.dataModel.getActualTipAmount();
 		}
 		actualTipAmountText.setText(amount.toPlainString());
 	}
@@ -682,7 +621,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 			if (updatedData != null) {
 				newAmount = updatedData.getAmount();
 			} else {
-				newAmount = this.model.getBillTotal();
+				newAmount = this.dataModel.getBillTotal();
 			}
 			billTotalEntry.setText(newAmount.toPlainString());
 		}
@@ -703,7 +642,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 		if (updatedData != null) {
 			newAmount = updatedData.getAmount();
 		} else {
-			newAmount = this.model.getBillSubtotal();
+			newAmount = this.dataModel.getBillSubtotal();
 		}
 		billSubtotalText.setText(newAmount.toPlainString());
 	}
@@ -723,7 +662,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 		if (updatedData != null) {
 			newBumps = updatedData.getValue();
 		} else {
-			newBumps = this.model.getBumps();
+			newBumps = this.dataModel.getBumps();
 		}
 		String bumpsValue = String.valueOf(newBumps);
 		bumpsText.setText(bumpsValue);
@@ -745,7 +684,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 			if (updatedData != null) {
 				newAmount = updatedData.getAmount();
 			} else {
-				newAmount = this.model.getDiscount();
+				newAmount = this.dataModel.getDiscount();
 			}
 			discountEntry.setText(newAmount.toPlainString());
 		}
@@ -766,7 +705,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 		if (updatedData != null) {
 			newAmount = updatedData.getAmount();
 		} else {
-			newAmount = this.model.getTippableAmount();
+			newAmount = this.dataModel.getTippableAmount();
 		}
 		tippableText.setText(newAmount.toPlainString());
 	}
@@ -786,7 +725,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 		if (updatedData != null) {
 			newAmount = updatedData.getAmount();
 		} else {
-			newAmount = this.model.getTotalDue();
+			newAmount = this.dataModel.getTotalDue();
 		}
 		totalDueText.setText(newAmount.toPlainString());
 	}
@@ -806,7 +745,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 		if (updatedData != null) {
 			newAmount = updatedData.getAmount();
 		} else {
-			newAmount = this.model.getShareDue();
+			newAmount = this.dataModel.getShareDue();
 		}
 		shareDueText.setText(newAmount.toPlainString());
 	}
@@ -828,7 +767,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 			if (updatedData != null) {
 				newAmount = updatedData.getAmount();
 			} else {
-				newAmount = this.model.getTaxAmount();
+				newAmount = this.dataModel.getTaxAmount();
 			}
 			taxAmountEntry.setText(newAmount.toPlainString());
 		}
@@ -851,7 +790,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 			if (updatedData != null) {
 				newRate = updatedData.getRate();
 			} else {
-				newRate = this.model.getTaxRate();
+				newRate = this.dataModel.getTaxRate();
 			}
 			taxPercentEntry.setText(formatRateToPercent(newRate));
 		}
@@ -866,7 +805,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 	private void updateTipPercentEntry(PlannedTipRateUpdate updatedData) {
 		if (!tipPercentEntry.isFocused() || null==updatedData) { 
 			tipPercentEntry.setText(formatRateToPercent
-					(this.model.getPlannedTipRate()));
+					(this.dataModel.getPlannedTipRate()));
 		}
 	}
 
@@ -885,7 +824,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 		if (updatedData != null) {
 			amount = updatedData.getAmount();
 		} else {
-			amount = this.model.getPlannedTipAmount();
+			amount = this.dataModel.getPlannedTipAmount();
 		}
 		tipAmountText.setText(amount.toPlainString());
 	}
@@ -897,7 +836,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 	private void updateSplitBetweenEntry(SplitBetweenUpdate updatedData) {
 		if (!splitBetweenEntry.isFocused() || null==updatedData) { 
 			splitBetweenEntry.setText			
-				(String.valueOf(this.model.getSplitBetween()));
+				(String.valueOf(this.dataModel.getSplitBetween()));
 		}
 	}
 
@@ -910,7 +849,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 	private void updateRoundUpToNearestEntry(RoundUpToNearestUpdate update) {
 		BigDecimal roundUpToAmount;
 		if (null == update) {
-			roundUpToAmount = this.model.getRoundUpToAmount();
+			roundUpToAmount = this.dataModel.getRoundUpToAmount();
 		} else {
 			roundUpToAmount = update.getAmount();
 		}
@@ -948,32 +887,32 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
     	//TODO Bumps is not saved when TOD is closed and reopened
 
     	SharedPreferences prefs =
-                context.getSharedPreferences(TipOnDiscountApplication.PREFERENCES_FILE, 
+                context.getSharedPreferences(TipOnDiscountApplication.TOD_PREFERENCES_FILE, 
                 		MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
         // Save application state
         String value;
         
-        value = this.model.getBillTotal().toPlainString();
+        value = this.dataModel.getBillTotal().toPlainString();
         editor.putString(DataModel.BILL_TOTAL_KEY, value);
         
-        value = this.model.getTaxRate().toPlainString();
+        value = this.dataModel.getTaxRate().toPlainString();
         editor.putString(DataModel.TAX_RATE_KEY, value);
         
-        value = this.model.getTaxAmount().toPlainString();
+        value = this.dataModel.getTaxAmount().toPlainString();
         editor.putString(DataModel.TAX_AMOUNT_KEY, value);
 
-        value = this.model.getDiscount().toPlainString();
+        value = this.dataModel.getDiscount().toPlainString();
         editor.putString(DataModel.DISCOUNT_KEY, value);
 
-        value = this.model.getPlannedTipRate().toPlainString();
+        value = this.dataModel.getPlannedTipRate().toPlainString();
         editor.putString(DataModel.PLANNED_TIP_RATE_KEY, value);
         
-        value = Integer.toString(this.model.getSplitBetween());
+        value = Integer.toString(this.dataModel.getSplitBetween());
         editor.putString(DataModel.SPLIT_BETWEEN_KEY, value);
         
-        value = this.model.getRoundUpToAmount().toPlainString();
+        value = this.dataModel.getRoundUpToAmount().toPlainString();
         editor.putString(DataModel.ROUND_UP_TO_NEAREST_AMOUNT, value);
         
         return (editor.commit());

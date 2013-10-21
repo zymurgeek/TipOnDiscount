@@ -43,6 +43,17 @@ public class PreferencesFilePersister implements Persister {
 	}
 
 	@Override
+	public void save(String key, boolean value) throws Exception {
+		if (null == editor) {
+			throw new Exception("beginSave must be called first");
+		}
+		if (null == key) {
+			throw new Exception("key may not be null");
+		}
+        editor.putBoolean(key, value);
+	}
+
+	@Override
 	public void save(String key, int value) throws Exception {
 		if (null == editor) {
 			throw new Exception("beginSave not called");
@@ -84,6 +95,26 @@ public class PreferencesFilePersister implements Persister {
 		return bigDecimalValue;
 	}
 
+	
+	public Boolean retrieveBoolean(Context context, String key) {
+		SharedPreferences prefs =
+				context.getSharedPreferences(
+						this.preferencesFileName, 
+						android.content.Context.MODE_PRIVATE);
+		if (!prefs.contains(key)) {
+			return null;
+		}
+		Boolean booleanValue = null;
+        try {
+        	boolean boolValue = prefs.getBoolean(key, false);
+        	booleanValue = Boolean.valueOf(boolValue);
+        } catch (Exception x) {
+        	// leave booleanValue == null
+        }
+		return booleanValue;
+	}
+
+	
 	@Override
 	public Integer retrieveInteger(Context context, String key) {
 		SharedPreferences prefs =

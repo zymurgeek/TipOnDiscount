@@ -12,6 +12,7 @@ import static org.junit.Assert.*;
 
 import com.itllp.tipOnDiscount.model.DataModel;
 import com.itllp.tipOnDiscount.model.persistence.DataModelPersister;
+import com.itllp.tipOnDiscount.model.persistence.impl.DataModelPersisterImpl;
 import com.itllp.tipOnDiscount.persistence.Persister;
 
 public class DataModelPersisterTests {
@@ -34,7 +35,7 @@ public class DataModelPersisterTests {
 	public void initialize() {
 		mockDataModel = context.mock(DataModel.class);
 		mockPersister = context.mock(Persister.class);
-		dataModelPersister = new DataModelPersister();
+		dataModelPersister = new DataModelPersisterImpl();
 	}
 
 

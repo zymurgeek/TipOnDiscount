@@ -16,10 +16,12 @@ import junit.framework.TestCase;
 
 class MockSharedPreferencesEditor implements SharedPreferences.Editor {
 
-	private String lastStringKey = null;
-	private String lastStringValue = null;
+	private String lastBooleanKey = null;
+	private boolean lastBooleanValue = Boolean.FALSE;
 	private String lastIntKey = null;
 	private int lastIntValue = Integer.MIN_VALUE;
+	private String lastStringKey = null;
+	private String lastStringValue = null;
 	private boolean wasCommitCalled = false;
 	
 	@Override
@@ -38,10 +40,20 @@ class MockSharedPreferencesEditor implements SharedPreferences.Editor {
 	}
 
 	@Override
-	public Editor putBoolean(String arg0, boolean arg1) {
-		return null;
+	public Editor putBoolean(String key, boolean value) {
+		lastBooleanKey = key;
+		lastBooleanValue = value;
+		return this;
 	}
 
+	public String mock_getLastBooleanKey() {
+		return lastBooleanKey;
+	}
+	
+	public boolean mock_getLastBooleanValue() {
+		return lastBooleanValue;
+	}
+	
 	@Override
 	public Editor putFloat(String arg0, float arg1) {
 		return null;
@@ -102,6 +114,7 @@ class MockSharedPreferencesEditor implements SharedPreferences.Editor {
 class MockSharedPreferences implements SharedPreferences {
 	private Map<String, String> mock_stringMap = new HashMap<String, String>();
 	private Map<String, Integer> mock_intMap = new HashMap<String, Integer>();
+	private Map<String, Boolean> mock_boolMap = new HashMap<String, Boolean>();
 	private MockSharedPreferencesEditor mockSharedPreferencesEditor = null;
 	
 	@Override
@@ -110,6 +123,9 @@ class MockSharedPreferences implements SharedPreferences {
 			return true;
 		}
 		if (mock_intMap.containsKey(key)) {
+			return true;
+		}
+		if (mock_boolMap.containsKey(key)) {
 			return true;
 		}
 		return false;
@@ -131,10 +147,19 @@ class MockSharedPreferences implements SharedPreferences {
 	}
 
 	@Override
-	public boolean getBoolean(String arg0, boolean arg1) {
-		return false;
+	public boolean getBoolean(String key, boolean defaultValue) {
+		Boolean value = mock_boolMap.get(key);
+		if (null == value) {
+			value = defaultValue;
+		}
+		return value;
 	}
 
+	public void mock_setBoolean(String key, boolean value) {
+		Boolean booleanValue = Boolean.valueOf(value);
+		mock_boolMap.put(key, booleanValue);
+	}
+	
 	@Override
 	public float getFloat(String arg0, float arg1) {
 		return 0;
@@ -196,9 +221,11 @@ public class PreferencesFilePersisterTests extends TestCase {
 	private PreferencesFilePersister persister;
 	private String expectedKey = "MyKey";
 	private String missingKey = "No such key in preferences file";
+	private Boolean expectedBooleanValue;
 	private BigDecimal expectedBigDecimalValue;
 	private String expectedStringValue;
 	private int expectedIntValue = 42;
+	private boolean expectedBoolValue = true;
 	
 	public PreferencesFilePersisterTests(String name) {
 		super(name);
@@ -214,6 +241,7 @@ public class PreferencesFilePersisterTests extends TestCase {
 		super.setUp();
 		preferencesFileName = "test-prefs";
 		expectedBigDecimalValue = new BigDecimal("3.50");
+		expectedBooleanValue = Boolean.TRUE;
 		expectedStringValue = expectedBigDecimalValue.toPlainString();
 		mockSharedPreferences = new MockSharedPreferences();
 		mockContext = new MockContext() {
@@ -259,6 +287,27 @@ public class PreferencesFilePersisterTests extends TestCase {
 	}
 
 
+	public void testRetrieveBooleanWhenValueDoesNotExist() {
+		// Call method under test
+		Boolean value = persister.retrieveBoolean(mockContext, missingKey);
+		
+		// Verify postconditions
+		assertNull("Incorrect value", value);
+	}
+
+	
+	public void testRetrieveBooleanWhenValueExists() {
+		Boolean expectedBooleanValue = Boolean.valueOf(expectedBoolValue);
+		mockSharedPreferences.mock_setBoolean(expectedKey, expectedBoolValue);
+		
+		// Call method under test
+		Boolean actualValue = persister.retrieveBoolean(mockContext, expectedKey);
+		
+		// Verify postconditions
+		assertEquals("Incorrect value", expectedBooleanValue, actualValue);
+	}
+
+
 	public void testRetrieveIntegerWhenValueDoesNotExist() {
 		// Call method under test
 		Integer value = persister.retrieveInteger(mockContext, missingKey);
@@ -289,6 +338,15 @@ public class PreferencesFilePersisterTests extends TestCase {
 	}
 
 	
+	public void testSaveBooleanWhenBeginSaveNotCalled() {
+		// Call method under test and verify postconditions
+		try {
+			persister.save(expectedKey, expectedBooleanValue);
+			fail("Should throw exception");
+		} catch(Exception e) {}
+	}
+
+	
 	public void testSaveIntWhenBeginSaveNotCalled() {
 		// Call method under test and verify postconditions
 		try {
@@ -310,6 +368,18 @@ public class PreferencesFilePersisterTests extends TestCase {
 	}
 
 	
+	public void testSaveBooleanWithNullKey() {
+		// Set up preconditions
+		persister.beginSave(mockContext);
+		
+		// Call method under test
+		try {
+			persister.save(null, expectedBooleanValue);
+			fail("Should throw exception");
+		} catch(Exception e) {}
+	}
+
+	
 	public void testSaveIntWithNullKey() {
 		// Set up preconditions
 		persister.beginSave(mockContext);
@@ -322,13 +392,13 @@ public class PreferencesFilePersisterTests extends TestCase {
 	}
 
 	
-	public void testSaveNullValue() {
+	public void testSaveNullBigDecimalValue() {
 		// Set up preconditions
 		persister.beginSave(mockContext);
 		
 		// Call method under test
 		try {
-			persister.save(expectedKey, null);
+			persister.save(expectedKey, (BigDecimal)null);
 			fail("Should throw exception");
 		} catch(Exception e) {}
 	}
@@ -360,6 +430,27 @@ public class PreferencesFilePersisterTests extends TestCase {
 		assertEquals("Wrong key", expectedKey, mockEditor.mock_getLastStringKey());
 		assertEquals("Wrong value", expectedStringValue,
 				mockEditor.mock_getLastStringValue());
+	}
+
+
+	public void testSaveBoolean() {
+		// Set up preconditions
+		persister.beginSave(mockContext);
+		
+		// Call method under test
+		try {
+			persister.save(expectedKey, expectedBooleanValue);
+		} catch (Exception e) {
+			fail("Threw exception");
+		}
+		
+		// Verify postconditions
+		MockSharedPreferencesEditor mockEditor = (MockSharedPreferencesEditor)
+				mockSharedPreferences.mock_getEditor();
+		assertEquals("Wrong key", expectedKey, 
+				mockEditor.mock_getLastBooleanKey());
+		assertEquals("Wrong value", expectedBoolValue,
+				mockEditor.mock_getLastBooleanValue());
 	}
 
 
@@ -414,5 +505,4 @@ public class PreferencesFilePersisterTests extends TestCase {
 	}
 
 	
-	//TODO finish tests
 }
