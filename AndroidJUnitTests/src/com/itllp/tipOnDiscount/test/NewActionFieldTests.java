@@ -58,21 +58,10 @@ public class NewActionFieldTests extends
 	private TextView totalDueView;
 	private TextView shareDueView;
 	private DataModel model;
-	private String zeroText;
-	private String zeroAmountText;
-	private BigDecimal zeroAmount;
-	private BigDecimal oneCentAmount;
-	private String oneText;
 	private String oneDollarAmountText;
 	private BigDecimal oneDollarAmount;
-	private String zeroPercentText;
-	private String zeroPercentRateText;
-	private BigDecimal zeroPercentRate;
 	private String onePercentRateText;
 	private BigDecimal onePercentRate;
-	private String fifteenPercentText;
-	private String fifteenPercentRateText;
-	private BigDecimal fifteenPercentRate;
     
     
 	@SuppressWarnings("deprecation")
@@ -92,21 +81,10 @@ public class NewActionFieldTests extends
         StubDataModel stubDataModel = new StubDataModel();
         DataModelFactory.setDataModel(stubDataModel);
 
-        zeroText = "0";
-        zeroAmountText = "0.00";
-        zeroAmount = new BigDecimal(zeroAmountText);
-        oneText = "1";
-        oneCentAmount = new BigDecimal("0.01");
         oneDollarAmountText = "1.00";
         oneDollarAmount = new BigDecimal(oneDollarAmountText);
-        zeroPercentText = "0";
-        zeroPercentRateText = "0";
-    	zeroPercentRate = new BigDecimal(zeroPercentRateText);
         onePercentRateText = "0.01";
         onePercentRate = new BigDecimal(onePercentRateText);
-        fifteenPercentText = "15";
-        fifteenPercentRateText = "0.15";
-        fifteenPercentRate = new BigDecimal(fifteenPercentRateText);
         mInstrumentation = getInstrumentation();
         mActivity = this.getActivity();
 

@@ -3,7 +3,6 @@ package com.itllp.tipOnDiscount.model.persistence.impl;
 import java.math.BigDecimal;
 
 import android.content.Context;
-
 import com.itllp.tipOnDiscount.model.DataModel;
 import com.itllp.tipOnDiscount.model.persistence.DataModelPersister;
 import com.itllp.tipOnDiscount.persistence.Persister;
@@ -32,6 +31,8 @@ public class DataModelPersisterImpl implements DataModelPersister {
 			persister.save(DataModel.BUMPS_KEY, model.getBumps());
 		} catch (Exception e) {
 			// TODO toast if failed
+//			Toast.makeText(this,
+//           		 "Failed to save state", Toast.LENGTH_LONG).show();
 		}
 		try {
 			persister.endSave();

@@ -55,7 +55,9 @@ extends ActivityInstrumentationTestCase2<TipOnDiscount> {
     				}
     			}
         	);
-		
+    	
+    	// Verify postconditions
+    	getInstrumentation().waitForIdleSync();
 		assertEquals("Incorrect data model restored", stubDataModel, 
 				stubDataModelPersister.mock_getLastRestoredDataModel());
 		assertEquals("Incorrect persister used to restore",
@@ -63,5 +65,31 @@ extends ActivityInstrumentationTestCase2<TipOnDiscount> {
 				stubDataModelPersister.mock_getLastRestoredPersister());
 		assertEquals("Incorrect context used to restore", context, 
 				stubDataModelPersister.mock_getLastRestoredContext());
+	}
+	
+	
+	public void testSaveInstanceState() {
+		// Set up preconditions
+		final TipOnDiscount activity = getActivity();
+		final Context context = activity;
+		
+		// Call method under test
+    	activity.runOnUiThread(
+    			new Runnable() {
+    				public void run() {
+    					activity.saveInstanceState(context);
+    				}
+    			}
+        	);
+		
+    	// Verify postconditions
+    	getInstrumentation().waitForIdleSync();
+		assertEquals("Incorrect data model saved", stubDataModel, 
+				stubDataModelPersister.mock_getLastSavedDataModel());
+		assertEquals("Incorrect persister used to save", stubPersister, 
+				stubDataModelPersister.mock_getLastSavedPersister());
+		assertEquals("Incorrect context used to save", context, 
+				stubDataModelPersister.mock_getLastSavedContext());
+		
 	}
 }

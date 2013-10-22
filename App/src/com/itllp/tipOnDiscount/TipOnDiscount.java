@@ -25,7 +25,6 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
@@ -42,7 +41,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemSelectedListener;
 
 import com.itllp.tipOnDiscount.model.DataModel;
@@ -421,10 +419,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
     @Override
     public void onPause() {
         super.onPause();
-        if (!saveInstanceState(this)) {
-             Toast.makeText(this,
-            		 "Failed to save state", Toast.LENGTH_LONG).show();
-          }
+        saveInstanceState(this);
     }
 
 
@@ -883,40 +878,8 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
      * @param context - The Activity's Context
      *
      */
-    public boolean saveInstanceState(Context context) {
-    	//TODO Move save to data model persister
-    	//TODO Bumps is not saved when TOD is closed and reopened
-
-    	SharedPreferences prefs =
-                context.getSharedPreferences(TipOnDiscountApplication.TOD_PREFERENCES_FILE, 
-                		MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-
-        // Save application state
-        String value;
-        
-        value = this.dataModel.getBillTotal().toPlainString();
-        editor.putString(DataModel.BILL_TOTAL_KEY, value);
-        
-        value = this.dataModel.getTaxRate().toPlainString();
-        editor.putString(DataModel.TAX_RATE_KEY, value);
-        
-        value = this.dataModel.getTaxAmount().toPlainString();
-        editor.putString(DataModel.TAX_AMOUNT_KEY, value);
-
-        value = this.dataModel.getDiscount().toPlainString();
-        editor.putString(DataModel.DISCOUNT_KEY, value);
-
-        value = this.dataModel.getPlannedTipRate().toPlainString();
-        editor.putString(DataModel.PLANNED_TIP_RATE_KEY, value);
-        
-        value = Integer.toString(this.dataModel.getSplitBetween());
-        editor.putString(DataModel.SPLIT_BETWEEN_KEY, value);
-        
-        value = this.dataModel.getRoundUpToAmount().toPlainString();
-        editor.putString(DataModel.ROUND_UP_TO_NEAREST_AMOUNT, value);
-        
-        return (editor.commit());
+    public void saveInstanceState(Context context) {
+    	dataModelPersister.saveState(dataModel, persister, context);
     }
 
 	
