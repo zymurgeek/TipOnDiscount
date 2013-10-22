@@ -98,12 +98,6 @@ public interface DataModel {
 	 */
 	public BigDecimal getRoundUpToAmount();
 
-	/** Restores saved data model values. */
-	public void restoreState();
-	
-	/** Saves the values contained in the data model. */
-	public void saveState();
-	
 	/** Sets the amount the bill share is to be rounded up to, i.e.,
 	 * round each share up to the nearest "roundUpToAmount".
 	 * This may change Share Due.

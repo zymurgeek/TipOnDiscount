@@ -29,10 +29,15 @@ import com.itllp.tipOnDiscount.model.DataModelFactory;
 import com.itllp.tipOnDiscount.model.persistence.DataModelPersisterFactory;
 import com.itllp.tipOnDiscount.model.persistence.test.StubDataModelPersister;
 import com.itllp.tipOnDiscount.model.test.StubDataModel;
+import com.itllp.tipOnDiscount.persistence.PersisterFactory;
+import com.itllp.tipOnDiscount.persistence.test.StubPersister;
 
 public class DestroyTests extends
 	ActivityInstrumentationTestCase2<TipOnDiscount>{
 
+	private StubDataModel stubDataModel;
+	private StubPersister stubPersister;
+	private StubDataModelPersister stubDataModelPersister;
 	private Instrumentation mInstrumentation;
     private TipOnDiscount mActivity;
     private TextView billTotalEntryView;
@@ -62,13 +67,15 @@ public class DestroyTests extends
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        mInstrumentation = getInstrumentation();
-
-        DataModelPersisterFactory.setDataModelPersister(
-        		new StubDataModelPersister());
-        DataModel stubDataModel = new StubDataModel();
-        DataModelFactory.setDataModel(stubDataModel);
         
+        stubPersister = new StubPersister();
+        PersisterFactory.setPersister(stubPersister);
+        stubDataModelPersister = new StubDataModelPersister();
+        DataModelPersisterFactory.setDataModelPersister(
+        		stubDataModelPersister);
+        stubDataModel = new StubDataModel();
+        DataModelFactory.setDataModel(stubDataModel);
+        mInstrumentation = getInstrumentation();
         mActivity = this.getActivity();
 
         billTotalEntryView = (TextView) mActivity.findViewById
@@ -207,20 +214,24 @@ public class DestroyTests extends
     
 
 
-    //FIXME Update test--model doesn't save itself anymore
-//    public void testDataModelSaveAndRestoreOnDestroy() {
-//    	// Preconditions
-//    	final MockDataModel model = (MockDataModel)mActivity.getDataModel();
-//    	
-//    	// Method under test
-//    	this.destroyAndRestart();
-//    	
-//    	// Postconditions
-//    	assertTrue("Data model was not saved", model.wasDataModelSaved());
-//    	// When the app is destroyed, the restore method will not be called because
-//    	// it's a new activity that's created, not the old one restarted.
-//    	// assertTrue("Data model was not restored", model.wasDataModelRestored());
-//    }
+    public void testDataModelSaveAndRestoreOnDestroy() {
+    	// Method under test
+    	this.destroyAndRestart();
+    	
+    	// Postconditions
+    	assertEquals("Incorrect Data model saved", 
+    			stubDataModel,
+    			stubDataModelPersister.mock_getLastSavedDataModel());
+    	assertEquals("Incorrect Persister used to save",
+    			stubPersister,
+    			stubDataModelPersister.mock_getLastSavedPersister());
+    	assertEquals("Incorrect context used to save",
+    			getActivity(), 
+    			stubDataModelPersister.mock_getLastSavedContext());
+    	// When the app is destroyed, the restore method will not be called because
+    	// it's a new activity that's created, not the old one restarted.
+    	// assertTrue("Data model was not restored", model.wasDataModelRestored());
+    }
     
     
     public void testDiscountStateDestroy() {

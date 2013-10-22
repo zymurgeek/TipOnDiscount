@@ -42,8 +42,6 @@ public class StubDataModel extends Observable implements DataModel {
 	private BigDecimal tippableAmount;
 	private BigDecimal totalDue;
 	private boolean usingTaxRate;
-	private boolean dataModelWasSaved;
-	private boolean dataModelWasRestored;
 	public static final BigDecimal INITIAL_ACTUAL_TIP_AMOUNT = new BigDecimal("1.23");
 	public static final BigDecimal INITIAL_ACTUAL_TIP_RATE = new BigDecimal("0.1234");
 	public static final BigDecimal INITIAL_BILL_SUBTOTAL = new BigDecimal("2.34");
@@ -167,22 +165,10 @@ public class StubDataModel extends Observable implements DataModel {
 		tippableAmount = INITIAL_TIPPABLE_AMOUNT;
 		totalDue = INITIAL_TOTAL_DUE;
 		usingTaxRate = INITIAL_USING_TAX_RATE;
-		dataModelWasRestored = false;
-		dataModelWasSaved = false;
 	}
 
 	public boolean isUsingTaxRate() {
 		return this.usingTaxRate;
-	}
-
-	@Override
-	public void restoreState() {
-		this.dataModelWasRestored = true;
-	}
-
-	@Override
-	public void saveState() {
-		this.dataModelWasSaved = true;
 	}
 
 	public void setActualTipAmount(BigDecimal amount) {
@@ -246,13 +232,4 @@ public class StubDataModel extends Observable implements DataModel {
 	public void setTotalDue(BigDecimal amount) {
 		this.totalDue = amount;
 	}
-
-	public boolean wasDataModelSaved() {
-		return this.dataModelWasSaved;
-	}
-
-	public boolean wasDataModelRestored() {
-		return this.dataModelWasRestored;
-	}
-
 }
