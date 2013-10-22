@@ -21,6 +21,7 @@ package com.itllp.tipOnDiscount.test;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Currency;
+
 import android.app.Instrumentation;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.KeyEvent;
@@ -32,7 +33,9 @@ import android.widget.TextView;
 import com.itllp.tipOnDiscount.TipOnDiscount;
 import com.itllp.tipOnDiscount.model.DataModel;
 import com.itllp.tipOnDiscount.model.DataModelFactory;
-import com.itllp.tipOnDiscount.model.test.MockDataModel;
+import com.itllp.tipOnDiscount.model.persistence.DataModelPersisterFactory;
+import com.itllp.tipOnDiscount.model.persistence.test.StubDataModelPersister;
+import com.itllp.tipOnDiscount.model.test.StubDataModel;
 
 /* These test are related to user interface operation only, such as
  * data formatting and widget operations. 
@@ -99,8 +102,16 @@ public class DataEntryFieldTests extends
     private TextView totalDueTextView;
     private TextView shareDueTextView;
 	private Spinner roundUpToNearestSpinner;
-    
-    
+	private String roundUpToNoneSpinnerText = "None";
+	private String roundUpToNickelSpinnerText = "Nickel";
+	private String roundUpToDimeSpinnerText = "Dime";
+	private String roundUpToQuarterSpinnerText = "Quarter";
+	private String roundUpToHalfDollarSpinnerText = "Half Dollar";
+	private String roundUpToDollarSpinnerText = "$1";
+	private String roundUpToTwoDollarsSpinnerText = "$2";
+	private String roundUpToFiveDollarsSpinnerText = "$5";
+	private String roundUpToTenDollarsSpinnerText = "$10";
+	private String roundUpToTwentyDollarsSpinnerText = "$20";
 	@SuppressWarnings("deprecation")
 	public DataEntryFieldTests() {
 		// Using the non-deprecated version of this constructor requires API 8
@@ -115,12 +126,12 @@ public class DataEntryFieldTests extends
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+
+        DataModel stubDataModel = new StubDataModel();
+    	DataModelFactory.setDataModel(stubDataModel);
+    	DataModelPersisterFactory.setDataModelPersister(
+    			new StubDataModelPersister());
         mInstrumentation = getInstrumentation();
-        
-        DataModel mockDataModel = new MockDataModel();
-        DataModelFactory.clearDataModel();
-        DataModelFactory.setDataModel(mockDataModel);
-        
         mActivity = this.getActivity();
 
         billTotalEntryView = (EditText) mActivity.findViewById
@@ -302,7 +313,7 @@ public class DataEntryFieldTests extends
      */
     public void testBillTotalPaste() {
     	// Preconditions
-    	MockDataModel model = (MockDataModel)mActivity.getDataModel();
+    	StubDataModel model = (StubDataModel)mActivity.getDataModel();
     	final String amountText = "120.56";
     	final BigDecimal amount = new BigDecimal(amountText);
 
@@ -412,20 +423,20 @@ public class DataEntryFieldTests extends
         	mInstrumentation.waitForIdleSync();
     }
     
-    
+    //TODO replace string constants and values with values from strings.xml
     /* Test that the Round Up To Nearest spinner sets the round up to amount in 
      * the data model. */
     public void testRoundUpToAmountNone() {
     	// Preconditions
-    	final MockDataModel model = (MockDataModel)mActivity.getDataModel();
-    	String roundingText = "None";
+    	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
     	BigDecimal roundingValue = new BigDecimal("0.01");
+    	setRoundUpToAmount(roundUpToNickelSpinnerText);  // spinner must change to activate test
     	
     	// Method under test
-    	setRoundUpToAmount(roundingText);
+    	setRoundUpToAmount(roundUpToNoneSpinnerText);
     	
     	// Postconditions
-    	assertEquals("Incorrect amount for RoundUpToNearest "+roundingText,
+    	assertEquals("Incorrect amount for RoundUpToNearest "+roundUpToNoneSpinnerText,
     			roundingValue, model.getRoundUpToAmount());
     }
 
@@ -434,15 +445,15 @@ public class DataEntryFieldTests extends
      * the data model. */
     public void testRoundUpToAmountNickel() {
     	// Preconditions
-    	final MockDataModel model = (MockDataModel)mActivity.getDataModel();
-    	String roundingText = "Nickel";
+    	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
     	BigDecimal roundingValue = new BigDecimal("0.05");
+    	setRoundUpToAmount(roundUpToNoneSpinnerText);
     	
     	// Method under test
-    	setRoundUpToAmount(roundingText);
+    	setRoundUpToAmount(roundUpToNickelSpinnerText);
     	
     	// Postconditions
-    	assertEquals("Incorrect amount for RoundUpToNearest "+roundingText,
+    	assertEquals("Incorrect amount for RoundUpToNearest "+roundUpToNickelSpinnerText,
     			roundingValue, model.getRoundUpToAmount());
     }
     
@@ -451,15 +462,15 @@ public class DataEntryFieldTests extends
      * the data model. */
     public void testRoundUpToAmountDime() {
     	// Preconditions
-    	final MockDataModel model = (MockDataModel)mActivity.getDataModel();
-    	String roundingText = "Dime";
+    	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
     	BigDecimal roundingValue = new BigDecimal("0.10");
+    	setRoundUpToAmount(roundUpToNoneSpinnerText);
     	
     	// Method under test
-    	setRoundUpToAmount(roundingText);
+    	setRoundUpToAmount(roundUpToDimeSpinnerText);
     	
     	// Postconditions
-    	assertEquals("Incorrect amount for RoundUpToNearest "+roundingText,
+    	assertEquals("Incorrect amount for RoundUpToNearest "+roundUpToDimeSpinnerText,
     			roundingValue, model.getRoundUpToAmount());
     	BigDecimal remainder = getBillShareRemainder("Dime", "0.10");
     	assertEquals("Incorrect amount for RoundUpToNearest Dime",
@@ -471,15 +482,15 @@ public class DataEntryFieldTests extends
      * the data model. */
     public void testRoundUpToAmountQuarter() {
     	// Preconditions
-    	final MockDataModel model = (MockDataModel)mActivity.getDataModel();
-    	String roundingText = "Quarter";
+    	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
     	BigDecimal roundingValue = new BigDecimal("0.25");
+    	setRoundUpToAmount(roundUpToNoneSpinnerText);
     	
     	// Method under test
-    	setRoundUpToAmount(roundingText);
+    	setRoundUpToAmount(roundUpToQuarterSpinnerText);
     	
     	// Postconditions
-    	assertEquals("Incorrect amount for RoundUpToNearest "+roundingText,
+    	assertEquals("Incorrect amount for RoundUpToNearest "+roundUpToQuarterSpinnerText,
     			roundingValue, model.getRoundUpToAmount());
     }
     
@@ -488,15 +499,15 @@ public class DataEntryFieldTests extends
      * the data model. */
     public void testRoundUpToAmountHalfDollar() {
     	// Preconditions
-    	final MockDataModel model = (MockDataModel)mActivity.getDataModel();
-    	String roundingText = "Half Dollar";
+    	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
     	BigDecimal roundingValue = new BigDecimal("0.50");
+    	setRoundUpToAmount(roundUpToNoneSpinnerText);
     	
     	// Method under test
-    	setRoundUpToAmount(roundingText);
+    	setRoundUpToAmount(roundUpToHalfDollarSpinnerText);
     	
     	// Postconditions
-    	assertEquals("Incorrect amount for RoundUpToNearest "+roundingText,
+    	assertEquals("Incorrect amount for RoundUpToNearest "+roundUpToHalfDollarSpinnerText,
     			roundingValue, model.getRoundUpToAmount());
     }
     
@@ -505,15 +516,15 @@ public class DataEntryFieldTests extends
      * the data model. */
     public void testRoundUpToAmountOneDollar() {
     	// Preconditions
-    	final MockDataModel model = (MockDataModel)mActivity.getDataModel();
-    	String roundingText = "$1";
+    	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
     	BigDecimal roundingValue = new BigDecimal("1.00");
-    	
+    	setRoundUpToAmount(roundUpToNoneSpinnerText);
+
     	// Method under test
-    	setRoundUpToAmount(roundingText);
+    	setRoundUpToAmount(roundUpToDollarSpinnerText);
     	
     	// Postconditions
-    	assertEquals("Incorrect amount for RoundUpToNearest "+roundingText,
+    	assertEquals("Incorrect amount for RoundUpToNearest "+roundUpToDollarSpinnerText,
     			roundingValue, model.getRoundUpToAmount());
     }
     
@@ -522,15 +533,15 @@ public class DataEntryFieldTests extends
      * the data model. */
     public void testRoundUpToAmountTwoDollars() {
     	// Preconditions
-    	final MockDataModel model = (MockDataModel)mActivity.getDataModel();
-    	String roundingText = "$2";
+    	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
     	BigDecimal roundingValue = new BigDecimal("2.00");
+    	setRoundUpToAmount(roundUpToNoneSpinnerText);
     	
     	// Method under test
-    	setRoundUpToAmount(roundingText);
+    	setRoundUpToAmount(roundUpToTwoDollarsSpinnerText);
     	
     	// Postconditions
-    	assertEquals("Incorrect amount for RoundUpToNearest "+roundingText,
+    	assertEquals("Incorrect amount for RoundUpToNearest "+roundUpToTwoDollarsSpinnerText,
     			roundingValue, model.getRoundUpToAmount());
     }
     
@@ -539,15 +550,15 @@ public class DataEntryFieldTests extends
      * the data model. */
     public void testRoundUpToAmountFiveDollars() {
     	// Preconditions
-    	final MockDataModel model = (MockDataModel)mActivity.getDataModel();
-    	String roundingText = "$5";
+    	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
     	BigDecimal roundingValue = new BigDecimal("5.00");
+    	setRoundUpToAmount(roundUpToNoneSpinnerText);
     	
     	// Method under test
-    	setRoundUpToAmount(roundingText);
+    	setRoundUpToAmount(roundUpToFiveDollarsSpinnerText);
     	
     	// Postconditions
-    	assertEquals("Incorrect amount for RoundUpToNearest "+roundingText,
+    	assertEquals("Incorrect amount for RoundUpToNearest "+roundUpToFiveDollarsSpinnerText,
     			roundingValue, model.getRoundUpToAmount());
     }
     
@@ -556,15 +567,15 @@ public class DataEntryFieldTests extends
      * the data model. */
     public void testRoundUpToAmountTenDollars() {
     	// Preconditions
-    	final MockDataModel model = (MockDataModel)mActivity.getDataModel();
-    	String roundingText = "$10";
+    	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
     	BigDecimal roundingValue = new BigDecimal("10.00");
+    	setRoundUpToAmount(roundUpToNoneSpinnerText);
     	
     	// Method under test
-    	setRoundUpToAmount(roundingText);
+    	setRoundUpToAmount(roundUpToTenDollarsSpinnerText);
     	
     	// Postconditions
-    	assertEquals("Incorrect amount for RoundUpToNearest "+roundingText,
+    	assertEquals("Incorrect amount for RoundUpToNearest "+roundUpToTenDollarsSpinnerText,
     			roundingValue, model.getRoundUpToAmount());
     }
     
@@ -573,15 +584,15 @@ public class DataEntryFieldTests extends
      * the data model. */
     public void testRoundUpToAmountTwentyDollars() {
     	// Preconditions
-    	final MockDataModel model = (MockDataModel)mActivity.getDataModel();
-    	String roundingText = "$20";
+    	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
     	BigDecimal roundingValue = new BigDecimal("20.00");
+    	setRoundUpToAmount(roundUpToNoneSpinnerText);
     	
     	// Method under test
-    	setRoundUpToAmount(roundingText);
+    	setRoundUpToAmount(roundUpToTwentyDollarsSpinnerText);
     	
     	// Postconditions
-    	assertEquals("Incorrect amount for RoundUpToNearest "+roundingText,
+    	assertEquals("Incorrect amount for RoundUpToNearest "+roundUpToTwentyDollarsSpinnerText,
     			roundingValue, model.getRoundUpToAmount());
     }
     
@@ -591,7 +602,7 @@ public class DataEntryFieldTests extends
      */
     public void testBumpDownButtonUpdatesDataModel() {
     	// Set up preconditions
-    	final MockDataModel model = (MockDataModel)mActivity.getDataModel();
+    	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
     	
     	// Method under test
 		mActivity.runOnUiThread(
@@ -615,7 +626,7 @@ public class DataEntryFieldTests extends
      */
     public void testBumpUpButtonUpdatesDataModel() {
     	// Set up preconditions
-    	final MockDataModel model = (MockDataModel)mActivity.getDataModel();
+    	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
     	
     	// Method under test
 		mActivity.runOnUiThread(

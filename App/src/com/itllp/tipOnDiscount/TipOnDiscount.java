@@ -320,6 +320,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
         splitBetweenEntry.setOnFocusChangeListener(focusChangeListener);
 
         roundUpToNearestValues = new HashMap<String, BigDecimal>();
+        //TODO Use strings.xml for these values
         roundUpToNearestValues.put("None", this.pennyValue);
         roundUpToNearestValues.put("Nickel", this.nickelValue);
         roundUpToNearestValues.put("Dime", this.dimeValue);

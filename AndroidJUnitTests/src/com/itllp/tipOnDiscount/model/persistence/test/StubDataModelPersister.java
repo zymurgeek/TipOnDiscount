@@ -6,7 +6,7 @@ import com.itllp.tipOnDiscount.model.DataModel;
 import com.itllp.tipOnDiscount.model.persistence.DataModelPersister;
 import com.itllp.tipOnDiscount.persistence.Persister;
 
-public class MockDataModelPersister implements DataModelPersister {
+public class StubDataModelPersister implements DataModelPersister {
 
 	private DataModel mock_lastSavedDataModel;
 	private Persister mock_lastSavedPersister;

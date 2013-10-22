@@ -5,9 +5,7 @@ public class PersisterFactory {
 
 	
 	public static void setPersister(Persister newPersister) {
-		if (null == persister) {
-			persister = newPersister;
-		}
+		persister = newPersister;
 	}
 
 
@@ -16,7 +14,4 @@ public class PersisterFactory {
 	}
 	
 
-	public static void clearPersister() {
-		PersisterFactory.persister = null;
-	}
 }

@@ -12,27 +12,16 @@ import android.util.Log;
 public class TipOnDiscountApplication extends Application {
 	
 	public static final String TOD_PREFERENCES_FILE = "TipOnDiscountPrefs";
-	public static final String APP_PREFERENCES_FILE = "ApplicationPrefs";
-	public static final String UNIT_TEST_KEY = "isDebug";
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
 
-		PreferencesFilePersister appPrefs = new PreferencesFilePersister
-				(APP_PREFERENCES_FILE);
-		Boolean isUnitTest = appPrefs.retrieveBoolean(getApplicationContext(),
-				UNIT_TEST_KEY);
-		if (null == isUnitTest || isUnitTest.booleanValue() == false) {
-			Log.d("TipOnDiscount", "Setting production factories");
-			DataModelFactory.clearDataModel();
-			DataModelFactory.setDataModel(new DataModelImpl());
-			DataModelPersisterFactory.clearDataModelPersister();
-			DataModelPersisterFactory.setDataModelPersister(
-					new DataModelPersisterImpl());
-			PersisterFactory.clearPersister();
-			PersisterFactory.setPersister(new PreferencesFilePersister(
-					TOD_PREFERENCES_FILE));
-		}
+		Log.d("TipOnDiscount", "Setting production factories");
+		DataModelFactory.setDataModel(new DataModelImpl());
+		DataModelPersisterFactory.setDataModelPersister(
+				new DataModelPersisterImpl());
+		PersisterFactory.setPersister(new PreferencesFilePersister(
+				TOD_PREFERENCES_FILE));
 	}
 }

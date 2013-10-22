@@ -7,9 +7,7 @@ public class DataModelFactory {
 	
 	public static void setDataModel(DataModel newDataModel) {
 		Log.d("TipOnDiscount", "setDataModel() was: " + getDataModelDescription(dataModel));
-		if (null == dataModel) {
-			dataModel = newDataModel;
-		}
+		dataModel = newDataModel;
 		Log.d("TipOnDiscount", "setDataModel() now is: " + getDataModelDescription(dataModel));
 	}
 
@@ -27,7 +25,4 @@ public class DataModelFactory {
 	}
 	
 
-	public static void clearDataModel() {
-		DataModelFactory.dataModel = null;
-	}
 }

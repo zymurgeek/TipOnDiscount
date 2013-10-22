@@ -30,7 +30,9 @@ import android.widget.TextView;
 import com.itllp.tipOnDiscount.TipOnDiscount;
 import com.itllp.tipOnDiscount.model.DataModel;
 import com.itllp.tipOnDiscount.model.DataModelFactory;
-import com.itllp.tipOnDiscount.model.impl.DataModelImpl;
+import com.itllp.tipOnDiscount.model.persistence.DataModelPersisterFactory;
+import com.itllp.tipOnDiscount.model.persistence.test.StubDataModelPersister;
+import com.itllp.tipOnDiscount.model.test.StubDataModel;
 
 /* These test are related to the New menu action only. 
  */
@@ -86,6 +88,10 @@ public class NewActionFieldTests extends
     protected void setUp() throws Exception {
         super.setUp();
         
+        DataModelPersisterFactory.setDataModelPersister(new StubDataModelPersister());
+        StubDataModel stubDataModel = new StubDataModel();
+        DataModelFactory.setDataModel(stubDataModel);
+
         zeroText = "0";
         zeroAmountText = "0.00";
         zeroAmount = new BigDecimal(zeroAmountText);
@@ -102,11 +108,6 @@ public class NewActionFieldTests extends
         fifteenPercentRateText = "0.15";
         fifteenPercentRate = new BigDecimal(fifteenPercentRateText);
         mInstrumentation = getInstrumentation();
-        
-        DataModel dataModel = new DataModelImpl();
-        DataModelFactory.clearDataModel();
-        DataModelFactory.setDataModel(dataModel);
-
         mActivity = this.getActivity();
 
         billTotalEntryView = (EditText) mActivity.findViewById
@@ -155,21 +156,21 @@ public class NewActionFieldTests extends
     	runOpenNewAction();
     	
     	// Postconditions
-        assertBillTotalFieldAndModelAreZero();    	
-        assertTaxPercentFieldAndTaxRateInModelAreZero();    	
-        assertTaxAmountFieldAndModelAreZero();
-        assertBillSubtotalFieldAndModelAreZero();
-        assertDiscountFieldAndModelAreZero();
-        assertTippableAmountFieldAndModelAreZero();
-        assertPlannedTipPercentFieldAndModelAreFifteenPercent();
-        assertPlannedTipAmountFieldAndModelAreZero();
-        assertSplitBetweenFieldAndModelAreOne();
-        assertRoundUpToNearestFieldAndModelAreNone();
-        assertBumpsFieldAndModelAreZero();
-        assertActualTipPercentFieldAndModelAreZero();
-        assertActualTipAmountFieldAndModelAreZero();
-        assertTotalDueFieldAndModelAreZero();
-        assertShareDueFieldAndModelAreZero();
+        assertBillTotalFieldAndModelAreAtInitialValues();    	
+        assertTaxPercentFieldAndTaxRateInModelAreAtInitialValues();    	
+        assertTaxAmountFieldAndModelAreAtInitialValues();
+        assertBillSubtotalFieldAndModelAreAtInitialValues();
+        assertDiscountFieldAndModelAreAtInitialValues();
+        assertTippableAmountFieldAndModelAreAtInitialValues();
+        assertPlannedTipPercentFieldAndModelAreAtInitialValues();
+        assertPlannedTipAmountFieldAndModelAreAtInitialValues();
+        assertSplitBetweenFieldAndModelAreAtInitialValues();
+        assertRoundUpToNearestFieldAndModelAreAtInitialValues();
+        assertBumpsFieldAndModelAreAtInitialValues();
+        assertActualTipPercentFieldAndModelAreAtInitialValues();
+        assertActualTipAmountFieldAndModelAreAtActualValues();
+        assertTotalDueFieldAndModelAreAtInitialValues();
+        assertShareDueFieldAndModelAreAtInitialValues();
     }
 
 
@@ -181,7 +182,7 @@ public class NewActionFieldTests extends
 		runOpenNewAction();
     	
 		// Verify postconditions
-    	assertBillTotalFieldAndModelAreZero();    	
+    	assertBillTotalFieldAndModelAreAtInitialValues();    	
     }
 
     
@@ -193,7 +194,7 @@ public class NewActionFieldTests extends
 		runOpenNewAction();
 		
 		// Verify postconditions
-		assertTaxPercentFieldAndTaxRateInModelAreZero();
+		assertTaxPercentFieldAndTaxRateInModelAreAtInitialValues();
 	}
 
 
@@ -205,7 +206,7 @@ public class NewActionFieldTests extends
 		runOpenNewAction();
 		
 		// Verify postconditions
-		assertTaxAmountFieldAndModelAreZero();
+		assertTaxAmountFieldAndModelAreAtInitialValues();
 	}
 
 
@@ -217,7 +218,7 @@ public class NewActionFieldTests extends
 		runOpenNewAction();
     	
 		// Verify postconditions
-    	assertDiscountFieldAndModelAreZero();    	
+    	assertDiscountFieldAndModelAreAtInitialValues();    	
     }
 
     
@@ -229,7 +230,7 @@ public class NewActionFieldTests extends
     	runOpenNewAction();
     	
     	// Verify postconditions
-    	assertPlannedTipPercentFieldAndModelAreFifteenPercent();
+    	assertPlannedTipPercentFieldAndModelAreAtInitialValues();
 	}
 
 
@@ -241,7 +242,7 @@ public class NewActionFieldTests extends
 		runOpenNewAction();
     	
 		// Verify postconditions
-    	assertSplitBetweenFieldAndModelAreOne();    	
+    	assertSplitBetweenFieldAndModelAreAtInitialValues();    	
     }
 
     
@@ -253,128 +254,155 @@ public class NewActionFieldTests extends
 		runOpenNewAction();
     	
 		// Verify postconditions
-    	assertRoundUpToNearestFieldAndModelAreNone();    	
+    	assertRoundUpToNearestFieldAndModelAreAtInitialValues();    	
     }
     
     
-	private void assertActualTipAmountFieldAndModelAreZero() {
-		assertEquals("Wrong value in actual tip amount field", zeroAmountText, 
+	private void assertActualTipAmountFieldAndModelAreAtActualValues() {
+		assertEquals("Wrong value in actual tip amount field", 
+				StubDataModel.INITIAL_ACTUAL_TIP_AMOUNT.toPlainString(), 
 	    		actualTipAmountView.getText().toString());    	
-	    assertEquals("Wrong value for actual tip amount in data model", zeroAmount, 
+	    assertEquals("Wrong value for actual tip amount in data model", 
+	    		StubDataModel.INITIAL_ACTUAL_TIP_AMOUNT, 
 	    		model.getActualTipAmount());
 	}
 	
 	
-	private void assertBillTotalFieldAndModelAreZero() {
-		assertEquals("Wrong value in bill total field", zeroAmountText, 
+	private void assertBillTotalFieldAndModelAreAtInitialValues() {
+		assertEquals("Wrong value in bill total field", 
+				StubDataModel.INITIAL_BILL_TOTAL.toPlainString(), 
 	    		billTotalEntryView.getText().toString());    	
-	    assertEquals("Wrong value for bill total in data model", zeroAmount, 
+	    assertEquals("Wrong value for bill total in data model", 
+	    		StubDataModel.INITIAL_BILL_TOTAL, 
 	    		model.getBillTotal());
 	}
 
 
-	private void assertBillSubtotalFieldAndModelAreZero() {
-		assertEquals("Wrong value in bill subtotal field", zeroAmountText, 
+	private void assertBillSubtotalFieldAndModelAreAtInitialValues() {
+		assertEquals("Wrong value in bill subtotal field", 
+				StubDataModel.INITIAL_BILL_SUBTOTAL.toPlainString(), 
 	    		billSubtotalView.getText().toString());    	
-	    assertEquals("Wrong value for bill subtotal in data model", zeroAmount, 
+	    assertEquals("Wrong value for bill subtotal in data model", 
+	    		StubDataModel.INITIAL_BILL_SUBTOTAL, 
 	    		model.getBillSubtotal());
 	}
 
 
-	private void assertBumpsFieldAndModelAreZero() {
-		assertEquals("Wrong value in bumps field", zeroText, 
+	private void assertBumpsFieldAndModelAreAtInitialValues() {
+		assertEquals("Wrong value in bumps field", 
+				String.valueOf(StubDataModel.INITIAL_BUMPS), 
 	    		bumpsTextView.getText().toString());    	
-	    assertEquals("Wrong value for bumps in data model", 0, 
+	    assertEquals("Wrong value for bumps in data model", 
+	    		StubDataModel.INITIAL_BUMPS, 
 	    		model.getBumps());
 	}
 
 	
-	private void assertActualTipPercentFieldAndModelAreZero() {
-		assertEquals("Wrong value in actual tip percent field", zeroPercentText,
+	private void assertActualTipPercentFieldAndModelAreAtInitialValues() {
+		assertEquals("Wrong value in actual tip percent field", 
+				TipOnDiscount.formatRateToPercent(StubDataModel.INITIAL_ACTUAL_TIP_RATE),
 				actualTipPercentView.getText().toString());
 	    assertTrue("Wrong value for actual tip rate in data model", 
-	    		0 == zeroPercentRate.compareTo(model.getActualTipRate()));
+	    		0 == StubDataModel.INITIAL_ACTUAL_TIP_RATE.compareTo(model.getActualTipRate()));
 	}
 	
 	
-	private void assertDiscountFieldAndModelAreZero() {
-		assertEquals("Wrong value in discount field", zeroAmountText, 
+	private void assertDiscountFieldAndModelAreAtInitialValues() {
+		assertEquals("Wrong value in discount field", 
+				StubDataModel.INITIAL_DISCOUNT.toPlainString(), 
 	    		discountEntryView.getText().toString());    	
-	    assertEquals("Wrong value for discount in data model", zeroAmount, 
+	    assertEquals("Wrong value for discount in data model", 
+	    		StubDataModel.INITIAL_DISCOUNT, 
 	    		model.getDiscount());
 	}
 
 
-	private void assertPlannedTipAmountFieldAndModelAreZero() {
-		assertEquals("Wrong value in planned tip amount field", zeroAmountText, 
+	private void assertPlannedTipAmountFieldAndModelAreAtInitialValues() {
+		assertEquals("Wrong value in planned tip amount field", 
+				StubDataModel.INITIAL_PLANNED_TIP_AMOUNT.toPlainString(), 
 	    		plannedTipAmountView.getText().toString());    	
-	    assertEquals("Wrong value for tippable amount in data model", zeroAmount, 
+	    assertEquals("Wrong value for tippable amount in data model", 
+	    		StubDataModel.INITIAL_PLANNED_TIP_AMOUNT, 
 	    		model.getPlannedTipAmount());
 		
 	}
 	
 	
-	private void assertPlannedTipPercentFieldAndModelAreFifteenPercent() {
-		assertEquals("Wrong value in planned tip field", fifteenPercentText, 
+	private void assertPlannedTipPercentFieldAndModelAreAtInitialValues() {
+		assertEquals("Wrong value in planned tip field", 
+				TipOnDiscount.formatRateToPercent(StubDataModel.INITIAL_PLANNED_TIP_RATE), 
 				plannedTipPercentEntryView.getText().toString());
 	    assertTrue("Wrong value for planned tip rate in data model", 
-	    		0 == fifteenPercentRate.compareTo(model.getPlannedTipRate()));
+	    		0 == StubDataModel.INITIAL_PLANNED_TIP_RATE.compareTo(model.getPlannedTipRate()));
 	}
 
 
-	private void assertSplitBetweenFieldAndModelAreOne() {
-		assertEquals("Wrong value in split between field", oneText, 
+	private void assertSplitBetweenFieldAndModelAreAtInitialValues() {
+		assertEquals("Wrong value in split between field", 
+				String.valueOf(StubDataModel.INITIAL_SPLIT_BETWEEN), 
 	    		splitBetweenEntryView.getText().toString());    	
-	    assertEquals("Wrong value for split between in data model", 1, 
+	    assertEquals("Wrong value for split between in data model", 
+	    		StubDataModel.INITIAL_SPLIT_BETWEEN, 
 	    		model.getSplitBetween());
 	}
 
 	
-	private void assertRoundUpToNearestFieldAndModelAreNone() {
-		assertEquals("Wrong value in round up to nearest spinner", "None", 
+	private void assertRoundUpToNearestFieldAndModelAreAtInitialValues() {
+		//TODO Replace constant
+		assertEquals("Wrong value in round up to nearest spinner", "$2", 
 	    	roundUpToNearestSpinner.getSelectedItem().toString());
-	    assertEquals("Wrong value for round up to nearest in data model", oneCentAmount, 
+	    assertEquals("Wrong value for round up to nearest in data model", 
+	    		StubDataModel.INITIAL_ROUND_UP_TO_AMOUNT, 
 	    		model.getRoundUpToAmount());
 	}
 
 	
-	private void assertTippableAmountFieldAndModelAreZero() {
-		assertEquals("Wrong value in tippable amount field", zeroAmountText, 
+	private void assertTippableAmountFieldAndModelAreAtInitialValues() {
+		assertEquals("Wrong value in tippable amount field", 
+				StubDataModel.INITIAL_TIPPABLE_AMOUNT.toPlainString(), 
 	    		tippableAmountView.getText().toString());    	
-	    assertEquals("Wrong value for tippable amount in data model", zeroAmount, 
+	    assertEquals("Wrong value for tippable amount in data model", 
+	    		StubDataModel.INITIAL_TIPPABLE_AMOUNT, 
 	    		model.getTippableAmount());
 		
 	}
 	
 	
-	private void assertTaxPercentFieldAndTaxRateInModelAreZero() {
+	private void assertTaxPercentFieldAndTaxRateInModelAreAtInitialValues() {
 		assertEquals("Wrong value in tax percent field", 
-	    		zeroPercentText, taxPercentEntryView.getText().toString());
+	    		TipOnDiscount.formatRateToPercent(StubDataModel.INITIAL_TAX_RATE), 
+	    		taxPercentEntryView.getText().toString());
 	    assertTrue("Wrong value for tax rate in data model", 
-	    		0 == zeroPercentRate.compareTo(model.getTaxRate()));
+	    		0 == StubDataModel.INITIAL_TAX_RATE.compareTo(model.getTaxRate()));
 	}
 
 
-	private void assertTaxAmountFieldAndModelAreZero() {
-		assertEquals("Wrong value in tax amount field", zeroAmountText, 
+	private void assertTaxAmountFieldAndModelAreAtInitialValues() {
+		assertEquals("Wrong value in tax amount field", 
+				StubDataModel.INITIAL_TAX_AMOUNT.toPlainString(), 
 	    		this.taxAmountEntryView.getText().toString());    	
-	    assertEquals("Wrong value for tax amount in data model", zeroAmount, 
+	    assertEquals("Wrong value for tax amount in data model", 
+	    		StubDataModel.INITIAL_TAX_AMOUNT, 
 	    		model.getTaxAmount());
 	}
 
 
-	private void assertTotalDueFieldAndModelAreZero() {
-		assertEquals("Wrong value in total due field", zeroAmountText, 
+	private void assertTotalDueFieldAndModelAreAtInitialValues() {
+		assertEquals("Wrong value in total due field", 
+				StubDataModel.INITIAL_TOTAL_DUE.toPlainString(), 
 	    		this.totalDueView.getText().toString());    	
-	    assertEquals("Wrong value for total due in data model", zeroAmount, 
+	    assertEquals("Wrong value for total due in data model", 
+	    		StubDataModel.INITIAL_TOTAL_DUE, 
 	    		model.getTotalDue());
 	}
 	
 
-	private void assertShareDueFieldAndModelAreZero() {
-		assertEquals("Wrong value in share due field", zeroAmountText, 
+	private void assertShareDueFieldAndModelAreAtInitialValues() {
+		assertEquals("Wrong value in share due field", 
+				StubDataModel.INITIAL_SHARE_DUE.toPlainString(), 
 	    		this.shareDueView.getText().toString());    	
-	    assertEquals("Wrong value for share due in data model", zeroAmount, 
+	    assertEquals("Wrong value for share due in data model", 
+	    		StubDataModel.INITIAL_SHARE_DUE, 
 	    		model.getShareDue());
 	}
 	

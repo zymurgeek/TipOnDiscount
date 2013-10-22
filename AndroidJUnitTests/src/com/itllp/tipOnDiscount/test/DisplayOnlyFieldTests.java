@@ -1,4 +1,4 @@
-// Copyright 2011-2012 David A. Greenbaum
+// Copyright 2011-2013 David A. Greenbaum
 /*
 This file is part of Tip On Discount.
 
@@ -34,7 +34,9 @@ import android.widget.TextView;
 import com.itllp.tipOnDiscount.TipOnDiscount;
 import com.itllp.tipOnDiscount.model.DataModel;
 import com.itllp.tipOnDiscount.model.DataModelFactory;
-import com.itllp.tipOnDiscount.model.test.MockDataModel;
+import com.itllp.tipOnDiscount.model.persistence.DataModelPersisterFactory;
+import com.itllp.tipOnDiscount.model.persistence.test.StubDataModelPersister;
+import com.itllp.tipOnDiscount.model.test.StubDataModel;
 import com.itllp.tipOnDiscount.model.update.ActualTipAmountUpdate;
 import com.itllp.tipOnDiscount.model.update.BillSubtotalUpdate;
 import com.itllp.tipOnDiscount.model.update.ShareDueUpdate;
@@ -86,12 +88,11 @@ public class DisplayOnlyFieldTests extends
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        
+    	DataModelFactory.setDataModel(new StubDataModel());
+    	DataModelPersisterFactory.setDataModelPersister(
+    			new StubDataModelPersister());
         mInstrumentation = getInstrumentation();
-        
-        DataModel mockDataModel = new MockDataModel();
-        DataModelFactory.clearDataModel();
-        DataModelFactory.setDataModel(mockDataModel);
-        
         mActivity = this.getActivity();
 
         billSubtotalView = (TextView) mActivity.findViewById
@@ -162,7 +163,7 @@ public class DisplayOnlyFieldTests extends
      */
     public void testBillSubtotalDisplayByDataModelQuery() {
     	// Preconditions
-    	final MockDataModel model = (MockDataModel)mActivity.getDataModel();
+    	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
     	String amountText = "94.12";
     	BigDecimal amount = new BigDecimal(amountText);
     	model.setBillSubtotal(amount);
@@ -198,7 +199,7 @@ public class DisplayOnlyFieldTests extends
      */
     public void testTippableAmountDisplayByDataModelQuery() {
     	// Preconditions
-    	final MockDataModel model = (MockDataModel)mActivity.getDataModel();
+    	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
     	String amountText = "67.89";
     	BigDecimal amount = new BigDecimal(amountText);
     	model.setTippableAmount(amount);
@@ -233,7 +234,7 @@ public class DisplayOnlyFieldTests extends
      */
     public void testPlannedTipAmountDisplayByDataModelQuery() {
     	// Preconditions
-    	final MockDataModel model = (MockDataModel)mActivity.getDataModel();
+    	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
     	String amountText = "2.50";
     	BigDecimal amount = new BigDecimal(amountText);
     	model.setPlannedTipAmount(amount);
@@ -269,7 +270,7 @@ public class DisplayOnlyFieldTests extends
      */
     public void testActualTipAmountDisplayByDataModelQuery() {
     	// Preconditions
-    	final MockDataModel model = (MockDataModel)mActivity.getDataModel();
+    	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
     	String amountText = "16.00";
     	BigDecimal amount = new BigDecimal(amountText);
     	model.setActualTipAmount(amount);
@@ -305,7 +306,7 @@ public class DisplayOnlyFieldTests extends
      */
     public void testTotalDueDisplayByDataModelQuery() {
     	// Preconditions
-    	final MockDataModel model = (MockDataModel)mActivity.getDataModel();
+    	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
     	String amountText = "77.78";
     	BigDecimal amount = new BigDecimal(amountText);
     	model.setTotalDue(amount);
@@ -343,7 +344,7 @@ public class DisplayOnlyFieldTests extends
      */
     public void testShareDueDisplayByDataModelQuery() {
     	// Preconditions
-    	final MockDataModel model = (MockDataModel)mActivity.getDataModel();
+    	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
     	String amountText = "192.45";
     	BigDecimal amount = new BigDecimal(amountText);
     	model.setShareDue(amount);

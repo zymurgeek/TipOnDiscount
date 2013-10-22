@@ -23,7 +23,7 @@ import java.util.Observable;
 import com.itllp.tipOnDiscount.model.DataModel;
 import com.itllp.tipOnDiscount.model.DataModelObserver;
 
-public class MockDataModel extends Observable implements DataModel {
+public class StubDataModel extends Observable implements DataModel {
 	private BigDecimal actualTipAmount;
 	private BigDecimal actualTipRate;
 	private BigDecimal billSubtotal;
@@ -44,9 +44,25 @@ public class MockDataModel extends Observable implements DataModel {
 	private boolean usingTaxRate;
 	private boolean dataModelWasSaved;
 	private boolean dataModelWasRestored;
+	public static final BigDecimal INITIAL_ACTUAL_TIP_AMOUNT = new BigDecimal("1.23");
+	public static final BigDecimal INITIAL_ACTUAL_TIP_RATE = new BigDecimal("0.1234");
+	public static final BigDecimal INITIAL_BILL_SUBTOTAL = new BigDecimal("2.34");
+	public static final BigDecimal INITIAL_BILL_TOTAL = new BigDecimal("3.45");
+	public static final int INITIAL_BUMPS = 7;
+	public static final BigDecimal INITIAL_DISCOUNT = new BigDecimal("5.67");
+	public static final BigDecimal INITIAL_PLANNED_TIP_AMOUNT = new BigDecimal("6.78");
+	public static final BigDecimal INITIAL_PLANNED_TIP_RATE = new BigDecimal("0.23456");
+	public static final BigDecimal INITIAL_ROUND_UP_TO_AMOUNT = new BigDecimal("2.00");
+	public static final BigDecimal INITIAL_SHARE_DUE = new BigDecimal("8.90");
+	public static final int INITIAL_SPLIT_BETWEEN = 8;
+	public static final BigDecimal INITIAL_TAX_AMOUNT = new BigDecimal("10.12");
+	public static final BigDecimal INITIAL_TAX_RATE = new BigDecimal("0.56789");
+	public static final BigDecimal INITIAL_TIPPABLE_AMOUNT = new BigDecimal("11.23");
+	public static final BigDecimal INITIAL_TOTAL_DUE = new BigDecimal("12.34");
+	public static final boolean INITIAL_USING_TAX_RATE = true;
 	
 	
-	public MockDataModel() {
+	public StubDataModel() {
 		initialize();
 	}
 	
@@ -133,24 +149,24 @@ public class MockDataModel extends Observable implements DataModel {
 	}
 
 	public void initialize() {
-		actualTipAmount = new BigDecimal("0.00");
-		actualTipRate = new BigDecimal("0.0000");
-		billSubtotal = new BigDecimal("0.00");
-		billTotal = new BigDecimal("0.00");
+		actualTipAmount = INITIAL_ACTUAL_TIP_AMOUNT;
+		actualTipRate = INITIAL_ACTUAL_TIP_RATE;
+		billSubtotal = INITIAL_BILL_SUBTOTAL;
+		billTotal = INITIAL_BILL_TOTAL;
 		bumpDownCallCount = 0;
 		bumpUpCallCount = 0;
-		bumps = 0;
-		discount = new BigDecimal("0.00");
-		plannedTipAmount = new BigDecimal("0.00");
-		plannedTipRate = new BigDecimal("0.00000");
-		roundUpToAmount = new BigDecimal("0.00");
-		shareDue = new BigDecimal("0.00");
-		splitBetween = 1;
-		taxAmount = new BigDecimal("0.00");
-		taxRate = new BigDecimal("0.00000");
-		tippableAmount = new BigDecimal("0.00");
-		totalDue = new BigDecimal("0.00");
-		usingTaxRate = false;
+		bumps = INITIAL_BUMPS;
+		discount = INITIAL_DISCOUNT;
+		plannedTipAmount = INITIAL_PLANNED_TIP_AMOUNT;
+		plannedTipRate = INITIAL_PLANNED_TIP_RATE;
+		roundUpToAmount = INITIAL_ROUND_UP_TO_AMOUNT;
+		shareDue = INITIAL_SHARE_DUE;
+		splitBetween = INITIAL_SPLIT_BETWEEN;
+		taxAmount = INITIAL_TAX_AMOUNT;
+		taxRate = INITIAL_TAX_RATE;
+		tippableAmount = INITIAL_TIPPABLE_AMOUNT;
+		totalDue = INITIAL_TOTAL_DUE;
+		usingTaxRate = INITIAL_USING_TAX_RATE;
 		dataModelWasRestored = false;
 		dataModelWasSaved = false;
 	}

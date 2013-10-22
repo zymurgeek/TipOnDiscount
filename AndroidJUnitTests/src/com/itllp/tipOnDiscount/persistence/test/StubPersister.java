@@ -6,7 +6,7 @@ import android.content.Context;
 
 import com.itllp.tipOnDiscount.persistence.Persister;
 
-public class MockPersister implements Persister {
+public class StubPersister implements Persister {
 
 	@Override
 	public void beginSave(Context context) {

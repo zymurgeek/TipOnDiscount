@@ -27,7 +27,9 @@ import android.widget.TextView;
 import com.itllp.tipOnDiscount.TipOnDiscount;
 import com.itllp.tipOnDiscount.model.DataModel;
 import com.itllp.tipOnDiscount.model.DataModelFactory;
-import com.itllp.tipOnDiscount.model.test.MockDataModel;
+import com.itllp.tipOnDiscount.model.persistence.DataModelPersisterFactory;
+import com.itllp.tipOnDiscount.model.persistence.test.StubDataModelPersister;
+import com.itllp.tipOnDiscount.model.test.StubDataModel;
 
 public class PauseTests extends
 	ActivityInstrumentationTestCase2<TipOnDiscount>{
@@ -61,12 +63,12 @@ public class PauseTests extends
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+
+        DataModelPersisterFactory.setDataModelPersister(
+        		new StubDataModelPersister());
+        StubDataModel stubDataModel = new StubDataModel();
+        DataModelFactory.setDataModel(stubDataModel);
         mInstrumentation = getInstrumentation();
-        
-        MockDataModel mockDataModel = new MockDataModel();
-        DataModelFactory.clearDataModel();
-        DataModelFactory.setDataModel(mockDataModel);
-        
         mActivity = this.getActivity();
 
         billTotalEntryView = (TextView) mActivity.findViewById
@@ -147,7 +149,7 @@ public class PauseTests extends
     
     public void testActualTipPercentStatePause() {
     	// Preconditions
-    	final MockDataModel model = (MockDataModel)mActivity.getDataModel();
+    	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
     	String textRate = ".15";
     	BigDecimal rate = new BigDecimal(textRate);
     	String textPercent = TipOnDiscount.formatRateToPercent(rate);
@@ -168,7 +170,7 @@ public class PauseTests extends
     
     public void testActualTipAmountStatePause() {
     	// Preconditions
-    	final MockDataModel model = (MockDataModel)mActivity.getDataModel();
+    	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
     	String textAmount = "6.50";
     	BigDecimal amount = new BigDecimal(textAmount);
     	model.setActualTipAmount(amount);
@@ -188,7 +190,7 @@ public class PauseTests extends
     
     public void testBillSubtotalStatePause() {
     	// Preconditions
-    	final MockDataModel model = (MockDataModel)mActivity.getDataModel();
+    	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
     	String textAmount = "24.32";
     	BigDecimal amount = new BigDecimal(textAmount);
     	model.setBillSubtotal(amount);
@@ -275,7 +277,7 @@ public class PauseTests extends
     
     public void testPlannedTipAmountStatePause() {
     	// Preconditions
-    	final MockDataModel model = (MockDataModel)mActivity.getDataModel();
+    	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
     	String textAmount = "5.00";
     	BigDecimal amount = new BigDecimal(textAmount);
     	model.setPlannedTipAmount(amount);
@@ -312,7 +314,7 @@ public class PauseTests extends
     
     public void testRoundUpToStatePause() {
     	// Preconditions
-    	final MockDataModel model = (MockDataModel)mActivity.getDataModel();
+    	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
     	String textAmount = "2.00";
     	String displayAmount = "$2";
     	BigDecimal amount = new BigDecimal(textAmount);
@@ -333,7 +335,7 @@ public class PauseTests extends
     
     public void testShareDueStatePause() {
     	// Preconditions
-    	final MockDataModel model = (MockDataModel)mActivity.getDataModel();
+    	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
     	String textAmount = "54.10";
     	BigDecimal amount = new BigDecimal(textAmount);
     	model.setShareDue(amount);
@@ -406,7 +408,7 @@ public class PauseTests extends
 
     public void testTippableAmountStatePause() {
     	// Preconditions
-    	final MockDataModel model = (MockDataModel)mActivity.getDataModel();
+    	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
     	String textAmount = "54.19";
     	BigDecimal amount = new BigDecimal(textAmount);
     	model.setTippableAmount(amount);
@@ -424,7 +426,7 @@ public class PauseTests extends
     
     public void testTotalDueStatePause() {
     	// Preconditions
-    	final MockDataModel model = (MockDataModel)mActivity.getDataModel();
+    	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
     	String textAmount = "219.08";
     	BigDecimal amount = new BigDecimal(textAmount);
     	model.setTotalDue(amount);

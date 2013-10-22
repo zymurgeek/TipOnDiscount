@@ -26,7 +26,9 @@ import android.widget.TextView;
 import com.itllp.tipOnDiscount.TipOnDiscount;
 import com.itllp.tipOnDiscount.model.DataModel;
 import com.itllp.tipOnDiscount.model.DataModelFactory;
-import com.itllp.tipOnDiscount.model.test.MockDataModel;
+import com.itllp.tipOnDiscount.model.persistence.DataModelPersisterFactory;
+import com.itllp.tipOnDiscount.model.persistence.test.StubDataModelPersister;
+import com.itllp.tipOnDiscount.model.test.StubDataModel;
 
 public class DestroyTests extends
 	ActivityInstrumentationTestCase2<TipOnDiscount>{
@@ -61,10 +63,11 @@ public class DestroyTests extends
     protected void setUp() throws Exception {
         super.setUp();
         mInstrumentation = getInstrumentation();
-        
-        DataModel mockDataModel = new MockDataModel();
-        DataModelFactory.clearDataModel();
-        DataModelFactory.setDataModel(mockDataModel);
+
+        DataModelPersisterFactory.setDataModelPersister(
+        		new StubDataModelPersister());
+        DataModel stubDataModel = new StubDataModel();
+        DataModelFactory.setDataModel(stubDataModel);
         
         mActivity = this.getActivity();
 
@@ -102,7 +105,8 @@ public class DestroyTests extends
     	final DataModel model = mActivity.getDataModel();
     	model.initialize();
     }
-    
+
+	
     private void destroyAndRestart() {
     	mInstrumentation.waitForIdleSync();
     	

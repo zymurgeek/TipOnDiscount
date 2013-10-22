@@ -8,12 +8,8 @@ public class DataModelPersisterFactory {
 	
 	public static void setDataModelPersister
 	(DataModelPersister newDataModelPersister) {
-		if (null == dataModelPersister) {
-			dataModelPersister = newDataModelPersister;
-			Log.d("TipOnDiscount", "newPersister is " + newDataModelPersister);
-		} else {
-			Log.d("TipOnDiscount", "newPersister rejected");
-		}
+		dataModelPersister = newDataModelPersister;
+		Log.d("TipOnDiscount", "newPersister is " + newDataModelPersister);
 	}
 
 
@@ -22,10 +18,5 @@ public class DataModelPersisterFactory {
 		return dataModelPersister;
 	}
 	
-
-	public static void clearDataModelPersister() {
-		Log.d("TipOnDiscount", "cleared DataModelPersister");
-		DataModelPersisterFactory.dataModelPersister = null;
-	}
 
 }
