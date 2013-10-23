@@ -1,0 +1,8 @@
+#!/bin/bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ART_DIR="$( dirname $( dirname ${DIR} ) )"
+RES_DIR="$( dirname $ART_DIR )/res"
+for SIZE in ldpi mdpi hdpi xhdpi; do
+    cp "${ART_DIR}/$SIZE/ic_launcher_tipondiscount.png" "${RES_DIR}/drawable-$SIZE/."
+done

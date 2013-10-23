@@ -1,0 +1,15 @@
+Edit icon with Inkscape.  
+
+To make icons, File > Export Bitmap.  Select Page.  Change Bitmaps
+size for each type:
+
+Google Play: 512x512
+HDPI:  72x72
+LDPI:  36x36
+MDPI:  48x48
+XHDPI:  96x96
+
+To update the delivered icons, run the script deliver-icons.  In
+Eclipse, refresh the res directory.
+
+Update screenshots and the icon in Google Play.
