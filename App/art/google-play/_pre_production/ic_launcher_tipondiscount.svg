@@ -15,9 +15,9 @@
    version="1.1"
    inkscape:version="0.47 r22583"
    sodipodi:docname="ic_launcher_tipondiscount.svg"
-   inkscape:export-filename="/home/dave/TipOnDiscount/App/art/ldpi/ic_launcher_tipondiscount.png"
-   inkscape:export-xdpi="6"
-   inkscape:export-ydpi="6">
+   inkscape:export-filename="/home/dave/TipOnDiscount/App/art/xhdpi/ic_launcher_tipondiscount.png"
+   inkscape:export-xdpi="16"
+   inkscape:export-ydpi="16">
   <defs
      id="defs4">
     <marker
@@ -133,7 +133,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
