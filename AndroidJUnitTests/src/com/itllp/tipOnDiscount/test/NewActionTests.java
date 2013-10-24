@@ -1,4 +1,4 @@
-// Copyright 2011-2012 David A. Greenbaum
+// Copyright 2011-2013 David A. Greenbaum
 /*
 This file is part of Tip On Discount.
 
@@ -20,8 +20,13 @@ package com.itllp.tipOnDiscount.test;
 
 import java.math.BigDecimal;
 import android.app.Instrumentation;
+import android.content.Context;
+import android.content.res.Configuration;
+import android.os.IBinder;
+import android.os.SystemClock;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -36,11 +41,12 @@ import com.itllp.tipOnDiscount.model.test.StubDataModel;
 
 /* These test are related to the New menu action only. 
  */
-public class NewActionFieldTests extends
+public class NewActionTests extends
 		ActivityInstrumentationTestCase2<TipOnDiscount> {
 	// TODO pull up common stuff into BaseTest class
 	private Instrumentation mInstrumentation;
     private TipOnDiscount mActivity;
+    private InputMethodManager imm;
     private EditText billTotalEntryView;
     private TextView discountEntryView;
     private TextView tippableAmountView;
@@ -65,7 +71,7 @@ public class NewActionFieldTests extends
     
     
 	@SuppressWarnings("deprecation")
-	public NewActionFieldTests() {
+	public NewActionTests() {
 		// Using the non-deprecated version of this constructor requires API 8
 		super("com.itllp.tipOnDiscount", TipOnDiscount.class);
         
@@ -121,11 +127,28 @@ public class NewActionFieldTests extends
         shareDueView = (TextView)mActivity.findViewById
             	(com.itllp.tipOnDiscount.R.id.share_due_text);
         model = mActivity.getDataModel();
+    	imm = (InputMethodManager)mActivity.
+    			getSystemService(Context.INPUT_METHOD_SERVICE);
     	
 		initializeDataModel();
     }
 
 
+    @Override
+    protected void tearDown() throws Exception {
+    	View focusedView = mActivity.getCurrentFocus();
+    	final IBinder windowToken = focusedView.getWindowToken();
+        mActivity.runOnUiThread(new Runnable() {
+            public void run() {
+                imm.hideSoftInputFromWindow(windowToken, 0);
+            }
+        });
+    	mInstrumentation.waitForIdleSync();
+    	
+        super.tearDown();
+    }
+
+    
 	public void testNewActionWhenFocusIsNotInAnyEntryField() {
     	// Preconditions
     	setFocusToView(bumpDownButton);
@@ -134,7 +157,7 @@ public class NewActionFieldTests extends
     	runOpenNewAction();
     	
     	// Postconditions
-        assertBillTotalFieldAndModelAreAtInitialValues();    	
+        assertBillTotalFieldAndModelAreCleared();    	
         assertTaxPercentFieldAndTaxRateInModelAreAtInitialValues();    	
         assertTaxAmountFieldAndModelAreAtInitialValues();
         assertBillSubtotalFieldAndModelAreAtInitialValues();
@@ -149,6 +172,11 @@ public class NewActionFieldTests extends
         assertActualTipAmountFieldAndModelAreAtActualValues();
         assertTotalDueFieldAndModelAreAtInitialValues();
         assertShareDueFieldAndModelAreAtInitialValues();
+        assertTrue("Focus not in Bill Total field", 
+        		billTotalEntryView.isFocused());
+        assertTrue("Bill total field is not empty", 
+        		0==billTotalEntryView.getText().length());
+    	assertSoftKeyboardIsShownIfExpected();
     }
 
 
@@ -160,7 +188,10 @@ public class NewActionFieldTests extends
 		runOpenNewAction();
     	
 		// Verify postconditions
-    	assertBillTotalFieldAndModelAreAtInitialValues();    	
+    	assertBillTotalFieldAndModelAreCleared();    	
+        assertTrue("Focus not in Bill Total field", 
+        		billTotalEntryView.isFocused());
+    	assertSoftKeyboardIsShownIfExpected();
     }
 
     
@@ -173,6 +204,9 @@ public class NewActionFieldTests extends
 		
 		// Verify postconditions
 		assertTaxPercentFieldAndTaxRateInModelAreAtInitialValues();
+        assertTrue("Focus not in Bill Total field", 
+        		billTotalEntryView.isFocused());
+    	assertSoftKeyboardIsShownIfExpected();
 	}
 
 
@@ -185,6 +219,9 @@ public class NewActionFieldTests extends
 		
 		// Verify postconditions
 		assertTaxAmountFieldAndModelAreAtInitialValues();
+        assertTrue("Focus not in Bill Total field", 
+        		billTotalEntryView.isFocused());
+    	assertSoftKeyboardIsShownIfExpected();
 	}
 
 
@@ -197,6 +234,9 @@ public class NewActionFieldTests extends
     	
 		// Verify postconditions
     	assertDiscountFieldAndModelAreAtInitialValues();    	
+        assertTrue("Focus not in Bill Total field", 
+        		billTotalEntryView.isFocused());
+    	assertSoftKeyboardIsShownIfExpected();
     }
 
     
@@ -209,6 +249,9 @@ public class NewActionFieldTests extends
     	
     	// Verify postconditions
     	assertPlannedTipPercentFieldAndModelAreAtInitialValues();
+        assertTrue("Focus not in Bill Total field", 
+        		billTotalEntryView.isFocused());
+    	assertSoftKeyboardIsShownIfExpected();
 	}
 
 
@@ -221,6 +264,9 @@ public class NewActionFieldTests extends
     	
 		// Verify postconditions
     	assertSplitBetweenFieldAndModelAreAtInitialValues();    	
+        assertTrue("Focus not in Bill Total field", 
+        		billTotalEntryView.isFocused());
+    	assertSoftKeyboardIsShownIfExpected();
     }
 
     
@@ -233,9 +279,38 @@ public class NewActionFieldTests extends
     	
 		// Verify postconditions
     	assertRoundUpToNearestFieldAndModelAreAtInitialValues();    	
+        assertTrue("Focus not in Bill Total field", 
+        		billTotalEntryView.isFocused());
+    	assertSoftKeyboardIsShownIfExpected();
     }
     
     
+	private void assertSoftKeyboardIsShownIfExpected() {
+		if (isHardwareKeyboardInUse()) {
+			return;
+		}
+		
+		final StubResultReceiver resultReceiver = new StubResultReceiver(null);
+        mActivity.runOnUiThread(new Runnable() {
+            public void run() {
+                imm.showSoftInput(billTotalEntryView, 
+                		InputMethodManager.SHOW_IMPLICIT,
+                		resultReceiver);
+            }
+        });
+    	mInstrumentation.waitForIdleSync();
+    	int tries = 10;
+    	while (tries > 0 &&	StubResultReceiver.NO_CODE == 
+    			resultReceiver.stub_getLastResultCode()) {
+            SystemClock.sleep(100);
+            --tries;
+    	}
+        assertEquals("Soft keyboard was not shown", 
+        		InputMethodManager.RESULT_UNCHANGED_SHOWN, 
+        		resultReceiver.stub_getLastResultCode());
+	}
+
+
 	private void assertActualTipAmountFieldAndModelAreAtActualValues() {
 		assertEquals("Wrong value in actual tip amount field", 
 				StubDataModel.INITIAL_ACTUAL_TIP_AMOUNT.toPlainString(), 
@@ -246,13 +321,11 @@ public class NewActionFieldTests extends
 	}
 	
 	
-	private void assertBillTotalFieldAndModelAreAtInitialValues() {
-		assertEquals("Wrong value in bill total field", 
-				StubDataModel.INITIAL_BILL_TOTAL.toPlainString(), 
-	    		billTotalEntryView.getText().toString());    	
-	    assertEquals("Wrong value for bill total in data model", 
-	    		StubDataModel.INITIAL_BILL_TOTAL, 
-	    		model.getBillTotal());
+	private void assertBillTotalFieldAndModelAreCleared() {
+		assertEquals("Bill total field is not blank", 
+				0, billTotalEntryView.getText().length());    	
+	    assertEquals("Bill total not cleared in data model", 
+	    		0, model.getBillTotal().compareTo(new BigDecimal("0")));
 	}
 
 
@@ -436,4 +509,14 @@ public class NewActionFieldTests extends
 	}
 
 
+	private boolean isHardwareKeyboardInUse() {
+		Configuration config = mActivity.getResources().getConfiguration();
+		if (config.keyboard == Configuration.KEYBOARD_NOKEYS) {
+			return false;
+		}
+		if (config.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_YES) {
+			return false;
+		}
+		return true;
+	}
 }
