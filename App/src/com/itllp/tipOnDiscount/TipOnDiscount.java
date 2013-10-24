@@ -396,10 +396,10 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
     public void openNew() {
     	reset();
 
-    	setFocusToBillTotalAndOpenSoftKeyboard();
+    	setFocusToBillTotalClearFieldAndOpenSoftKeyboard();
     }
 
-	private void setFocusToBillTotalAndOpenSoftKeyboard() {
+	private void setFocusToBillTotalClearFieldAndOpenSoftKeyboard() {
 		billTotalEntry.requestFocus();
 		billTotalEntry.setText("");
 		openSoftKeyboardIfApplicable();
