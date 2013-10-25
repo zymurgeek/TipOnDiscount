@@ -25,6 +25,7 @@ public class PreferencesFilePersister implements Persister {
 				this.preferencesFileName, 
 				android.content.Context.MODE_PRIVATE);
 		editor = prefs.edit();
+		editor.clear();
 	}
 
 	@Override

@@ -22,6 +22,7 @@ class StubSharedPreferencesEditor implements SharedPreferences.Editor {
 	private int stub_lastIntValue = Integer.MIN_VALUE;
 	private String stub_lastStringKey = null;
 	private String stub_lastStringValue = null;
+	private boolean stub_wasClearCalled = false;
 	private boolean stub_wasCommitCalled = false;
 	
 	@Override
@@ -30,7 +31,8 @@ class StubSharedPreferencesEditor implements SharedPreferences.Editor {
 
 	@Override
 	public Editor clear() {
-		return null;
+		stub_wasClearCalled = true;
+		return this;
 	}
 
 	@Override
@@ -104,6 +106,10 @@ class StubSharedPreferencesEditor implements SharedPreferences.Editor {
 		return null;
 	}
 
+	public boolean stub_wasClearCalled() {
+		return stub_wasClearCalled;
+	}
+	
 	public boolean stub_wasCommitCalled() {
 		return stub_wasCommitCalled;
 	}
@@ -404,7 +410,10 @@ public class PreferencesFilePersisterTests extends TestCase {
 		persister.beginSave(stubContext);
 		
 		// Verify postconditions
-		assertNotNull("Null editor", stubSharedPreferences.stub_getEditor());
+		StubSharedPreferencesEditor stubEditor = (StubSharedPreferencesEditor)
+				stubSharedPreferences.stub_getEditor();
+		assertNotNull("Null editor", stubEditor);
+		assertTrue("Clear was not called", stubEditor.stub_wasClearCalled());
 	}
 
 	
