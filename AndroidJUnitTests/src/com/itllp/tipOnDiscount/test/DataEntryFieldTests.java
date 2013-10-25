@@ -21,6 +21,7 @@ package com.itllp.tipOnDiscount.test;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Currency;
+import java.util.Set;
 
 import android.app.Instrumentation;
 import android.app.KeyguardManager;
@@ -38,6 +39,7 @@ import com.itllp.tipOnDiscount.model.DataModelFactory;
 import com.itllp.tipOnDiscount.model.persistence.DataModelPersisterFactory;
 import com.itllp.tipOnDiscount.model.persistence.test.StubDataModelPersister;
 import com.itllp.tipOnDiscount.model.test.StubDataModel;
+import com.itllp.tipOnDiscount.util.BigDecimalLabelMap;
 
 /* These test are related to user interface operation only, such as
  * data formatting and widget operations. 
@@ -432,6 +434,29 @@ public class DataEntryFieldTests extends
             	);
         	mInstrumentation.waitForIdleSync();
     }
+    
+    public void testRoundUptoAmounts() {
+    	// Set up preconditions
+    	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
+		String[] valueStringArray = mActivity.getResources().getStringArray
+				(com.itllp.tipOnDiscount.R.array.round_up_to_nearest_value_array);
+		String[] labelArray = mActivity.getResources().getStringArray
+				(com.itllp.tipOnDiscount.R.array.round_up_to_nearest_label_array);
+		BigDecimalLabelMap map = new BigDecimalLabelMap(valueStringArray, labelArray);
+		Set<BigDecimal> valueSet = map.getValues();
+		setRoundUpToAmount(labelArray[1]);  // spinner must change to activate test
+		for (BigDecimal value : valueSet) {
+			String label = map.getLabel(value);
+
+	    	// Method under test
+	    	setRoundUpToAmount(label);
+	    	
+	    	// Postconditions
+	    	assertEquals("Incorrect amount for RoundUpToNearest "+label,
+	    			value, model.getRoundUpToAmount());
+		}
+    }
+    
     
     //TODO replace string constants and values with values from strings.xml
     /* Test that the Round Up To Nearest spinner sets the round up to amount in 
