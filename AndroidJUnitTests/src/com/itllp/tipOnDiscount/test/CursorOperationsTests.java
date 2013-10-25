@@ -135,5 +135,71 @@ ActivityInstrumentationTestCase2<TipOnDiscount> {
     }
 
 
-    //TODO: Test that edit texts have select all performed on entry
+    public void testEntryToBillTotalField() {
+    	// Set up preconditions
+    	setFocusToView(taxPercentEntryView);
+    	
+    	// Call method under test
+    	setFocusToView(billTotalEntryView);
+    	
+    	// Verify postconditions
+    	verifyAllTextIsSelected(billTotalEntryView);
+    }
+
+    
+    public void testEntryToTaxPercentField() {
+    	// Call method under test
+    	setFocusToView(taxPercentEntryView);
+    	
+    	// Verify postconditions
+    	verifyAllTextIsSelected(taxPercentEntryView);
+    }
+
+
+    public void testEntryToTaxAmountField() {
+    	// Call method under test
+    	setFocusToView(taxAmountEntryView);
+    	
+    	// Verify postconditions
+    	verifyAllTextIsSelected(taxAmountEntryView);
+    }
+
+
+    public void testEntryToDiscountField() {
+    	// Call method under test
+    	setFocusToView(discountEntryView);
+    	
+    	// Verify postconditions
+    	verifyAllTextIsSelected(discountEntryView);
+    }
+
+
+    public void testEntryToPlannedTipPercentField() {
+    	// Call method under test
+    	setFocusToView(plannedTipPercentEntryView);
+    	
+    	// Verify postconditions
+    	verifyAllTextIsSelected(plannedTipPercentEntryView);
+    }
+
+
+    public void testEntryToSplitBetweenField() {
+    	// Call method under test
+    	setFocusToView(splitBetweenEntryView);
+    	
+    	// Verify postconditions
+    	verifyAllTextIsSelected(splitBetweenEntryView);
+    }
+
+
+    private void verifyAllTextIsSelected(TextView textView) {
+    	int expectedSelectionEnd = textView.getEditableText().length();
+        assertEquals("Incorrect selection start", 0,
+        		textView.getSelectionStart());
+        assertEquals("Incorrect selection end", expectedSelectionEnd,
+        		textView.getSelectionEnd());
+    }
+    
+    
+
 }
