@@ -27,7 +27,19 @@
         <item>$10</item>
         <item>$20</item>
     </string-array>
-	<string name="bump_down_label">Bump Down</string>
+    <string-array name="round_up_to_nearest_value_array">
+        <item>.01</item>
+        <item>.05</item>
+        <item>.1</item>
+        <item>.25</item>
+        <item>.5</item>
+        <item>1</item>
+        <item>2</item>
+        <item>5</item>
+        <item>10</item>
+        <item>20</item>
+    </string-array>
+    	<string name="bump_down_label">Bump Down</string>
 	<string name="bump_up_label">Bump Up</string>
 <string name="total_due_label">Total Due</string>
 </resources>

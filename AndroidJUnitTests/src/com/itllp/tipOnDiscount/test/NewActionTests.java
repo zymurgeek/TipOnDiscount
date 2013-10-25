@@ -39,6 +39,7 @@ import com.itllp.tipOnDiscount.model.DataModelFactory;
 import com.itllp.tipOnDiscount.model.persistence.DataModelPersisterFactory;
 import com.itllp.tipOnDiscount.model.persistence.test.StubDataModelPersister;
 import com.itllp.tipOnDiscount.model.test.StubDataModel;
+import com.itllp.tipOnDiscount.util.BigDecimalLabelMap;
 
 /* These test are related to the New menu action only. 
  */
@@ -408,12 +409,25 @@ public class NewActionTests extends
 
 	
 	private void assertRoundUpToNearestFieldAndModelAreAtInitialValues() {
-		//TODO Replace constant
-		assertEquals("Wrong value in round up to nearest spinner", "$2", 
+		BigDecimal expectedValue = StubDataModel.INITIAL_ROUND_UP_TO_AMOUNT; 
+		String expectedLabel = getRoundUpToLabel(expectedValue);
+		assertEquals("Wrong value in round up to nearest spinner", 
+				expectedLabel, 
 	    	roundUpToNearestSpinner.getSelectedItem().toString());
 	    assertEquals("Wrong value for round up to nearest in data model", 
-	    		StubDataModel.INITIAL_ROUND_UP_TO_AMOUNT, 
+	    		expectedValue, 
 	    		model.getRoundUpToAmount());
+	}
+
+
+	private String getRoundUpToLabel(BigDecimal roundUpToValue) {
+		String[] valueArray = mActivity.getResources().getStringArray
+				(com.itllp.tipOnDiscount.R.array.round_up_to_nearest_value_array);
+		String[] labelArray = mActivity.getResources().getStringArray
+				(com.itllp.tipOnDiscount.R.array.round_up_to_nearest_label_array);
+		BigDecimalLabelMap map = new BigDecimalLabelMap(valueArray, labelArray);
+		String label = map.getLabel(roundUpToValue);
+		return label;
 	}
 
 	
