@@ -23,6 +23,8 @@ import java.text.NumberFormat;
 import java.util.Currency;
 
 import android.app.Instrumentation;
+import android.app.KeyguardManager;
+import android.content.Context;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.KeyEvent;
 import android.widget.Button;
@@ -296,6 +298,15 @@ public class DataEntryFieldTests extends
         // Verify input "7.0" formats to "7"
     	sendKeysToView(view, keyCodes7Dot0);
         assertEquals(assertErrorMessage, "7", view.getText().toString());
+    }
+    
+    
+    public void testAAA_ScreenMustNotBeLocked() {
+    	KeyguardManager km = (KeyguardManager)mActivity.getSystemService
+    			(Context.KEYGUARD_SERVICE);
+    	boolean isScreenLocked = km.inKeyguardRestrictedInputMode();
+    	assertFalse("Unlock the device screen to run these tests",
+    			isScreenLocked);
     }
     
     

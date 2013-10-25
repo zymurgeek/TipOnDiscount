@@ -20,6 +20,7 @@ package com.itllp.tipOnDiscount.test;
 
 import java.math.BigDecimal;
 import android.app.Instrumentation;
+import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.IBinder;
@@ -148,6 +149,15 @@ public class NewActionTests extends
         super.tearDown();
     }
 
+    
+    public void testAAA_ScreenMustNotBeLocked() {
+    	KeyguardManager km = (KeyguardManager)mActivity.getSystemService
+    			(Context.KEYGUARD_SERVICE);
+    	boolean isScreenLocked = km.inKeyguardRestrictedInputMode();
+    	assertFalse("Unlock the device screen to run these tests",
+    			isScreenLocked);
+    }
+    
     
 	public void testNewActionWhenFocusIsNotInAnyEntryField() {
     	// Preconditions

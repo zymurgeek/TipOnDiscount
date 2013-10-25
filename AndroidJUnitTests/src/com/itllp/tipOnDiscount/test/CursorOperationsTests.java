@@ -2,6 +2,8 @@ package com.itllp.tipOnDiscount.test;
 
 import android.annotation.TargetApi;
 import android.app.Instrumentation;
+import android.app.KeyguardManager;
+import android.content.Context;
 import android.os.Build;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.KeyEvent;
@@ -101,6 +103,15 @@ ActivityInstrumentationTestCase2<TipOnDiscount> {
     }
 
 
+    public void testAAA_ScreenMustNotBeLocked() {
+    	KeyguardManager km = (KeyguardManager)mActivity.getSystemService
+    			(Context.KEYGUARD_SERVICE);
+    	boolean isScreenLocked = km.inKeyguardRestrictedInputMode();
+    	assertFalse("Unlock the device screen to run these tests",
+    			isScreenLocked);
+    }
+    
+    
     public void testNextFromBillTotalField() {
     	// Call method under test
     	sendNextKeyToView(billTotalEntryView);
