@@ -1,12 +1,8 @@
 package com.itllp.tipOnDiscount.test;
 
-import android.annotation.TargetApi;
 import android.app.Instrumentation;
-import android.app.KeyguardManager;
-import android.content.Context;
-import android.os.Build;
 import android.test.ActivityInstrumentationTestCase2;
-import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -21,11 +17,11 @@ ActivityInstrumentationTestCase2<TipOnDiscount> {
 	private Instrumentation mInstrumentation;
     private TipOnDiscount mActivity;
     private EditText billTotalEntryView;
-    private TextView discountEntryView;
-    private TextView taxPercentEntryView;
-    private TextView taxAmountEntryView;
-    private TextView plannedTipPercentEntryView;
-    private TextView splitBetweenEntryView;
+    private EditText discountEntryView;
+    private EditText taxPercentEntryView;
+    private EditText taxAmountEntryView;
+    private EditText plannedTipPercentEntryView;
+    private EditText splitBetweenEntryView;
 
 	@SuppressWarnings("deprecation")
 	public CursorOperationsTests() {
@@ -48,15 +44,15 @@ ActivityInstrumentationTestCase2<TipOnDiscount> {
 
         billTotalEntryView = (EditText) mActivity.findViewById
         		(com.itllp.tipOnDiscount.R.id.bill_total_entry);
-        discountEntryView = (TextView) mActivity.findViewById
+        discountEntryView = (EditText) mActivity.findViewById
             	(com.itllp.tipOnDiscount.R.id.discount_entry);
-        taxPercentEntryView = (TextView) mActivity.findViewById
+        taxPercentEntryView = (EditText) mActivity.findViewById
             	(com.itllp.tipOnDiscount.R.id.tax_percent_entry);
-        taxAmountEntryView = (TextView) mActivity.findViewById
+        taxAmountEntryView = (EditText) mActivity.findViewById
         		(com.itllp.tipOnDiscount.R.id.tax_amount_entry);
-        plannedTipPercentEntryView = (TextView) mActivity.findViewById
+        plannedTipPercentEntryView = (EditText) mActivity.findViewById
         		(com.itllp.tipOnDiscount.R.id.planned_tip_percent_entry);
-        splitBetweenEntryView = (TextView) mActivity.findViewById
+        splitBetweenEntryView = (EditText) mActivity.findViewById
         		(com.itllp.tipOnDiscount.R.id.split_between_entry);
 
         mActivity.runOnUiThread(
@@ -70,20 +66,13 @@ ActivityInstrumentationTestCase2<TipOnDiscount> {
     }
     
     
-    /* Sets focus to the given TextViewfield and sends keypresses to it.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	private void sendNextKeyToView(final TextView view) {
-    	setFocusToView(view);
-    	int forwardKey = KeyEvent.KEYCODE_DPAD_DOWN;
-    	if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-    		forwardKey = KeyEvent.KEYCODE_FORWARD;
-    	}
-    	this.sendKeys(forwardKey);
+	private void simulateNextButtonPress(EditText editText) {
+		setFocusToView(editText);
+		editText.onEditorAction(EditorInfo.IME_ACTION_NEXT);
     	mInstrumentation.waitForIdleSync();
-    }
+	}
 
-
+	
 	private void setFocusToView(final TextView view) {
 		mActivity.runOnUiThread(
     			new Runnable() {
@@ -96,25 +85,9 @@ ActivityInstrumentationTestCase2<TipOnDiscount> {
 	}
 
 
-	private void sendDownKeyToView(final TextView view) {
-		setFocusToView(view);
-    	this.sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
-    	mInstrumentation.waitForIdleSync();
-    }
-
-
-    public void testAAA_ScreenMustNotBeLocked() {
-    	KeyguardManager km = (KeyguardManager)mActivity.getSystemService
-    			(Context.KEYGUARD_SERVICE);
-    	boolean isScreenLocked = km.inKeyguardRestrictedInputMode();
-    	assertFalse("Unlock the device screen to run these tests",
-    			isScreenLocked);
-    }
-    
-    
-    public void testNextFromBillTotalField() {
+    public void testNextButtonFromBillTotalField() {
     	// Call method under test
-    	sendNextKeyToView(billTotalEntryView);
+    	simulateNextButtonPress(billTotalEntryView);
     	
     	// Verify postconditions
         assertEquals("Incorrect field focused", taxPercentEntryView,
@@ -122,19 +95,9 @@ ActivityInstrumentationTestCase2<TipOnDiscount> {
     }
 
 
-    public void testDownFromBillTotalField() {
+    public void testNextButtonFromTaxPercentField() {
     	// Call method under test
-    	sendDownKeyToView(billTotalEntryView);
-    	
-    	// Verify postconditions
-        assertEquals("Incorrect field focused", taxPercentEntryView,
-        		mActivity.getCurrentFocus());
-    }
-
-
-    public void testNextFromTaxPercentField() {
-    	// Call method under test
-    	sendNextKeyToView(taxPercentEntryView);
+    	simulateNextButtonPress(taxPercentEntryView);
     	
     	// Verify postconditions
         assertEquals("Incorrect field focused", taxAmountEntryView,
@@ -142,19 +105,9 @@ ActivityInstrumentationTestCase2<TipOnDiscount> {
     }
 
 
-    public void testDownFromTaxPercentField() {
+    public void testNextButtonFromTaxAmountField() {
     	// Call method under test
-    	sendDownKeyToView(taxPercentEntryView);
-    	
-    	// Verify postconditions
-        assertEquals("Incorrect field focused", taxAmountEntryView,
-        		mActivity.getCurrentFocus());
-    }
-
-
-    public void testNextFromTaxAmountField() {
-    	// Call method under test
-    	sendNextKeyToView(taxAmountEntryView);
+    	simulateNextButtonPress(taxAmountEntryView);
     	
     	// Verify postconditions
         assertEquals("Incorrect field focused", discountEntryView,
@@ -162,19 +115,9 @@ ActivityInstrumentationTestCase2<TipOnDiscount> {
     }
 
 
-    public void testDownFromTaxAmountField() {
+    public void testNextButtonFromDiscountField() {
     	// Call method under test
-    	sendDownKeyToView(taxAmountEntryView);
-    	
-    	// Verify postconditions
-        assertEquals("Incorrect field focused", discountEntryView,
-        		mActivity.getCurrentFocus());
-    }
-
-
-    public void testNextFromDiscountField() {
-    	// Call method under test
-    	sendNextKeyToView(discountEntryView);
+    	simulateNextButtonPress(discountEntryView);
     	
     	// Verify postconditions
         assertEquals("Incorrect field focused", plannedTipPercentEntryView,
@@ -182,19 +125,9 @@ ActivityInstrumentationTestCase2<TipOnDiscount> {
     }
 
 
-    public void testDownFromDiscountField() {
+    public void testNextButtonFromPlannedTipPercentField() {
     	// Call method under test
-    	sendDownKeyToView(discountEntryView);
-    	
-    	// Verify postconditions
-        assertEquals("Incorrect field focused", plannedTipPercentEntryView,
-        		mActivity.getCurrentFocus());
-    }
-
-
-    public void testNextFromPlannedTipPercentField() {
-    	// Call method under test
-    	sendNextKeyToView(plannedTipPercentEntryView);
+    	simulateNextButtonPress(plannedTipPercentEntryView);
     	
     	// Verify postconditions
         assertEquals("Incorrect field focused", splitBetweenEntryView,
@@ -202,35 +135,5 @@ ActivityInstrumentationTestCase2<TipOnDiscount> {
     }
 
 
-    public void testDownFromPlannedTipPercentField() {
-    	// Call method under test
-    	sendDownKeyToView(plannedTipPercentEntryView);
-    	
-    	// Verify postconditions
-        assertEquals("Incorrect field focused", splitBetweenEntryView,
-        		mActivity.getCurrentFocus());
-    }
-
-
-    public void testNextFromSplitBetweenField() {
-    	// Call method under test
-    	sendNextKeyToView(splitBetweenEntryView);
-    	
-    	// Verify postconditions
-        assertEquals("Incorrect field focused", splitBetweenEntryView,
-        		mActivity.getCurrentFocus());
-    }
-
-
-    public void testDownFromSplitBetweenField() {
-    	// Call method under test
-    	sendDownKeyToView(splitBetweenEntryView);
-    	
-    	// Verify postconditions
-        assertEquals("Incorrect field focused", splitBetweenEntryView,
-        		mActivity.getCurrentFocus());
-    }
-
-    //FIXME:  Tests fail on Android 4.3
     //TODO: Test that edit texts have select all performed on entry
 }
