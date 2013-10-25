@@ -334,7 +334,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
         roundUpToNearestSpinner = (Spinner)this.findViewById
 			(com.itllp.tipOnDiscount.R.id.round_up_to_nearest_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-        	this, R.array.round_up_to_nearest_array, 
+        	this, R.array.round_up_to_nearest_label_array, 
         	android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         roundUpToNearestSpinner.setAdapter(adapter);
