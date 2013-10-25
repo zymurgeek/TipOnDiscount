@@ -32,6 +32,7 @@ import com.itllp.tipOnDiscount.model.DataModelFactory;
 import com.itllp.tipOnDiscount.model.persistence.DataModelPersisterFactory;
 import com.itllp.tipOnDiscount.model.persistence.test.StubDataModelPersister;
 import com.itllp.tipOnDiscount.model.test.StubDataModel;
+import com.itllp.tipOnDiscount.util.BigDecimalLabelMap;
 
 /* These tests cover the initial values displayed in each field.
  * 
@@ -230,16 +231,19 @@ public class InitializationTests extends
 
     
     public void testInitialRoundUpToNearest() {
-    	//TODO replace constants
-    	/* This field is a spinner with None, Nickel, Dime,
-    	Quarter, Half Dollar, $1, $2, $5, $10, $20. */
+    	// Set up preconditions
+		String[] valueArray = mActivity.getResources().getStringArray
+				(com.itllp.tipOnDiscount.R.array.round_up_to_nearest_value_array);
+		String[] labelArray = mActivity.getResources().getStringArray
+				(com.itllp.tipOnDiscount.R.array.round_up_to_nearest_label_array);
+		BigDecimalLabelMap map = new BigDecimalLabelMap(valueArray, labelArray);
+		String expectedLabel = map.getLabel(StubDataModel.INITIAL_ROUND_UP_TO_AMOUNT);
+
+		// Verify postconditions
     	String selectedItem
     		= roundUpToNearestSpinner.getSelectedItem().toString();
-    	assertTrue("Initial value of round up to has changed",
-    			0==StubDataModel.INITIAL_ROUND_UP_TO_AMOUNT.compareTo(
-    					new BigDecimal("2.00")));
         assertEquals("Incorrect initial value of Round Up To Nearest", 
-        		"$2", selectedItem);    	
+        		expectedLabel, selectedItem);    	
     }
 
     
