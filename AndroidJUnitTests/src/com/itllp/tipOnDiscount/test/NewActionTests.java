@@ -44,7 +44,6 @@ import com.itllp.tipOnDiscount.model.test.StubDataModel;
  */
 public class NewActionTests extends
 		ActivityInstrumentationTestCase2<TipOnDiscount> {
-	// TODO pull up common stuff into BaseTest class
 	private Instrumentation mInstrumentation;
     private TipOnDiscount mActivity;
     private InputMethodManager imm;

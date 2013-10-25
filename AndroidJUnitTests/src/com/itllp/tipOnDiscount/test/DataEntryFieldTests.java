@@ -81,7 +81,6 @@ public class DataEntryFieldTests extends
     		KeyEvent.KEYCODE_4,
     		KeyEvent.KEYCODE_ENTER };
 
-	// TODO pull up common stuff into BaseTest class
 	private Instrumentation mInstrumentation;
     private TipOnDiscount mActivity;
     private EditText billTotalEntryView;
