@@ -21,6 +21,7 @@ package com.itllp.tipOnDiscount;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
@@ -260,7 +261,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 
         dataModel = DataModelFactory.getDataModel();
         dataModelPersister = DataModelPersisterFactory.getDataModelPersister();
-        persister = PersisterFactory.getPersister();
+        persister = PersisterFactory.getPersisterForApp();
         
         setContentView(R.layout.main);
 
@@ -368,6 +369,9 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
             case R.id.action_new:
                 openNew();
                 return true;
+            case R.id.action_set_defaults:
+            	startSetDefaults();
+            	return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -850,6 +854,11 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
     public void saveInstanceState(Context context) {
     	dataModelPersister.saveState(dataModel, persister, context);
     }
+
+	public void startSetDefaults() {
+		Intent intent = new Intent(this, SetDefaultsActivity.class);
+		startActivity(intent);
+	}
 
 	
 }

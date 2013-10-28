@@ -19,7 +19,7 @@ public class TipOnDiscountApplication extends Application {
 		DataModelFactory.setDataModel(new DataModelImpl());
 		DataModelPersisterFactory.setDataModelPersister(
 				new DataModelPersisterImpl());
-		PersisterFactory.setPersister(new PreferencesFilePersister(
+		PersisterFactory.setPersisterForApp(new PreferencesFilePersister(
 				TOD_PREFERENCES_FILE));
 	}
 }

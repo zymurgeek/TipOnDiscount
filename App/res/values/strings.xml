@@ -39,7 +39,10 @@
         <item>10</item>
         <item>20</item>
     </string-array>
+    <string name="default_round_up_to_nearest_label">Quarter</string>
     	<string name="bump_down_label">Bump Down</string>
 	<string name="bump_up_label">Bump Up</string>
 <string name="total_due_label">Total Due</string>
+    <string name="set_defaults_name">Set Defaults</string>
+    <string name="action_set_defaults">Set Defaults</string>
 </resources>

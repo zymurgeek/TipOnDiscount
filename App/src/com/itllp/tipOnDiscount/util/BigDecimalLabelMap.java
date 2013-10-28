@@ -1,13 +1,17 @@
 package com.itllp.tipOnDiscount.util;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class BigDecimalLabelMap {
 
+	private List<String> labelList = new ArrayList<String>();
 	private Map<BigDecimal, String> map = new HashMap<BigDecimal, String>();
 	
 	public BigDecimalLabelMap(String[] valueStrings, String[] labels) {
@@ -21,6 +25,7 @@ public class BigDecimalLabelMap {
 			throw new RuntimeException
 			("label and value string arrays must be the same length.");
 		}
+		labelList.addAll(Arrays.asList(labels));
 		for (int i=0; i<valueStrings.length; ++i) {
 			String valueString = valueStrings[i];
 			BigDecimal value = new BigDecimal(valueString);
@@ -53,6 +58,13 @@ public class BigDecimalLabelMap {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * @return The index of the label or -1 if not found.
+	 */
+	public int getPosition(String label) {
+		return labelList.indexOf(label);
 	}
 
 }

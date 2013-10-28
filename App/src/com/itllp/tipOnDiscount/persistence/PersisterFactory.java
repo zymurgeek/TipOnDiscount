@@ -1,17 +1,29 @@
 package com.itllp.tipOnDiscount.persistence;
 
+
 public class PersisterFactory {
-	private static Persister persister;
+	private static Persister appPersister;
+	private static Persister defaultsPersister;
 
 	
-	public static void setPersister(Persister newPersister) {
-		persister = newPersister;
+	public static void setPersisterForApp(Persister persister) {
+		appPersister = persister;
 	}
 
 
-	public static Persister getPersister() {
-		return persister;
+	public static Persister getPersisterForApp() {
+		return appPersister;
+	}
+
+
+	public static void setPersisterForDefaults(Persister persister) {
+		defaultsPersister = persister;
 	}
 	
+
+	public static Persister getPersisterForDefaults() {
+		return defaultsPersister;
+	}
+
 
 }

@@ -8,6 +8,7 @@ HDPI:  72x72
 LDPI:  36x36
 MDPI:  48x48
 XHDPI:  96x96
+XXHDPI: 144x144
 
 To update the delivered icons, run the script deliver-icons.  In
 Eclipse, refresh the res directory.

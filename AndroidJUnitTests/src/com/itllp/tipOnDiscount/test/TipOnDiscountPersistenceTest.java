@@ -50,7 +50,7 @@ extends ActivityInstrumentationTestCase2<TipOnDiscount> {
         stubDataModel = new StubDataModel();
         DataModelFactory.setDataModel(stubDataModel);
         stubPersister = new StubPersister();
-        PersisterFactory.setPersister(stubPersister);
+        PersisterFactory.setPersisterForApp(stubPersister);
         stubDataModelPersister = new StubDataModelPersister();
 		DataModelPersisterFactory.setDataModelPersister(
 				stubDataModelPersister);

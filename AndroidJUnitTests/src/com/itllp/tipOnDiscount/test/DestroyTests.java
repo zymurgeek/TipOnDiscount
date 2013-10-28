@@ -69,7 +69,7 @@ public class DestroyTests extends
         super.setUp();
         
         stubPersister = new StubPersister();
-        PersisterFactory.setPersister(stubPersister);
+        PersisterFactory.setPersisterForApp(stubPersister);
         stubDataModelPersister = new StubDataModelPersister();
         DataModelPersisterFactory.setDataModelPersister(
         		stubDataModelPersister);
