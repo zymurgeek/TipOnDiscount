@@ -20,10 +20,6 @@ package com.itllp.tipOnDiscount;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map.Entry;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -67,6 +63,7 @@ import com.itllp.tipOnDiscount.model.update.TotalDueUpdate;
 import com.itllp.tipOnDiscount.model.update.Update;
 import com.itllp.tipOnDiscount.persistence.Persister;
 import com.itllp.tipOnDiscount.persistence.PersisterFactory;
+import com.itllp.tipOnDiscount.util.BigDecimalLabelMap;
 
 // TODO Set defaults for TIP%, Tax and Rounding
 
@@ -85,17 +82,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 	private TextView tipAmountText;
 	private TextView splitBetweenEntry;
 	private Spinner roundUpToNearestSpinner;
-	private HashMap<String, BigDecimal> roundUpToNearestValues;
-	private BigDecimal pennyValue = new BigDecimal("0.01");
-	private BigDecimal nickelValue = new BigDecimal("0.05");
-	private BigDecimal dimeValue = new BigDecimal("0.10");
-	private BigDecimal quarterValue = new BigDecimal("0.25");
-	private BigDecimal halfDollarValue = new BigDecimal("0.50");
-	private BigDecimal oneDollarValue = new BigDecimal("1.00");
-	private BigDecimal twoDollarValue = new BigDecimal("2.00");
-	private BigDecimal fiveDollarValue = new BigDecimal("5.00");
-	private BigDecimal tenDollarValue = new BigDecimal("10.00");
-	private BigDecimal twentyDollarValue = new BigDecimal("20.00");
+	BigDecimalLabelMap spinnerMap;
 	private Button bumpDownButton;
 	private Button bumpUpButton;
 	private TextView actualTipAmountText;
@@ -237,7 +224,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 		public void onItemSelected(AdapterView<?> parent, View arg1, int pos,
 			long id) {
 			String key = parent.getItemAtPosition(pos).toString();
-			BigDecimal amount = roundUpToNearestValues.get(key);
+			BigDecimal amount = spinnerMap.getValue(key);
 			dataModel.setRoundUpToAmount(amount);
 		}
 
@@ -264,6 +251,12 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
         // Unlock screen for Android JUnit tests
         Window window = getWindow();  
         window.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+
+        String[] valueStringArray = getResources().getStringArray
+        		(com.itllp.tipOnDiscount.R.array.round_up_to_nearest_value_array);
+        String[] labelArray = getResources().getStringArray
+        		(com.itllp.tipOnDiscount.R.array.round_up_to_nearest_label_array);
+		spinnerMap = new BigDecimalLabelMap(valueStringArray, labelArray);
 
         dataModel = DataModelFactory.getDataModel();
         dataModelPersister = DataModelPersisterFactory.getDataModelPersister();
@@ -317,19 +310,6 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
         splitBetweenEntry.addTextChangedListener(new NonZeroIntegerTextWatcher
         		(splitBetweenEntry));
         splitBetweenEntry.setOnFocusChangeListener(focusChangeListener);
-
-        roundUpToNearestValues = new HashMap<String, BigDecimal>();
-        //TODO Use strings.xml for these values
-        roundUpToNearestValues.put("None", this.pennyValue);
-        roundUpToNearestValues.put("Nickel", this.nickelValue);
-        roundUpToNearestValues.put("Dime", this.dimeValue);
-        roundUpToNearestValues.put("Quarter", this.quarterValue);
-        roundUpToNearestValues.put("Half Dollar", this.halfDollarValue);
-        roundUpToNearestValues.put("$1", this.oneDollarValue);
-        roundUpToNearestValues.put("$2", this.twoDollarValue);
-        roundUpToNearestValues.put("$5", this.fiveDollarValue);
-        roundUpToNearestValues.put("$10", this.tenDollarValue);
-        roundUpToNearestValues.put("$20", this.twentyDollarValue);
 
         roundUpToNearestSpinner = (Spinner)this.findViewById
 			(com.itllp.tipOnDiscount.R.id.round_up_to_nearest_spinner);
@@ -841,9 +821,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 
 	
 	/**
-	 * Updates the value in the Round Up To Nearest spinner.  This does not
-	 * get changed by any means other than user input, so there's no
-	 * update notification.
+	 * Updates the value in the Round Up To Nearest spinner.
 	 */
 	private void updateRoundUpToNearestEntry(RoundUpToNearestUpdate update) {
 		BigDecimal roundUpToAmount;
@@ -853,21 +831,9 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 			roundUpToAmount = update.getAmount();
 		}
 		
-		Iterator<Entry<String, BigDecimal>> iterator 
-			= roundUpToNearestValues.entrySet().iterator();
-		Entry<String, BigDecimal> entry;
-		String selection = "";
-        while(iterator.hasNext()){        
-            entry = iterator.next();
-            BigDecimal value = entry.getValue();
-            if (value.equals(roundUpToAmount)) {
-            	selection = entry.getKey();
-            }
-        }
-        
-        int position;
+		String selection = spinnerMap.getLabel(roundUpToAmount);
         int itemCount = roundUpToNearestSpinner.getCount();
-        for (position=0; position<itemCount; ++position) {
+        for (int position=0; position<itemCount; ++position) {
         	if (roundUpToNearestSpinner.getItemAtPosition(position)
         			.equals(selection)) {
         		roundUpToNearestSpinner.setSelection(position);

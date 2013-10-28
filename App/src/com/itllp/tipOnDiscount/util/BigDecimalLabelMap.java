@@ -1,6 +1,7 @@
 package com.itllp.tipOnDiscount.util;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -32,6 +33,23 @@ public class BigDecimalLabelMap {
 		for (BigDecimal aValue: valueSet) {
 			if (0 == aValue.compareTo(value)) {
 				return map.get(aValue);
+			}
+		}
+		return null;
+	}
+	
+	public Set<BigDecimal> keySet() {
+		return map.keySet();
+	}
+
+	public Collection<String> values() {
+		return map.values();
+	}
+
+	public BigDecimal getValue(String label) {
+		for (BigDecimal bigDecimal : keySet()) {
+			if (getLabel(bigDecimal).equals(label)) {
+				return bigDecimal;
 			}
 		}
 		return null;

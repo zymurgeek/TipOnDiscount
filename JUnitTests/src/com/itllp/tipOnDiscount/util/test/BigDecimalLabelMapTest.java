@@ -124,4 +124,51 @@ public class BigDecimalLabelMapTest {
 		
 	}
 
+	@Test
+	public void testGetValueWhenMapIsEmpty() {
+		// Set up preconditions
+		BigDecimalLabelMap map = new BigDecimalLabelMap(emptyValueStringArray, emptyLabelArray);
+		String label = "none";
+		
+		// Call method under test
+		BigDecimal actualValue = map.getValue(label);
+		
+		// Verify postconditions
+		assertNull("Value should not be found", actualValue);
+	}
+
+
+	@Test
+	public void testGetValueNotInMap() {
+		// Set up preconditions
+		String[] values = { "1" };
+		String[] labels = { "one" };
+		BigDecimalLabelMap map = new BigDecimalLabelMap(values, labels);
+		String label = "does not exist";
+		
+		// Call method under test
+		BigDecimal actualValue = map.getValue(label);
+		
+		// Verify postconditions
+		assertNull("Value should not be found", actualValue);
+	}
+
+	@Test
+	public void testGetValueWhenInMap() {
+		// Set up preconditions
+		String expectedLabel = "One";
+		String expectedValueString = "1";
+		String[] labels = { expectedLabel, "Two" };
+		String[] values = { expectedValueString, "2" };
+		BigDecimalLabelMap map = new BigDecimalLabelMap(values, labels);
+		BigDecimal expectedValue = new BigDecimal(expectedValueString);
+		
+		// Call method under test
+		BigDecimal actualValue = map.getValue(expectedLabel);
+		
+		// Verify postconditions
+		assertTrue("Wrong value", 0==expectedValue.compareTo(actualValue));
+	}
+	
+
 }

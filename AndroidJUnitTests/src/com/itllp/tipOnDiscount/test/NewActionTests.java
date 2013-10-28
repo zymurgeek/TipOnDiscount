@@ -312,7 +312,7 @@ public class NewActionTests extends
     	int tries = 10;
     	while (tries > 0 &&	StubResultReceiver.NO_CODE == 
     			resultReceiver.stub_getLastResultCode()) {
-            SystemClock.sleep(100);
+            SystemClock.sleep(200);
             --tries;
     	}
         assertEquals("Soft keyboard was not shown", 
