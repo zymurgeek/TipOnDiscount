@@ -137,6 +137,9 @@ ActivityInstrumentationTestCase2<TipOnDiscount> {
 
     public void testEntryToBillTotalField() {
     	// Set up preconditions
+    	setFocusToView(taxAmountEntryView);
+
+    	// Set up preconditions
     	setFocusToView(taxPercentEntryView);
     	
     	// Call method under test
@@ -148,6 +151,9 @@ ActivityInstrumentationTestCase2<TipOnDiscount> {
 
     
     public void testEntryToTaxPercentField() {
+    	// Set up preconditions
+    	setFocusToView(billTotalEntryView);
+
     	// Call method under test
     	setFocusToView(taxPercentEntryView);
     	
@@ -157,6 +163,9 @@ ActivityInstrumentationTestCase2<TipOnDiscount> {
 
 
     public void testEntryToTaxAmountField() {
+    	// Set up preconditions
+    	setFocusToView(taxPercentEntryView);
+
     	// Call method under test
     	setFocusToView(taxAmountEntryView);
     	
@@ -166,6 +175,9 @@ ActivityInstrumentationTestCase2<TipOnDiscount> {
 
 
     public void testEntryToDiscountField() {
+    	// Set up preconditions
+    	setFocusToView(taxAmountEntryView);
+
     	// Call method under test
     	setFocusToView(discountEntryView);
     	
@@ -175,6 +187,9 @@ ActivityInstrumentationTestCase2<TipOnDiscount> {
 
 
     public void testEntryToPlannedTipPercentField() {
+    	// Set up preconditions
+    	setFocusToView(discountEntryView);
+
     	// Call method under test
     	setFocusToView(plannedTipPercentEntryView);
     	
@@ -184,6 +199,9 @@ ActivityInstrumentationTestCase2<TipOnDiscount> {
 
 
     public void testEntryToSplitBetweenField() {
+    	// Set up preconditions
+    	setFocusToView(plannedTipPercentEntryView);
+
     	// Call method under test
     	setFocusToView(splitBetweenEntryView);
     	

@@ -192,6 +192,7 @@ public class NewActionTests extends
 
 	public void testNewActionWhenFocusIsInBillTotal() {
 		// Set up preconditions
+		setFocusToView(taxAmountEntryView);
     	setFocusToView(billTotalEntryView);
 
     	// Run method under test
