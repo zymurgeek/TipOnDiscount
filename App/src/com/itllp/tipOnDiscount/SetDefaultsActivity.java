@@ -84,4 +84,15 @@ public class SetDefaultsActivity extends Activity {
         roundUpToNearestSpinner.setSelection(position);
     }
 
+    @Override
+    public void onPause() {
+    	super.onPause();
+    	
+    	Defaults defaults = DefaultsFactory.getDefaults();
+    	String taxPercentString = taxPercentEntry.getText().toString();
+    	BigDecimal taxPercent = new BigDecimal(taxPercentString);
+    	defaults.setTaxPercent(taxPercent);
+    	DefaultsPersister persister = DefaultsPersisterFactory.getDefaultsPersister();
+    	persister.saveState(defaults, this);
+    }
 }

@@ -20,44 +20,29 @@ package com.itllp.tipOnDiscount.defaults.test;
 
 import java.math.BigDecimal;
 import android.app.Instrumentation;
+import android.content.Context;
 import android.test.ActivityInstrumentationTestCase2;
+import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.itllp.tipOnDiscount.SetDefaultsActivity;
-import com.itllp.tipOnDiscount.TipOnDiscount;
-import com.itllp.tipOnDiscount.model.DataModel;
-import com.itllp.tipOnDiscount.model.DataModelFactory;
-import com.itllp.tipOnDiscount.model.persistence.DataModelPersisterFactory;
-import com.itllp.tipOnDiscount.model.persistence.test.StubDataModelPersister;
-import com.itllp.tipOnDiscount.model.test.StubDataModel;
-import com.itllp.tipOnDiscount.persistence.PersisterFactory;
-import com.itllp.tipOnDiscount.persistence.test.StubPersister;
+import com.itllp.tipOnDiscount.defaults.Defaults;
+import com.itllp.tipOnDiscount.defaults.DefaultsFactory;
+import com.itllp.tipOnDiscount.defaults.DefaultsImpl;
+import com.itllp.tipOnDiscount.defaults.persistence.DefaultsPersisterFactory;
+import com.itllp.tipOnDiscount.defaults.persistence.test.StubDefaultsPersister;
 
-//TODO Implement
+//TODO Finish implementing
 public class PauseTests extends
 	ActivityInstrumentationTestCase2<SetDefaultsActivity>{
 
-//	StubDataModelPersister stubDataModelPersister;
-//	StubDataModel stubDataModel;
-//	StubPersister stubPersister;
+	StubDefaultsPersister stubDefaultsPersister;
+	DefaultsImpl defaults;
 	private Instrumentation mInstrumentation;
-    private TipOnDiscount mActivity;
-//    private TextView billTotalEntryView;
-//    private TextView billSubtotalTextView;
-//    private TextView discountEntryView;
-//    private TextView tippableAmountTextView;
-    private TextView taxPercentEntryView;
-//    private TextView taxAmountEntryView;
-//    private TextView plannedTipPercentEntryView;
-//    private TextView plannedTipAmountTextView;
-//    private TextView splitBetweenEntryView;
+    private SetDefaultsActivity mActivity;
+    private EditText taxPercentEntryView;
+    private EditText plannedTipPercentEntryView;
     private Spinner roundUpToNearestSpinner;
-//    private TextView bumpsTextView;
-//    private TextView actualTipPercentTextView;
-//    private TextView actualTipAmountTextView;
-//    private TextView totalDueTextView;
-//    private TextView shareDueTextView;
 
     
 	@SuppressWarnings("deprecation")
@@ -71,56 +56,25 @@ public class PauseTests extends
     protected void setUp() throws Exception {
         super.setUp();
 
-//        stubPersister = new StubPersister();
-//        PersisterFactory.setPersisterForApp(stubPersister);
-//        stubDataModelPersister = new StubDataModelPersister(); 
-//        DataModelPersisterFactory.setDataModelPersister(
-//        		stubDataModelPersister);
-//        stubDataModel = new StubDataModel();
-//        DataModelFactory.setDataModel(stubDataModel);
-//        mInstrumentation = getInstrumentation();
-//        mActivity = this.getActivity();
-//
-//        billTotalEntryView = (TextView) mActivity.findViewById
-//    		(com.itllp.tipOnDiscount.R.id.bill_total_entry);
-//        billSubtotalTextView = (TextView) mActivity.findViewById
-//        	(com.itllp.tipOnDiscount.R.id.bill_subtotal_text);
-//        discountEntryView = (TextView) mActivity.findViewById
-//        	(com.itllp.tipOnDiscount.R.id.discount_entry);
-//        tippableAmountTextView = (TextView) mActivity.findViewById(
-//        		com.itllp.tipOnDiscount.R.id.tippable_amount_text);
-//        taxPercentEntryView = (TextView) mActivity.findViewById
-//        	(com.itllp.tipOnDiscount.R.id.tax_percent_entry);
-//        taxAmountEntryView = (TextView) mActivity.findViewById
-//        	(com.itllp.tipOnDiscount.R.id.tax_amount_entry);
-//        plannedTipPercentEntryView = (TextView) mActivity.findViewById
-//			(com.itllp.tipOnDiscount.R.id.planned_tip_percent_entry);
-//        plannedTipAmountTextView = (TextView) mActivity.findViewById
-//			(com.itllp.tipOnDiscount.R.id.planned_tip_amount_text);
-//        splitBetweenEntryView = (TextView)mActivity.findViewById
-//        	(com.itllp.tipOnDiscount.R.id.split_between_entry);
-//        roundUpToNearestSpinner = (Spinner)mActivity.findViewById
-//        	(com.itllp.tipOnDiscount.R.id.round_up_to_nearest_spinner);
-//        bumpsTextView = (TextView) mActivity.findViewById
-//			(com.itllp.tipOnDiscount.R.id.bumps_text);
-//        actualTipPercentTextView = (TextView)mActivity.findViewById
-//			(com.itllp.tipOnDiscount.R.id.actual_tip_percent_text);
-//        actualTipAmountTextView = (TextView)mActivity.findViewById
-//			(com.itllp.tipOnDiscount.R.id.actual_tip_amount_text);
-//        totalDueTextView = (TextView) mActivity.findViewById
-//			(com.itllp.tipOnDiscount.R.id.total_due_text);
-//        shareDueTextView = (TextView) mActivity.findViewById
-//			(com.itllp.tipOnDiscount.R.id.share_due_text);
-//        
-//    	final DataModel model = mActivity.getDataModel();
-//    	model.initialize();
+        stubDefaultsPersister = new StubDefaultsPersister(); 
+        DefaultsPersisterFactory.setDefaultsPersister(stubDefaultsPersister);
+        defaults = new DefaultsImpl();
+        DefaultsFactory.setDefaults(defaults);
+        mInstrumentation = getInstrumentation();
+        mActivity = getActivity();
+
+        taxPercentEntryView = (EditText) mActivity.findViewById
+        	(com.itllp.tipOnDiscount.R.id.tax_percent_entry);
+        plannedTipPercentEntryView = (EditText) mActivity.findViewById
+			(com.itllp.tipOnDiscount.R.id.planned_tip_percent_entry);
+        roundUpToNearestSpinner = (Spinner)mActivity.findViewById
+        	(com.itllp.tipOnDiscount.R.id.round_up_to_nearest_spinner);
     }
     
     
-    private void pause() {
+    private void pauseActivity() {
     	mInstrumentation.waitForIdleSync();
 
-    	// Pause app
     	mActivity.runOnUiThread(
     			new Runnable() {
     				public void run() {
@@ -132,37 +86,31 @@ public class PauseTests extends
     	mInstrumentation.waitForIdleSync();
     }
     
-    
-//    private void updateAllFields() {
-//    	mActivity.runOnUiThread(
-//    			new Runnable() {
-//    				public void run() {
-//    			    	mActivity.updateAllFields();;
-//    				}
-//    			}
-//        	);
-//
-//    	mInstrumentation.waitForIdleSync();
-//    }
-    
-    
-//    public void testActualTipPercentStatePause() {
-//    	// Preconditions
-//    	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
-//    	String textRate = ".15";
-//    	BigDecimal rate = new BigDecimal(textRate);
-//    	String textPercent = TipOnDiscount.formatRateToPercent(rate);
-//    	model.setActualTipRate(rate);
-//    	
-//    	// Method under test
-//    	pause();
-//    	
-//    	// Postconditions
-//    	assertEquals("Incorrect actual tip percent data model value", rate,
-//    			model.getActualTipRate());
-//        assertEquals("Incorrect actual tip percent field value", textPercent, 
-//        		actualTipPercentTextView.getText().toString());
-//    }
+//todo test pause when taxpercent is empty    
+    public void testPause() {
+    	// Preconditions
+    	String expectedTaxPercentString = "4.25";
+    	BigDecimal expectedTaxPercent = new BigDecimal(expectedTaxPercentString);
+    	String x = taxPercentEntryView.getText().toString();
+    	taxPercentEntryView.setText("42");
+    	taxPercentEntryView.setText(expectedTaxPercentString);
+    	
+    	// Method under test
+    	pauseActivity();
+    	
+    	// Postconditions
+    	Defaults savedDefaults = stubDefaultsPersister.stub_getLastSavedDefaults();
+    	BigDecimal actualTaxPercent = savedDefaults.getTaxPercent();
+    	String errorMsg = "Incorrect tax percent saved: expected " + 
+    			expectedTaxPercent.toPlainString() + " but was " +
+    			actualTaxPercent.toPlainString();
+    	assertTrue(errorMsg, 0==expectedTaxPercent.compareTo(actualTaxPercent));
+    	Context expectedContext = mActivity;
+    	Context actualContext = stubDefaultsPersister.stub_getLastSavedContext(); 
+        assertEquals("Incorrect context used to save defaults", expectedContext, 
+        		actualContext);
+        //TODO test planned tip and round up to
+    }
 	
 
 
