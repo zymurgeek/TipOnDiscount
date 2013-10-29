@@ -20,7 +20,6 @@ package com.itllp.tipOnDiscount.defaults.test;
 
 import java.math.BigDecimal;
 
-import android.app.Instrumentation;
 import android.test.ActivityInstrumentationTestCase2;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -35,7 +34,6 @@ import com.itllp.tipOnDiscount.util.BigDecimalLabelMap;
 
 public class InitializationTests extends
 		ActivityInstrumentationTestCase2<SetDefaultsActivity> {
-	private Instrumentation mInstrumentation;
     private SetDefaultsActivity mActivity;
     private EditText taxPercentEntryView;
     private EditText plannedTipPercentEntryView;
@@ -44,6 +42,7 @@ public class InitializationTests extends
 	private StubDefaultsPersister stubPersister;
 	private BigDecimal expectedTaxPercent;
 	private BigDecimal expectedTipPercent;
+	private String expectedLabel;
 	
 	@SuppressWarnings("deprecation")
 	public InitializationTests() {
@@ -59,15 +58,27 @@ public class InitializationTests extends
         super.setUp();
 
         defaults = new DefaultsImpl();
-        expectedTaxPercent = new BigDecimal("6.25");
-        expectedTipPercent = new BigDecimal("17.5");
-        defaults.setTaxPercent(expectedTaxPercent);
-        defaults.setTipPercent(expectedTipPercent);
         DefaultsFactory.setDefaults(defaults);
         stubPersister = new StubDefaultsPersister();
         DefaultsPersisterFactory.setDefaultsPersister(stubPersister);
-        mInstrumentation = getInstrumentation();
-        mActivity = this.getActivity();
+        expectedTaxPercent = new BigDecimal("6.25");
+        expectedTipPercent = new BigDecimal("17.5");
+        mActivity = getActivity();
+    	String[] labels = mActivity.getResources().getStringArray(
+    			com.itllp.tipOnDiscount.R.array.round_up_to_nearest_label_array);
+    	String[] values = mActivity.getResources().getStringArray(
+    			com.itllp.tipOnDiscount.R.array.round_up_to_nearest_value_array);
+    	BigDecimalLabelMap map = new BigDecimalLabelMap(values, labels);
+    	int spinnerItemCount = labels.length;
+    	int expectedPosition = spinnerItemCount / 2;
+    	BigDecimal expectedValue = new BigDecimal(values[expectedPosition]);
+    	expectedLabel = map.getLabel(expectedValue);
+    	mActivity.finish();
+    	setActivity(null);
+        defaults.setTaxPercent(expectedTaxPercent);
+        defaults.setTipPercent(expectedTipPercent);
+        defaults.setRoundUpToAmount(expectedValue);
+        mActivity = getActivity();
 
         taxPercentEntryView = (EditText) mActivity.findViewById
         	(com.itllp.tipOnDiscount.R.id.tax_percent_entry);
@@ -78,18 +89,12 @@ public class InitializationTests extends
     }
     
     
-    public void testPreconditions() {
-    	assertNotNull(taxPercentEntryView);
-    	assertNotNull(plannedTipPercentEntryView);
-    	assertNotNull(roundUpToNearestSpinner);
-    }
-    
-    
     public void testInitialization() {
     	// Verify postconditions
     	verifyDefaultsAreLoadedFromPersister();
     	verifyTaxPercentFieldIsLoadedFromDefaults();
     	verifyPlannedTipPercentFieldIsLoadedFromDefaults();
+    	verifyRoundUpToNearestSpinnerIsLoadedFromDefaults();
     }
 
     
@@ -122,27 +127,7 @@ public class InitializationTests extends
     }
     
     
-    public void testInitializationOfRoundUpToNearestSpinner() {
-    	// Set up preconditions
-    	String[] labels = mActivity.getResources().getStringArray(
-    			com.itllp.tipOnDiscount.R.array.round_up_to_nearest_label_array);
-    	String[] values = mActivity.getResources().getStringArray(
-    			com.itllp.tipOnDiscount.R.array.round_up_to_nearest_value_array);
-    	BigDecimalLabelMap map = new BigDecimalLabelMap(values, labels);
-    	int spinnerItemCount = labels.length;
-    	int expectedPosition = spinnerItemCount / 2;
-    	BigDecimal expectedValue = new BigDecimal(values[expectedPosition]);
-    	String expectedLabel = map.getLabel(expectedValue);
-    	mActivity.finish();
-    	setActivity(null);
-    	mInstrumentation.waitForIdleSync();
-        defaults.setRoundUpToAmount(expectedValue);
-        
-        // Call method under test
-        mActivity = getActivity();
-        mInstrumentation.waitForIdleSync();
-    	
-        // Verify postconditions
+    private void verifyRoundUpToNearestSpinnerIsLoadedFromDefaults() {
         roundUpToNearestSpinner = (Spinner)mActivity.findViewById
             	(com.itllp.tipOnDiscount.R.id.round_up_to_nearest_spinner);
     	String actualLabel = roundUpToNearestSpinner.getSelectedItem().
