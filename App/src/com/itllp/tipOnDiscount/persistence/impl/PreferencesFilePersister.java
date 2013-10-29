@@ -97,6 +97,7 @@ public class PreferencesFilePersister implements Persister {
 	}
 
 	
+	@Override
 	public Boolean retrieveBoolean(Context context, String key) {
 		SharedPreferences prefs =
 				context.getSharedPreferences(

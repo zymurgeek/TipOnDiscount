@@ -18,30 +18,25 @@ along with Tip On Discount.  If not, see <http://www.gnu.org/licenses/>.
 
 package com.itllp.tipOnDiscount;
 
-import com.itllp.tipOnDiscount.TipOnDiscount.AmountTextWatcher;
-import com.itllp.tipOnDiscount.TipOnDiscount.NonZeroIntegerTextWatcher;
-import com.itllp.tipOnDiscount.TipOnDiscount.PercentTextWatcher;
-import com.itllp.tipOnDiscount.TipOnDiscount.RoundUpToNearestOnItemSelectedListener;
-import com.itllp.tipOnDiscount.model.DataModelFactory;
-import com.itllp.tipOnDiscount.model.persistence.DataModelPersisterFactory;
-import com.itllp.tipOnDiscount.persistence.PersisterFactory;
+import java.math.BigDecimal;
+
+import com.itllp.tipOnDiscount.defaults.Defaults;
+import com.itllp.tipOnDiscount.defaults.DefaultsFactory;
+import com.itllp.tipOnDiscount.defaults.persistence.DefaultsPersister;
+import com.itllp.tipOnDiscount.defaults.persistence.DefaultsPersisterFactory;
 import com.itllp.tipOnDiscount.util.BigDecimalLabelMap;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 
 public class SetDefaultsActivity extends Activity {
 
-	public static final String DEFAULT_TAX_PERCENT = "0";
-	public static final String DEFAULT_PLANNED_TIP_PERCENT = "15";
 	private TextView taxPercentEntry;
 	private TextView plannedTipPercentEntry;
 	private Spinner roundUpToNearestSpinner;
@@ -59,18 +54,8 @@ public class SetDefaultsActivity extends Activity {
 
         taxPercentEntry = (TextView)this.findViewById
 			(com.itllp.tipOnDiscount.R.id.tax_percent_entry);
-//        taxPercentEntry.addTextChangedListener(new PercentTextWatcher
-//        		(taxPercentEntry));
-//        taxPercentEntry.setOnFocusChangeListener(focusChangeListener);
-        taxPercentEntry.setText(DEFAULT_TAX_PERCENT);
-
         plannedTipPercentEntry = (TextView)this.findViewById
 			(com.itllp.tipOnDiscount.R.id.planned_tip_percent_entry);
-//        tipPercentEntry.addTextChangedListener(new PercentTextWatcher
-//        		(tipPercentEntry));
-//        tipPercentEntry.setOnFocusChangeListener(focusChangeListener);
-        plannedTipPercentEntry.setText(DEFAULT_PLANNED_TIP_PERCENT);
-        
         roundUpToNearestSpinner = (Spinner)this.findViewById
 			(com.itllp.tipOnDiscount.R.id.round_up_to_nearest_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
@@ -78,17 +63,25 @@ public class SetDefaultsActivity extends Activity {
         	android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         roundUpToNearestSpinner.setAdapter(adapter);
-//        roundUpToNearestSpinner.setOnItemSelectedListener
-//        	(new RoundUpToNearestOnItemSelectedListener());
-        String defaultRoundUpTo = getResources().getString
-        		(R.string.default_round_up_to_nearest_label);
+    }
+
+    @Override
+    public void onResume() {
+    	super.onResume();
+    	
+        Defaults defaults = DefaultsFactory.getDefaults();
+        DefaultsPersister defaultsPersister = 
+        		DefaultsPersisterFactory.getDefaultsPersister();
+        defaultsPersister.restoreState(defaults, this);
+        taxPercentEntry.setText(defaults.getTaxPercent().toPlainString());
+        plannedTipPercentEntry.setText(defaults.getTipPercent().toPlainString());
         BigDecimalLabelMap map = new BigDecimalLabelMap(
         		getResources().getStringArray(R.array.round_up_to_nearest_value_array),
         		getResources().getStringArray(R.array.round_up_to_nearest_label_array));
+        BigDecimal defaultRoundUpToAmount = defaults.getRoundUpToAmount();
+        String defaultRoundUpTo = map.getLabel(defaultRoundUpToAmount);
         int position = map.getPosition(defaultRoundUpTo);
         roundUpToNearestSpinner.setSelection(position);
     }
-
-    
 
 }

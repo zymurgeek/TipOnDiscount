@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.test.mock.MockContext;
+
+import com.itllp.tipOnDiscount.persistence.Persister;
 import com.itllp.tipOnDiscount.persistence.impl.PreferencesFilePersister;
 
 import junit.framework.TestCase;
@@ -225,7 +227,7 @@ public class PreferencesFilePersisterTests extends TestCase {
 	private Context stubContext;
 	private StubSharedPreferences stubSharedPreferences;
 	private String preferencesFileName;
-	private PreferencesFilePersister persister;
+	private Persister persister;
 	private String expectedKey = "MyKey";
 	private String missingKey = "No such key in preferences file";
 	private Boolean expectedBooleanValue;

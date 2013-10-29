@@ -38,4 +38,8 @@ public class StubPersister implements Persister {
 		return null;
 	}
 
+	public Boolean retrieveBoolean(Context context, String key) {
+		return null;
+	}
+
 }

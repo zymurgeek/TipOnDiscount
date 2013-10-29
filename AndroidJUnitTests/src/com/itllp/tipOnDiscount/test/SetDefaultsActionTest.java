@@ -1,7 +1,29 @@
+// Copyright 2013 David A. Greenbaum
+/*
+This file is part of Tip On Discount.
+
+Tip On Discount is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+Tip On Discount is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Tip On Discount.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package com.itllp.tipOnDiscount.test;
 
 import com.itllp.tipOnDiscount.SetDefaultsActivity;
 import com.itllp.tipOnDiscount.TipOnDiscount;
+import com.itllp.tipOnDiscount.defaults.DefaultsFactory;
+import com.itllp.tipOnDiscount.defaults.DefaultsImpl;
+import com.itllp.tipOnDiscount.defaults.persistence.DefaultsPersisterFactory;
+import com.itllp.tipOnDiscount.defaults.persistence.impl.DefaultsPersisterImpl;
+import com.itllp.tipOnDiscount.defaults.persistence.test.StubDefaultsPersister;
 import com.itllp.tipOnDiscount.model.DataModelFactory;
 import com.itllp.tipOnDiscount.model.persistence.DataModelPersisterFactory;
 import com.itllp.tipOnDiscount.model.persistence.test.StubDataModelPersister;
@@ -33,6 +55,10 @@ extends ActivityInstrumentationTestCase2<TipOnDiscount> {
     protected void setUp() throws Exception {
         super.setUp();
         
+		DefaultsFactory.setDefaults(new DefaultsImpl());
+		DefaultsPersisterFactory.setDefaultsPersister(
+				new StubDefaultsPersister());
+
         DataModelPersisterFactory.setDataModelPersister(new StubDataModelPersister());
         StubDataModel stubDataModel = new StubDataModel();
         DataModelFactory.setDataModel(stubDataModel);
@@ -54,5 +80,6 @@ extends ActivityInstrumentationTestCase2<TipOnDiscount> {
 		SetDefaultsActivity newActivity = (SetDefaultsActivity)instrumentation
 				.waitForMonitorWithTimeout(activityMonitor, 5000);
 		assertNotNull("Activity did not start", newActivity);
+		newActivity.finish();
 	}
 }
