@@ -20,6 +20,7 @@ package com.itllp.tipOnDiscount.defaults.test;
 
 import java.math.BigDecimal;
 
+import android.app.Instrumentation;
 import android.test.ActivityInstrumentationTestCase2;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -34,6 +35,7 @@ import com.itllp.tipOnDiscount.util.BigDecimalLabelMap;
 
 public class InitializationTests extends
 		ActivityInstrumentationTestCase2<SetDefaultsActivity> {
+	private Instrumentation mInstrumentation;
     private SetDefaultsActivity mActivity;
     private EditText taxPercentEntryView;
     private EditText plannedTipPercentEntryView;
@@ -63,6 +65,7 @@ public class InitializationTests extends
         DefaultsPersisterFactory.setDefaultsPersister(stubPersister);
         expectedTaxPercent = new BigDecimal("6.25");
         expectedTipPercent = new BigDecimal("17.5");
+        mInstrumentation = getInstrumentation();
         mActivity = getActivity();
     	String[] labels = mActivity.getResources().getStringArray(
     			com.itllp.tipOnDiscount.R.array.round_up_to_nearest_label_array);
@@ -75,6 +78,7 @@ public class InitializationTests extends
     	expectedLabel = map.getLabel(expectedValue);
     	mActivity.finish();
     	setActivity(null);
+    	mInstrumentation.waitForIdleSync();
         defaults.setTaxPercent(expectedTaxPercent);
         defaults.setTipPercent(expectedTipPercent);
         defaults.setRoundUpToAmount(expectedValue);
