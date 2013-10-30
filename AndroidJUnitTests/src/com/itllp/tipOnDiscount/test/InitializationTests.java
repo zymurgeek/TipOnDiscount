@@ -28,9 +28,11 @@ import android.widget.TextView;
 import com.itllp.tipOnDiscount.TipOnDiscount;
 import com.itllp.tipOnDiscount.model.DataModel;
 import com.itllp.tipOnDiscount.model.DataModelFactory;
+import com.itllp.tipOnDiscount.model.DataModelInitializerFactory;
 import com.itllp.tipOnDiscount.model.persistence.DataModelPersisterFactory;
 import com.itllp.tipOnDiscount.model.persistence.test.StubDataModelPersister;
 import com.itllp.tipOnDiscount.model.test.StubDataModel;
+import com.itllp.tipOnDiscount.model.test.StubDataModelInitializer;
 import com.itllp.tipOnDiscount.util.BigDecimalLabelMap;
 
 /* These tests cover the initial values displayed in each field.
@@ -71,6 +73,7 @@ public class InitializationTests extends
     private TextView actualTipPercentTextView;
     private TextView totalDueTextView;
     private DataModel dataModel;
+    private StubDataModelInitializer stubDataModelInitializer;
     
     
 	public InitializationTests() {
@@ -78,6 +81,8 @@ public class InitializationTests extends
     	DataModelPersisterFactory.setDataModelPersister(
     			new StubDataModelPersister());
     	DataModelFactory.setDataModel(new StubDataModel());
+    	stubDataModelInitializer = new StubDataModelInitializer();
+    	DataModelInitializerFactory.setDataModelInitializer(stubDataModelInitializer);
 		percentNumberFormat.setMaximumFractionDigits(3);
 		zeroPercentString = percentNumberFormat.format(0);
 	}
@@ -144,6 +149,12 @@ public class InitializationTests extends
     	dataModel = DataModelFactory.getDataModel();
     }
 
+    
+    public void testDataModelInitialization() {
+    	// Verify postconditions
+    	assertTrue("Data model was not initialized", stubDataModelInitializer.
+    			stub_wasInitializeCalled());
+    }
     
     public void testInitialBillTotal() {
         assertEquals("Incorrect currency format", 

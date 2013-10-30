@@ -84,6 +84,7 @@ public class DataModelImpl implements DataModel {
 	/* (non-Javadoc)
 	 * @see com.itllp.tipOnDiscount.model.DataModel#initialize()
 	 */
+	//TODO Move this to DataModelInitializer
 	public void initialize() {
 		setRoundUpToAmount(new BigDecimal("0.01"));
 		setBillTotal(BigDecimal.ZERO.setScale(2));

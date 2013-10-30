@@ -21,7 +21,9 @@ import com.itllp.tipOnDiscount.defaults.DefaultsImpl;
 import com.itllp.tipOnDiscount.defaults.persistence.DefaultsPersisterFactory;
 import com.itllp.tipOnDiscount.defaults.persistence.impl.DefaultsPersisterImpl;
 import com.itllp.tipOnDiscount.model.DataModelFactory;
+import com.itllp.tipOnDiscount.model.DataModelInitializerFactory;
 import com.itllp.tipOnDiscount.model.impl.DataModelImpl;
+import com.itllp.tipOnDiscount.model.impl.DataModelInitializerFromPersistedDefaults;
 import com.itllp.tipOnDiscount.model.persistence.DataModelPersisterFactory;
 import com.itllp.tipOnDiscount.model.persistence.impl.DataModelPersisterImpl;
 import com.itllp.tipOnDiscount.persistence.Persister;
@@ -49,5 +51,8 @@ public class TipOnDiscountApplication extends Application {
 				(TOD_PREFERENCES_FILE);
 		DataModelPersisterFactory.setDataModelPersister(
 				new DataModelPersisterImpl(dataModelPreferencesPersister));
+		
+		DataModelInitializerFactory.setDataModelInitializer(
+				new DataModelInitializerFromPersistedDefaults());
 	}
 }

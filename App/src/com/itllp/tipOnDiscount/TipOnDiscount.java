@@ -43,6 +43,8 @@ import android.widget.AdapterView.OnItemSelectedListener;
 
 import com.itllp.tipOnDiscount.model.DataModel;
 import com.itllp.tipOnDiscount.model.DataModelFactory;
+import com.itllp.tipOnDiscount.model.DataModelInitializer;
+import com.itllp.tipOnDiscount.model.DataModelInitializerFactory;
 import com.itllp.tipOnDiscount.model.DataModelObserver;
 import com.itllp.tipOnDiscount.model.persistence.DataModelPersister;
 import com.itllp.tipOnDiscount.model.persistence.DataModelPersisterFactory;
@@ -506,7 +508,9 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 	 * all fields in the UI.
 	 */
 	public void reset() {
-		this.dataModel.initialize();
+		DataModelInitializer initializer = 
+		DataModelInitializerFactory.getDataModelInitializer();
+		initializer.initialize(dataModel);
 		this.updateAllFields();
 	}
 	

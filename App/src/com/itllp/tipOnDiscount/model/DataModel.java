@@ -36,6 +36,7 @@ public interface DataModel {
 	 * Resets all attributes to their default values.  
 	 * No update notifications are sent.
 	 */
+	// TODO Remove this method, as its function is performed by DataModelInitializer
 	public void initialize();
 
 	public void addObserver(DataModelObserver observer);
