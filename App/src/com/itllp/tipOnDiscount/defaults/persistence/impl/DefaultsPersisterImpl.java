@@ -17,23 +17,57 @@ along with Tip On Discount.  If not, see <http://www.gnu.org/licenses/>.
 */
 package com.itllp.tipOnDiscount.defaults.persistence.impl;
 
+import java.math.BigDecimal;
+
 import android.content.Context;
+import android.widget.Toast;
 
 import com.itllp.tipOnDiscount.defaults.Defaults;
 import com.itllp.tipOnDiscount.defaults.persistence.DefaultsPersister;
+import com.itllp.tipOnDiscount.persistence.Persister;
 
 public class DefaultsPersisterImpl implements DefaultsPersister {
-
+	private Persister persister;
+	
+	public DefaultsPersisterImpl(Persister persister) {
+		this.persister = persister;
+	}
+	
 	@Override
 	public void saveState(Defaults defaults, Context context) {
-		// TODO Auto-generated method stub
-
+		persister.beginSave(context);
+		try {
+			persister.save(Defaults.TAX_PERCENT_KEY, defaults.getTaxPercent());
+			persister.save(Defaults.TIP_PERCENT_KEY, defaults.getTipPercent());
+			persister.save(Defaults.ROUND_UP_TO_AMOUNT_KEY, 
+					defaults.getRoundUpToAmount());
+			persister.endSave();
+		} catch (Exception e) {
+			Toast.makeText(context,
+	           		 "Failed to save defaults", Toast.LENGTH_LONG).show();
+		}
 	}
 
 	@Override
 	public void restoreState(Defaults defaults, Context context) {
-		// TODO Auto-generated method stub
-
+		BigDecimal taxPercent = persister.retrieveBigDecimal(context, 
+				Defaults.TAX_PERCENT_KEY);
+		if (null != taxPercent) {
+			defaults.setTaxPercent(taxPercent);
+		}
+		
+		BigDecimal tipPercent = persister.retrieveBigDecimal(context, 
+				Defaults.TIP_PERCENT_KEY);
+		if (null != tipPercent) {
+			defaults.setTipPercent(tipPercent);
+		}
+		
+		
+		BigDecimal roundUpToAmount = persister.retrieveBigDecimal(context, 
+				Defaults.ROUND_UP_TO_AMOUNT_KEY);
+		if (null != roundUpToAmount) {
+			defaults.setRoundUpToAmount(roundUpToAmount);
+		}
 	}
 
 }

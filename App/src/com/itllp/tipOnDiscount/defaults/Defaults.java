@@ -21,6 +21,10 @@ import java.math.BigDecimal;
 
 public interface Defaults {
 
+	String TAX_PERCENT_KEY = "TaxPercent";
+	String TIP_PERCENT_KEY = "TipPercent";
+	String ROUND_UP_TO_AMOUNT_KEY = "RoundUpToAmount";
+
 	public abstract void setTaxPercent(BigDecimal taxPercent);
 
 	public abstract BigDecimal getTaxPercent();
@@ -32,4 +36,5 @@ public interface Defaults {
 	public abstract void setRoundUpToAmount(BigDecimal roundUpToAmount);
 
 	public abstract BigDecimal getRoundUpToAmount();
+
 }

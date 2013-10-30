@@ -1,6 +1,6 @@
 package com.itllp.tipOnDiscount.persistence;
 
-
+// TODO Remove this factory.  Have Persister passed in to the DataModelPersister constructor
 public class PersisterFactory {
 	private static Persister appPersister;
 	private static Persister defaultsPersister;

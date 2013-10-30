@@ -43,6 +43,7 @@ import com.itllp.tipOnDiscount.util.BigDecimalLabelMap;
 
 /* These test are related to the New menu action only. 
  */
+//TODO Add tests to verify planned tip percent, tax percent and round-up-to are set from Defaults
 public class NewActionTests extends
 		ActivityInstrumentationTestCase2<TipOnDiscount> {
 	private Instrumentation mInstrumentation;
