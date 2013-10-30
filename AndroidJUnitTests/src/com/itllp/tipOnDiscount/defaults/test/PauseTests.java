@@ -32,6 +32,7 @@ import com.itllp.tipOnDiscount.defaults.DefaultsFactory;
 import com.itllp.tipOnDiscount.defaults.DefaultsImpl;
 import com.itllp.tipOnDiscount.defaults.persistence.DefaultsPersisterFactory;
 import com.itllp.tipOnDiscount.defaults.persistence.test.StubDefaultsPersister;
+import com.itllp.tipOnDiscount.util.BigDecimalLabelMap;
 
 //TODO Finish implementing
 public class PauseTests extends
@@ -95,31 +96,73 @@ public class PauseTests extends
     	String expectedTipPercentString = "9.33";
     	BigDecimal expectedTipPercent = new BigDecimal(expectedTipPercentString);
     	setText(plannedTipPercentEntryView, expectedTipPercentString);
-    	
+
+    	String[] labels = mActivity.getResources().getStringArray(
+    			com.itllp.tipOnDiscount.R.array.round_up_to_nearest_label_array);
+    	String[] values = mActivity.getResources().getStringArray(
+    			com.itllp.tipOnDiscount.R.array.round_up_to_nearest_value_array);
+    	BigDecimalLabelMap map = new BigDecimalLabelMap(values, labels);
+    	int itemsInSpinner = labels.length;
+    	int selectedItem = itemsInSpinner / 3;
+    	setSpinnerSelection(roundUpToNearestSpinner, selectedItem);
+    	String expectedLabel = labels[selectedItem];
+    	BigDecimal expectedRoundUpToAmount = map.getValue(expectedLabel);
+    			
     	// Call method under test
     	pauseActivity();
     	
     	// Verify postconditions
     	Defaults savedDefaults = stubDefaultsPersister.stub_getLastSavedDefaults();
-    	
-    	Context expectedContext = mActivity;
+    	verifyContextUsedToSave();
+		verifySavedTaxPercent(expectedTaxPercent, savedDefaults);
+    	verifySavedTipPercent(expectedTipPercent, savedDefaults);
+		verifySavedRoundUpToAmount(expectedRoundUpToAmount, savedDefaults);
+    }
+
+	private void verifySavedRoundUpToAmount(BigDecimal expectedRoundUpToAmount,
+			Defaults savedDefaults) {
+		BigDecimal actualRoundUpToAmount = savedDefaults.getRoundUpToAmount();
+    	String errorMsg = "Incorrect round up to amount saved: expected " + 
+    			expectedRoundUpToAmount.toPlainString() + " but was " +
+    			actualRoundUpToAmount.toPlainString();
+    	assertTrue(errorMsg, 0==expectedRoundUpToAmount.compareTo(actualRoundUpToAmount));
+	}
+
+	private void setSpinnerSelection(final Spinner spinner, final int selectedItem) {
+    	mActivity.runOnUiThread(
+    			new Runnable() {
+    				public void run() {
+    					spinner.setSelection(selectedItem);
+    				}
+    			}
+    			);
+    	mInstrumentation.waitForIdleSync();
+	}
+
+	private void verifyContextUsedToSave() {
+		Context expectedContext = mActivity;
     	Context actualContext = stubDefaultsPersister.stub_getLastSavedContext(); 
         assertEquals("Incorrect context used to save defaults", expectedContext, 
         		actualContext);
-        
-    	BigDecimal actualTaxPercent = savedDefaults.getTaxPercent();
+	}
+
+	private void verifySavedTipPercent(BigDecimal expectedTipPercent,
+			Defaults savedDefaults) {
+		BigDecimal actualTipPercent = savedDefaults.getTipPercent();
+    	String errorMsg = "Incorrect tip percent saved: expected " + 
+    			expectedTipPercent.toPlainString() + " but was " +
+    			actualTipPercent.toPlainString();
+    	assertTrue(errorMsg, 0==expectedTipPercent.compareTo(actualTipPercent));
+	}
+
+	private void verifySavedTaxPercent(BigDecimal expectedTaxPercent,
+			Defaults savedDefaults) {
+		BigDecimal actualTaxPercent = savedDefaults.getTaxPercent();
     	String errorMsg = "Incorrect tax percent saved: expected " + 
     			expectedTaxPercent.toPlainString() + " but was " +
     			actualTaxPercent.toPlainString();
     	assertTrue(errorMsg, 0==expectedTaxPercent.compareTo(actualTaxPercent));
-
-    	BigDecimal actualTipPercent = savedDefaults.getTipPercent();
-    	errorMsg = "Incorrect tip percent saved: expected " + 
-    			expectedTipPercent.toPlainString() + " but was " +
-    			actualTipPercent.toPlainString();
-    	assertTrue(errorMsg, 0==expectedTipPercent.compareTo(actualTipPercent));
-        //TODO test round up to
-    }
+	}
 	
 
   //todo test pause when taxpercent is empty    

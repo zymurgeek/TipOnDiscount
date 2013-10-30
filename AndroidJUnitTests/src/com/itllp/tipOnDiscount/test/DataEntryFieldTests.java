@@ -237,7 +237,7 @@ public class DataEntryFieldTests extends
 
     /* Verify proper formatting of currency fields.
      */
-    public void testAmountFieldFormatting(TextView view, 
+    public void verifyAmountFieldFormatting(TextView view, 
     		final String viewName) {
     	String assertErrorMessage = "Incorrect " + viewName
     		+ " amount";
@@ -306,7 +306,7 @@ public class DataEntryFieldTests extends
     /* Verify proper formatting of values in the bill total field.
      */
     public void testBillTotalFormatting() {
-    	testAmountFieldFormatting(billTotalEntryView, "bill total");
+    	verifyAmountFieldFormatting(billTotalEntryView, "bill total");
     }
     
    
@@ -342,7 +342,7 @@ public class DataEntryFieldTests extends
     /* Test formatting of values in the discount field.
      */
     public void testDiscountFormatting() {
-    	testAmountFieldFormatting(discountEntryView, "discount");
+    	verifyAmountFieldFormatting(discountEntryView, "discount");
     }
 
     
@@ -356,7 +356,7 @@ public class DataEntryFieldTests extends
     /* Test formatting of values in the tax amount field.
      */
     public void testTaxAmountFormatting() {
-    	testAmountFieldFormatting(this.taxAmountEntryView, "tax amount");
+    	verifyAmountFieldFormatting(this.taxAmountEntryView, "tax amount");
     }
     
     

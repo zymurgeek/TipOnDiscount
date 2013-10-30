@@ -40,6 +40,7 @@ public class SetDefaultsActivity extends Activity {
 	private TextView taxPercentEntry;
 	private TextView plannedTipPercentEntry;
 	private Spinner roundUpToNearestSpinner;
+	private BigDecimalLabelMap map;
 	
 	/** Called when the activity is first created. */
     @Override
@@ -56,6 +57,9 @@ public class SetDefaultsActivity extends Activity {
 			(com.itllp.tipOnDiscount.R.id.tax_percent_entry);
         plannedTipPercentEntry = (TextView)this.findViewById
 			(com.itllp.tipOnDiscount.R.id.planned_tip_percent_entry);
+        map = new BigDecimalLabelMap(
+        		getResources().getStringArray(R.array.round_up_to_nearest_value_array),
+        		getResources().getStringArray(R.array.round_up_to_nearest_label_array));
         roundUpToNearestSpinner = (Spinner)this.findViewById
 			(com.itllp.tipOnDiscount.R.id.round_up_to_nearest_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
@@ -75,9 +79,6 @@ public class SetDefaultsActivity extends Activity {
         defaultsPersister.restoreState(defaults, this);
         taxPercentEntry.setText(defaults.getTaxPercent().toPlainString());
         plannedTipPercentEntry.setText(defaults.getTipPercent().toPlainString());
-        BigDecimalLabelMap map = new BigDecimalLabelMap(
-        		getResources().getStringArray(R.array.round_up_to_nearest_value_array),
-        		getResources().getStringArray(R.array.round_up_to_nearest_label_array));
         BigDecimal defaultRoundUpToAmount = defaults.getRoundUpToAmount();
         String defaultRoundUpTo = map.getLabel(defaultRoundUpToAmount);
         int position = map.getPosition(defaultRoundUpTo);
@@ -97,6 +98,10 @@ public class SetDefaultsActivity extends Activity {
     	String tipPercentString = plannedTipPercentEntry.getText().toString();
     	BigDecimal tipPercent = new BigDecimal(tipPercentString);
     	defaults.setTipPercent(tipPercent);
+
+    	String selectedRoundUpToLabel = roundUpToNearestSpinner.getSelectedItem().toString();
+    	BigDecimal roundUpToAmount = map.getValue(selectedRoundUpToLabel);
+    	defaults.setRoundUpToAmount(roundUpToAmount);
     	
     	DefaultsPersister persister = DefaultsPersisterFactory.getDefaultsPersister();
     	persister.saveState(defaults, this);
