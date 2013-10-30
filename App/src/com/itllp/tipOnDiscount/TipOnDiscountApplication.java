@@ -25,7 +25,6 @@ import com.itllp.tipOnDiscount.model.impl.DataModelImpl;
 import com.itllp.tipOnDiscount.model.persistence.DataModelPersisterFactory;
 import com.itllp.tipOnDiscount.model.persistence.impl.DataModelPersisterImpl;
 import com.itllp.tipOnDiscount.persistence.Persister;
-import com.itllp.tipOnDiscount.persistence.PersisterFactory;
 import com.itllp.tipOnDiscount.persistence.impl.PreferencesFilePersister;
 
 import android.app.Application;
@@ -46,9 +45,9 @@ public class TipOnDiscountApplication extends Application {
 				new DefaultsPersisterImpl(defaultsPreferencesPersister));
 		
 		DataModelFactory.setDataModel(new DataModelImpl());
+		Persister dataModelPreferencesPersister = new PreferencesFilePersister
+				(TOD_PREFERENCES_FILE);
 		DataModelPersisterFactory.setDataModelPersister(
-				new DataModelPersisterImpl());
-		PersisterFactory.setPersisterForApp(new PreferencesFilePersister(
-				TOD_PREFERENCES_FILE));
+				new DataModelPersisterImpl(dataModelPreferencesPersister));
 	}
 }

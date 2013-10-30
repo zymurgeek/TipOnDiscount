@@ -62,8 +62,6 @@ import com.itllp.tipOnDiscount.model.update.PlannedTipAmountUpdate;
 import com.itllp.tipOnDiscount.model.update.TippableAmountUpdate;
 import com.itllp.tipOnDiscount.model.update.TotalDueUpdate;
 import com.itllp.tipOnDiscount.model.update.Update;
-import com.itllp.tipOnDiscount.persistence.Persister;
-import com.itllp.tipOnDiscount.persistence.PersisterFactory;
 import com.itllp.tipOnDiscount.util.BigDecimalLabelMap;
 
 // TODO Set defaults for TIP%, Tax and Rounding
@@ -71,7 +69,6 @@ import com.itllp.tipOnDiscount.util.BigDecimalLabelMap;
 public class TipOnDiscount extends ActionBarActivity implements DataModelObserver {
 	private DataModel dataModel;
 	private DataModelPersister dataModelPersister;
-	private Persister persister;
 	private TextView billTotalEntry;
 	private TextView billSubtotalText;
 	private TextView bumpsText;
@@ -261,7 +258,6 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 
         dataModel = DataModelFactory.getDataModel();
         dataModelPersister = DataModelPersisterFactory.getDataModelPersister();
-        persister = PersisterFactory.getPersisterForApp();
         
         setContentView(R.layout.main);
 
@@ -521,7 +517,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
      * @param context - The Activity's Context
      */
     public void restoreInstanceState(Context context) {
-    	dataModelPersister.restoreState(dataModel, persister, context);
+    	dataModelPersister.restoreState(dataModel, context);
         updateAllFields();
     }
 
@@ -852,7 +848,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
      *
      */
     public void saveInstanceState(Context context) {
-    	dataModelPersister.saveState(dataModel, persister, context);
+    	dataModelPersister.saveState(dataModel, context);
     }
 
 	public void startSetDefaults() {

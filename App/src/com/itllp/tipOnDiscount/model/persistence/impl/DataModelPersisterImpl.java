@@ -27,11 +27,18 @@ import com.itllp.tipOnDiscount.model.persistence.DataModelPersister;
 import com.itllp.tipOnDiscount.persistence.Persister;
 
 public class DataModelPersisterImpl implements DataModelPersister {
+	private Persister persister;
+	
+	public DataModelPersisterImpl(Persister persister) {
+		this.persister = persister;
+	}
+
+
 	/* (non-Javadoc)
 	 * @see com.itllp.tipOnDiscount.model.persistence.impl.DataModelPersister#saveState(com.itllp.tipOnDiscount.model.DataModel, com.itllp.tipOnDiscount.persistence.Persister, android.content.Context)
 	 */
 	@Override
-	public void saveState(DataModel model, Persister persister, Context context) {
+	public void saveState(DataModel model, Context context) {
 		persister.beginSave(context);
 		try {
 			persister.save(DataModel.BILL_TOTAL_KEY, model.getBillTotal());
@@ -60,8 +67,7 @@ public class DataModelPersisterImpl implements DataModelPersister {
 	 * @see com.itllp.tipOnDiscount.model.persistence.impl.DataModelPersister#restoreState(com.itllp.tipOnDiscount.model.DataModel, com.itllp.tipOnDiscount.persistence.Persister, android.content.Context)
 	 */
 	@Override
-	public void restoreState(DataModel dataModel, Persister persister,
-			Context context) {
+	public void restoreState(DataModel dataModel, Context context) {
 		
 		BigDecimal billTotal = persister.retrieveBigDecimal(context, 
 				DataModel.BILL_TOTAL_KEY);

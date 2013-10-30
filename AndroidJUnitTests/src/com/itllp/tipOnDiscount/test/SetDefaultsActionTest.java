@@ -22,7 +22,6 @@ import com.itllp.tipOnDiscount.TipOnDiscount;
 import com.itllp.tipOnDiscount.defaults.DefaultsFactory;
 import com.itllp.tipOnDiscount.defaults.DefaultsImpl;
 import com.itllp.tipOnDiscount.defaults.persistence.DefaultsPersisterFactory;
-import com.itllp.tipOnDiscount.defaults.persistence.impl.DefaultsPersisterImpl;
 import com.itllp.tipOnDiscount.defaults.persistence.test.StubDefaultsPersister;
 import com.itllp.tipOnDiscount.model.DataModelFactory;
 import com.itllp.tipOnDiscount.model.persistence.DataModelPersisterFactory;
@@ -31,9 +30,7 @@ import com.itllp.tipOnDiscount.model.test.StubDataModel;
 
 import android.app.Instrumentation;
 import android.app.Instrumentation.ActivityMonitor;
-import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
-import android.test.ActivityUnitTestCase;
 
 public class SetDefaultsActionTest 
 extends ActivityInstrumentationTestCase2<TipOnDiscount> {

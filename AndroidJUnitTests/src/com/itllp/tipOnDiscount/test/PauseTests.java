@@ -30,15 +30,12 @@ import com.itllp.tipOnDiscount.model.DataModelFactory;
 import com.itllp.tipOnDiscount.model.persistence.DataModelPersisterFactory;
 import com.itllp.tipOnDiscount.model.persistence.test.StubDataModelPersister;
 import com.itllp.tipOnDiscount.model.test.StubDataModel;
-import com.itllp.tipOnDiscount.persistence.PersisterFactory;
-import com.itllp.tipOnDiscount.persistence.test.StubPersister;
 
 public class PauseTests extends
 	ActivityInstrumentationTestCase2<TipOnDiscount>{
 
 	StubDataModelPersister stubDataModelPersister;
 	StubDataModel stubDataModel;
-	StubPersister stubPersister;
 	private Instrumentation mInstrumentation;
     private TipOnDiscount mActivity;
     private TextView billTotalEntryView;
@@ -69,8 +66,6 @@ public class PauseTests extends
     protected void setUp() throws Exception {
         super.setUp();
 
-        stubPersister = new StubPersister();
-        PersisterFactory.setPersisterForApp(stubPersister);
         stubDataModelPersister = new StubDataModelPersister(); 
         DataModelPersisterFactory.setDataModelPersister(
         		stubDataModelPersister);
@@ -259,18 +254,12 @@ public class PauseTests extends
     	assertEquals("Incorrect Data model saved", 
     			stubDataModel,
     			stubDataModelPersister.mock_getLastSavedDataModel());
-    	assertEquals("Incorrect Persister used to save",
-    			stubPersister,
-    			stubDataModelPersister.mock_getLastSavedPersister());
     	assertEquals("Incorrect context used to save",
     			getActivity(), 
     			stubDataModelPersister.mock_getLastSavedContext());
     	assertEquals("Incorrect Data model restored", 
     			stubDataModel,
     			stubDataModelPersister.mock_getLastRestoredDataModel());
-    	assertEquals("Incorrect Persister used to restore",
-    			stubPersister,
-    			stubDataModelPersister.mock_getLastRestoredPersister());
     	assertEquals("Incorrect context used to restore",
     			getActivity(), 
     			stubDataModelPersister.mock_getLastRestoredContext());

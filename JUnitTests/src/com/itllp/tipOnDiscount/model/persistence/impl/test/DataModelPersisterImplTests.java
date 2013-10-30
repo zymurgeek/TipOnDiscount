@@ -52,7 +52,7 @@ public class DataModelPersisterImplTests {
 	public void initialize() {
 		mockDataModel = context.mock(DataModel.class);
 		mockPersister = context.mock(Persister.class);
-		dataModelPersister = new DataModelPersisterImpl();
+		dataModelPersister = new DataModelPersisterImpl(mockPersister);
 	}
 
 
@@ -68,7 +68,7 @@ public class DataModelPersisterImplTests {
 		setPersisterExpectationsForEndSave(saveSequence);
 
 		// Call method under test
-		dataModelPersister.saveState(mockDataModel, mockPersister, mockAndroidContext);
+		dataModelPersister.saveState(mockDataModel, mockAndroidContext);
 	}
 
 
@@ -84,7 +84,7 @@ public class DataModelPersisterImplTests {
 		setPersisterExpectationsForEndSave(saveSequence);
 
 		// Call method under test
-		dataModelPersister.saveState(mockDataModel, mockPersister, mockAndroidContext);
+		dataModelPersister.saveState(mockDataModel, mockAndroidContext);
 	}
 
 
@@ -95,8 +95,7 @@ public class DataModelPersisterImplTests {
 		// Implicitly disallow saving anything to the data model
 		
 		// Run method under test
-		dataModelPersister.restoreState(mockDataModel, mockPersister, 
-				mockAndroidContext);
+		dataModelPersister.restoreState(mockDataModel, mockAndroidContext);
 	}
 
 
@@ -109,8 +108,7 @@ public class DataModelPersisterImplTests {
 		setDataModelExpectationsForSetTaxRate();
 		
 		// Run method under test
-		dataModelPersister.restoreState(mockDataModel, mockPersister,
-				mockAndroidContext);
+		dataModelPersister.restoreState(mockDataModel, mockAndroidContext);
 	}
 
 
@@ -123,8 +121,7 @@ public class DataModelPersisterImplTests {
 		setDataModelExpectationsForSetTaxAmount();
 
 		// Run method under test
-		dataModelPersister.restoreState(mockDataModel, mockPersister,
-				mockAndroidContext);
+		dataModelPersister.restoreState(mockDataModel, mockAndroidContext);
 	}
 
 	
