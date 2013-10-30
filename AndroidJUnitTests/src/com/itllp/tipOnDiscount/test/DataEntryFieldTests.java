@@ -220,7 +220,6 @@ public class DataEntryFieldTests extends
     	for (int keyCode : keyCodes) {
     		this.sendKeys(keyCode);
     	}
-    	mInstrumentation.waitForIdleSync();
     	mActivity.runOnUiThread(
     			new Runnable() {
     				public void run() {
