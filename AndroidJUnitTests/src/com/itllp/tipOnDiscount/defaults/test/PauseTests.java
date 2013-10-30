@@ -24,6 +24,7 @@ import android.content.Context;
 import android.test.ActivityInstrumentationTestCase2;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.itllp.tipOnDiscount.SetDefaultsActivity;
 import com.itllp.tipOnDiscount.defaults.Defaults;
@@ -91,9 +92,7 @@ public class PauseTests extends
     	// Preconditions
     	String expectedTaxPercentString = "4.25";
     	BigDecimal expectedTaxPercent = new BigDecimal(expectedTaxPercentString);
-    	String x = taxPercentEntryView.getText().toString();
-    	taxPercentEntryView.setText("42");
-    	taxPercentEntryView.setText(expectedTaxPercentString);
+    	setText(taxPercentEntryView, expectedTaxPercentString);
     	
     	// Method under test
     	pauseActivity();
@@ -113,7 +112,16 @@ public class PauseTests extends
     }
 	
 
-
+    private void setText(final EditText view, final String text) {
+    	mActivity.runOnUiThread(
+    			new Runnable() {
+    				public void run() {
+    					view.setText(text);
+    				}
+    			}
+    			);
+    	mInstrumentation.waitForIdleSync();
+    } 
     
 //    public void testDataModelSaveAndRestoreOnPause() {
 //    	// Method under test
