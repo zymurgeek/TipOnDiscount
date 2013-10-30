@@ -24,8 +24,6 @@ import android.content.Context;
 import android.test.ActivityInstrumentationTestCase2;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
-
 import com.itllp.tipOnDiscount.SetDefaultsActivity;
 import com.itllp.tipOnDiscount.defaults.Defaults;
 import com.itllp.tipOnDiscount.defaults.DefaultsFactory;
@@ -34,7 +32,7 @@ import com.itllp.tipOnDiscount.defaults.persistence.DefaultsPersisterFactory;
 import com.itllp.tipOnDiscount.defaults.persistence.test.StubDefaultsPersister;
 import com.itllp.tipOnDiscount.util.BigDecimalLabelMap;
 
-//TODO Finish implementing
+
 public class PauseTests extends
 	ActivityInstrumentationTestCase2<SetDefaultsActivity>{
 
@@ -87,6 +85,7 @@ public class PauseTests extends
 
     	mInstrumentation.waitForIdleSync();
     }
+
     
     public void testPauseWhenFieldsAreNotEmpty() {
     	// Set up preconditions
@@ -119,6 +118,29 @@ public class PauseTests extends
 		verifySavedRoundUpToAmount(expectedRoundUpToAmount, savedDefaults);
     }
 
+    public void testPauseWhenFieldsAreEmpty() {
+    	// Set up preconditions
+    	String expectedTaxPercentString = "99.8";
+    	BigDecimal expectedTaxPercent = new BigDecimal(expectedTaxPercentString);
+    	defaults.setTaxPercent(expectedTaxPercent);
+    	setText(taxPercentEntryView, "");
+
+    	String expectedTipPercentString = "88.9";
+    	BigDecimal expectedTipPercent = new BigDecimal(expectedTipPercentString);
+    	defaults.setTipPercent(expectedTipPercent);
+    	setText(plannedTipPercentEntryView, "");
+
+    	// Call method under test
+    	pauseActivity();
+    	
+    	// Verify postconditions
+    	Defaults savedDefaults = stubDefaultsPersister.stub_getLastSavedDefaults();
+    	verifyContextUsedToSave();
+		verifySavedTaxPercent(expectedTaxPercent, savedDefaults);
+    	verifySavedTipPercent(expectedTipPercent, savedDefaults);
+    }
+
+    
 	private void verifySavedRoundUpToAmount(BigDecimal expectedRoundUpToAmount,
 			Defaults savedDefaults) {
 		BigDecimal actualRoundUpToAmount = savedDefaults.getRoundUpToAmount();
@@ -165,10 +187,6 @@ public class PauseTests extends
 	}
 	
 
-  //todo test pause when taxpercent is empty    
-    //todo test pause when tippercent is empty    
-
-    
     private void setText(final EditText view, final String text) {
     	mActivity.runOnUiThread(
     			new Runnable() {
@@ -180,71 +198,5 @@ public class PauseTests extends
     	mInstrumentation.waitForIdleSync();
     } 
     
-//    public void testDataModelSaveAndRestoreOnPause() {
-//    	// Method under test
-//    	pause();
-//    	
-//    	// Postconditions
-//    	assertEquals("Incorrect Data model saved", 
-//    			stubDataModel,
-//    			stubDataModelPersister.mock_getLastSavedDataModel());
-//    	assertEquals("Incorrect Persister used to save",
-//    			stubPersister,
-//    			stubDataModelPersister.mock_getLastSavedPersister());
-//    	assertEquals("Incorrect context used to save",
-//    			getActivity(), 
-//    			stubDataModelPersister.mock_getLastSavedContext());
-//    	assertEquals("Incorrect Data model restored", 
-//    			stubDataModel,
-//    			stubDataModelPersister.mock_getLastRestoredDataModel());
-//    	assertEquals("Incorrect Persister used to restore",
-//    			stubPersister,
-//    			stubDataModelPersister.mock_getLastRestoredPersister());
-//    	assertEquals("Incorrect context used to restore",
-//    			getActivity(), 
-//    			stubDataModelPersister.mock_getLastRestoredContext());
-//
-//    }
-    
-    
-//    public void testRoundUpToStatePause() {
-//    	// Preconditions
-//    	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
-//    	String textAmount = "2.00";
-//    	String displayAmount = "$2";
-//    	BigDecimal amount = new BigDecimal(textAmount);
-//    	model.setRoundUpToAmount(amount);
-//    	
-//    	// Method under test
-//    	pause();
-//    	
-//    	// Postconditions
-//    	assertEquals("Incorrect round up to amount data model value", amount,
-//    			model.getRoundUpToAmount());
-//        assertEquals("Incorrect round up to amount field value", displayAmount, 
-//        		roundUpToNearestSpinner.getSelectedItem().toString());
-//    }        
-
-    
-
-    
-//    public void testTaxPercentStatePause() {
-//    	// Preconditions
-//    	final DataModel model = mActivity.getDataModel();
-//    	String textRate = ".05275";
-//    	BigDecimal rate = new BigDecimal(textRate);
-//    	String textPercent = TipOnDiscount.formatRateToPercent(rate);
-//    	model.setTaxRate(rate);
-//    	
-//    	// Method under test
-//    	pause();
-//    	
-//    	// Postconditions
-//    	assertEquals("Incorrect tax percent data model value", rate,
-//    			model.getTaxRate());
-//        assertEquals("Incorrect tax percent field value", textPercent, 
-//        		taxPercentEntryView.getText().toString());
-//    }
-	
 
 }

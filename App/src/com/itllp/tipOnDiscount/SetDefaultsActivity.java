@@ -69,6 +69,7 @@ public class SetDefaultsActivity extends Activity {
         roundUpToNearestSpinner.setAdapter(adapter);
     }
 
+    
     @Override
     public void onResume() {
     	super.onResume();
@@ -85,6 +86,7 @@ public class SetDefaultsActivity extends Activity {
         roundUpToNearestSpinner.setSelection(position);
     }
 
+    
     @Override
     public void onPause() {
     	super.onPause();
@@ -92,13 +94,21 @@ public class SetDefaultsActivity extends Activity {
     	Defaults defaults = DefaultsFactory.getDefaults();
     	
     	String taxPercentString = taxPercentEntry.getText().toString();
-    	BigDecimal taxPercent = new BigDecimal(taxPercentString);
-    	defaults.setTaxPercent(taxPercent);
+    	try {
+    		BigDecimal taxPercent = new BigDecimal(taxPercentString);
+    		defaults.setTaxPercent(taxPercent);
+    	} catch (NumberFormatException e) {
+    		// Ignore bad number and don't save default
+    	}
     	
     	String tipPercentString = plannedTipPercentEntry.getText().toString();
-    	BigDecimal tipPercent = new BigDecimal(tipPercentString);
-    	defaults.setTipPercent(tipPercent);
-
+      	try {
+    		BigDecimal tipPercent = new BigDecimal(tipPercentString);
+    		defaults.setTipPercent(tipPercent);
+    	} catch (NumberFormatException e) {
+    		// Ignore bad number and don't save default
+    	}
+  
     	String selectedRoundUpToLabel = roundUpToNearestSpinner.getSelectedItem().toString();
     	BigDecimal roundUpToAmount = map.getValue(selectedRoundUpToLabel);
     	defaults.setRoundUpToAmount(roundUpToAmount);
