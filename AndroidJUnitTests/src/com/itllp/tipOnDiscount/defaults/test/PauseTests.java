@@ -87,31 +87,45 @@ public class PauseTests extends
     	mInstrumentation.waitForIdleSync();
     }
     
-//todo test pause when taxpercent is empty    
-    public void testPause() {
-    	// Preconditions
+    public void testPauseWhenFieldsAreNotEmpty() {
+    	// Set up preconditions
     	String expectedTaxPercentString = "4.25";
     	BigDecimal expectedTaxPercent = new BigDecimal(expectedTaxPercentString);
     	setText(taxPercentEntryView, expectedTaxPercentString);
+    	String expectedTipPercentString = "9.33";
+    	BigDecimal expectedTipPercent = new BigDecimal(expectedTipPercentString);
+    	setText(plannedTipPercentEntryView, expectedTipPercentString);
     	
-    	// Method under test
+    	// Call method under test
     	pauseActivity();
     	
-    	// Postconditions
+    	// Verify postconditions
     	Defaults savedDefaults = stubDefaultsPersister.stub_getLastSavedDefaults();
+    	
+    	Context expectedContext = mActivity;
+    	Context actualContext = stubDefaultsPersister.stub_getLastSavedContext(); 
+        assertEquals("Incorrect context used to save defaults", expectedContext, 
+        		actualContext);
+        
     	BigDecimal actualTaxPercent = savedDefaults.getTaxPercent();
     	String errorMsg = "Incorrect tax percent saved: expected " + 
     			expectedTaxPercent.toPlainString() + " but was " +
     			actualTaxPercent.toPlainString();
     	assertTrue(errorMsg, 0==expectedTaxPercent.compareTo(actualTaxPercent));
-    	Context expectedContext = mActivity;
-    	Context actualContext = stubDefaultsPersister.stub_getLastSavedContext(); 
-        assertEquals("Incorrect context used to save defaults", expectedContext, 
-        		actualContext);
-        //TODO test planned tip and round up to
+
+    	BigDecimal actualTipPercent = savedDefaults.getTipPercent();
+    	errorMsg = "Incorrect tip percent saved: expected " + 
+    			expectedTipPercent.toPlainString() + " but was " +
+    			actualTipPercent.toPlainString();
+    	assertTrue(errorMsg, 0==expectedTipPercent.compareTo(actualTipPercent));
+        //TODO test round up to
     }
 	
 
+  //todo test pause when taxpercent is empty    
+    //todo test pause when tippercent is empty    
+
+    
     private void setText(final EditText view, final String text) {
     	mActivity.runOnUiThread(
     			new Runnable() {
