@@ -1,4 +1,4 @@
-// Copyright 2011-2012 David A. Greenbaum
+// Copyright 2011-2013 David A. Greenbaum
 /*
 This file is part of Tip On Discount.
 

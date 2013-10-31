@@ -50,7 +50,8 @@ public class DataModelInitializerFromPersistedDefaultsTests {
 				mockDefaultsPersister, mockDefaults);
 	}
 
-
+//TODO Move base model initialization SimpleDataModelInitializer
+	//TODO only test initialization done by DataModelInitializerFromPersistedDefaults
 	@Test
 	public void testInitializeWithPersistedDefaults() {
 		// Set up preconditions
@@ -60,7 +61,6 @@ public class DataModelInitializerFromPersistedDefaultsTests {
 				.DEFAULT_BILL_TOTAL;
 		final BigDecimal taxPercent = new BigDecimal("1");
 		final BigDecimal taxRate = new BigDecimal(".01");
-		final BigDecimal discount = initializer.getDiscount();
 		final BigDecimal tipPercent = new BigDecimal("2");
 		final BigDecimal tipRate = new BigDecimal(".02");
 		final int splitBetween = DataModelInitializerFromPersistedDefaults
@@ -82,7 +82,7 @@ public class DataModelInitializerFromPersistedDefaultsTests {
 		    will(returnValue(roundUpToAmount));
 		    oneOf(mockDataModel).setBillTotal(billTotal);
 		    oneOf(mockDataModel).setTaxRate(taxRate);
-		    oneOf(mockDataModel).setDiscount(discount);
+		    oneOf(mockDataModel).setDiscount(initializer.getDiscount());
 		    oneOf(mockDataModel).setPlannedTipRate(tipRate);
 		    oneOf(mockDataModel).setSplitBetween(splitBetween);
 		    oneOf(mockDataModel).setRoundUpToAmount(roundUpToAmount);
