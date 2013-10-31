@@ -50,24 +50,16 @@ public class DataModelInitializerFromPersistedDefaultsTests {
 				mockDefaultsPersister, mockDefaults);
 	}
 
-//TODO Move base model initialization SimpleDataModelInitializer
-	//TODO only test initialization done by DataModelInitializerFromPersistedDefaults
 	@Test
-	public void testInitializeWithPersistedDefaults() {
+	public void testInitialize() {
 		// Set up preconditions
 		final DataModel mockDataModel = context.mock(DataModel.class);
 		final android.content.Context dummyAndroidContext = new android.content.Context();
-		final BigDecimal billTotal = DataModelInitializerFromPersistedDefaults
-				.DEFAULT_BILL_TOTAL;
 		final BigDecimal taxPercent = new BigDecimal("1");
 		final BigDecimal taxRate = new BigDecimal(".01");
 		final BigDecimal tipPercent = new BigDecimal("2");
 		final BigDecimal tipRate = new BigDecimal(".02");
-		final int splitBetween = DataModelInitializerFromPersistedDefaults
-				.DEFAULT_SPLIT_BETWEEN;
 		final BigDecimal roundUpToAmount = new BigDecimal("3");
-		final int bumps = DataModelInitializerFromPersistedDefaults
-				.DEFAULT_BUMPS;
 		
 		// Set up expectations
 		final States defaultsRestored = context.states("restored").startsAs("false");
@@ -80,16 +72,19 @@ public class DataModelInitializerFromPersistedDefaultsTests {
 		    will(returnValue(tipPercent));
 		    allowing (mockDefaults).getRoundUpToAmount(); when(defaultsRestored.is("true"));
 		    will(returnValue(roundUpToAmount));
-		    oneOf(mockDataModel).setBillTotal(billTotal);
+		    oneOf(mockDataModel).setBillTotal(initializer.getBillTotal());
 		    oneOf(mockDataModel).setTaxRate(taxRate);
 		    oneOf(mockDataModel).setDiscount(initializer.getDiscount());
 		    oneOf(mockDataModel).setPlannedTipRate(tipRate);
-		    oneOf(mockDataModel).setSplitBetween(splitBetween);
+		    oneOf(mockDataModel).setSplitBetween(initializer.getSplitBetween());
 		    oneOf(mockDataModel).setRoundUpToAmount(roundUpToAmount);
-		    oneOf(mockDataModel).setBumps(bumps);
+		    oneOf(mockDataModel).setBumps(initializer.getBumps());
 		}});
 
 		// Call method under test
 		initializer.initialize(mockDataModel, dummyAndroidContext);
 	}
+	
+	//TODO add tests for persisted default get methods when they exist
+	//TODO add tests for persisted default get methods when they don't exist 
 }
