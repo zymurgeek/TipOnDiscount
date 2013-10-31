@@ -81,8 +81,6 @@ public class InitializationTests extends
     	DataModelPersisterFactory.setDataModelPersister(
     			new StubDataModelPersister());
     	DataModelFactory.setDataModel(new StubDataModel());
-    	stubDataModelInitializer = new StubDataModelInitializer();
-    	DataModelInitializerFactory.setDataModelInitializer(stubDataModelInitializer);
 		percentNumberFormat.setMaximumFractionDigits(3);
 		zeroPercentString = percentNumberFormat.format(0);
 	}
@@ -92,6 +90,9 @@ public class InitializationTests extends
     protected void setUp() throws Exception {
         super.setUp();
         
+        stubDataModelInitializer = new StubDataModelInitializer();
+        DataModelInitializerFactory.setDataModelInitializer(stubDataModelInitializer);
+
         mInstrumentation = getInstrumentation();
         mActivity = this.getActivity();
 
