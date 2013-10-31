@@ -25,9 +25,11 @@ import android.widget.TextView;
 
 import com.itllp.tipOnDiscount.TipOnDiscount;
 import com.itllp.tipOnDiscount.model.DataModelFactory;
+import com.itllp.tipOnDiscount.model.DataModelInitializerFactory;
 import com.itllp.tipOnDiscount.model.persistence.DataModelPersisterFactory;
 import com.itllp.tipOnDiscount.model.persistence.test.StubDataModelPersister;
 import com.itllp.tipOnDiscount.model.test.StubDataModel;
+import com.itllp.tipOnDiscount.model.test.StubDataModelInitializer;
 
 public class CursorOperationsTests extends
 ActivityInstrumentationTestCase2<TipOnDiscount> {
@@ -56,6 +58,8 @@ ActivityInstrumentationTestCase2<TipOnDiscount> {
     	DataModelFactory.setDataModel(new StubDataModel());
     	DataModelPersisterFactory.setDataModelPersister(
     			new StubDataModelPersister());
+    	DataModelInitializerFactory.setDataModelInitializer(
+    			new StubDataModelInitializer());
         mInstrumentation = getInstrumentation();
         mActivity = this.getActivity();
 

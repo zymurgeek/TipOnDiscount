@@ -36,9 +36,12 @@ import android.widget.TextView;
 import com.itllp.tipOnDiscount.TipOnDiscount;
 import com.itllp.tipOnDiscount.model.DataModel;
 import com.itllp.tipOnDiscount.model.DataModelFactory;
+import com.itllp.tipOnDiscount.model.DataModelInitializer;
+import com.itllp.tipOnDiscount.model.DataModelInitializerFactory;
 import com.itllp.tipOnDiscount.model.persistence.DataModelPersisterFactory;
 import com.itllp.tipOnDiscount.model.persistence.test.StubDataModelPersister;
 import com.itllp.tipOnDiscount.model.test.StubDataModel;
+import com.itllp.tipOnDiscount.model.test.StubDataModelInitializer;
 import com.itllp.tipOnDiscount.util.BigDecimalLabelMap;
 
 /* These test are related to the New menu action only. 
@@ -46,6 +49,7 @@ import com.itllp.tipOnDiscount.util.BigDecimalLabelMap;
 //TODO Add tests to verify planned tip percent, tax percent and round-up-to are set from Defaults
 public class NewActionTests extends
 		ActivityInstrumentationTestCase2<TipOnDiscount> {
+	private StubDataModelInitializer stubDataModelInitializer;
 	private Instrumentation mInstrumentation;
     private TipOnDiscount mActivity;
     private InputMethodManager imm;
@@ -88,6 +92,8 @@ public class NewActionTests extends
         DataModelPersisterFactory.setDataModelPersister(new StubDataModelPersister());
         StubDataModel stubDataModel = new StubDataModel();
         DataModelFactory.setDataModel(stubDataModel);
+        stubDataModelInitializer = new StubDataModelInitializer();
+        DataModelInitializerFactory.setDataModelInitializer(stubDataModelInitializer);
 
         oneDollarAmountText = "1.00";
         oneDollarAmount = new BigDecimal(oneDollarAmountText);
@@ -371,8 +377,10 @@ public class NewActionTests extends
 	
 	
 	private void assertDiscountFieldAndModelAreAtInitialValues() {
+		DataModelInitializer initer = 
+				DataModelInitializerFactory.getDataModelInitializer();
 		assertEquals("Wrong value in discount field", 
-				StubDataModel.INITIAL_DISCOUNT.toPlainString(), 
+				initer.getDiscount().toPlainString(), 
 	    		discountEntryView.getText().toString());    	
 	    assertEquals("Wrong value for discount in data model", 
 	    		StubDataModel.INITIAL_DISCOUNT, 

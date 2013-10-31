@@ -49,6 +49,7 @@ public class DataModelImpl implements DataModel {
 	// TODO Support tip included, maybe with help screen advice
 
 	DataModelObservable observable = new DataModelObservable();
+	//TODO Delete unused persister
 	Persister persister;
 	/* 
 	 * The following data is calculated in the order it appears here.

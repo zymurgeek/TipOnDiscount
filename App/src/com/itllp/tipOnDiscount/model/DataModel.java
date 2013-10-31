@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 
 public interface DataModel {
 
+	// TODO Move these constants to the DataModelPersister
 	public static final String BILL_TOTAL_KEY = "BillTotal";
 	public static final String TAX_RATE_KEY = "TaxRate";
 	public static final String DISCOUNT_KEY = "Discount";

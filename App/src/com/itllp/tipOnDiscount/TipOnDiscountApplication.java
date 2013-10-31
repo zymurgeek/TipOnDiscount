@@ -18,6 +18,7 @@ along with Tip On Discount.  If not, see <http://www.gnu.org/licenses/>.
 package com.itllp.tipOnDiscount;
 import com.itllp.tipOnDiscount.defaults.DefaultsFactory;
 import com.itllp.tipOnDiscount.defaults.DefaultsImpl;
+import com.itllp.tipOnDiscount.defaults.persistence.DefaultsPersister;
 import com.itllp.tipOnDiscount.defaults.persistence.DefaultsPersisterFactory;
 import com.itllp.tipOnDiscount.defaults.persistence.impl.DefaultsPersisterImpl;
 import com.itllp.tipOnDiscount.model.DataModelFactory;
@@ -52,7 +53,10 @@ public class TipOnDiscountApplication extends Application {
 		DataModelPersisterFactory.setDataModelPersister(
 				new DataModelPersisterImpl(dataModelPreferencesPersister));
 		
+		DefaultsPersister defaultsPersister = new DefaultsPersisterImpl(
+				defaultsPreferencesPersister);
 		DataModelInitializerFactory.setDataModelInitializer(
-				new DataModelInitializerFromPersistedDefaults());
+				new DataModelInitializerFromPersistedDefaults(
+						defaultsPersister, new DefaultsImpl()));
 	}
 }

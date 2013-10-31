@@ -20,7 +20,7 @@ along with Tip On Discount.  If not, see <http://www.gnu.org/licenses/>.
  * This JUnit test harness verifies that the data model correctly
  * initializes, stores and calculates values.
  */
-package com.itllp.tipOnDiscount.modelimpl;
+package com.itllp.tipOnDiscount.model.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

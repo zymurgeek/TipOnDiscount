@@ -20,7 +20,7 @@ along with Tip On Discount.  If not, see <http://www.gnu.org/licenses/>.
  * This JUnit test harness verifies that the data model sends out
  * notifications to registered DataModelObservers when data is updated. 
  */
-package com.itllp.tipOnDiscount.modelimpl;
+package com.itllp.tipOnDiscount.model.impl;
 
 import java.math.BigDecimal;
 import org.jmock.Expectations;
