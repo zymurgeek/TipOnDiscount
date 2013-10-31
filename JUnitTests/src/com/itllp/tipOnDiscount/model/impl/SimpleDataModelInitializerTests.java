@@ -63,5 +63,72 @@ public class SimpleDataModelInitializerTests {
 		initializer.initialize(mockDataModel, dummyAndroidContext);
 	}
 	
-	// TODO add tests to verify data returned by the get methods
+	@Test
+	public void testGetBillTotal() {
+		// Call method under test
+		BigDecimal billTotal = initializer.getBillTotal();
+		
+		// Verify postconditions
+		assertNotNull("Bill total may not be null", billTotal);
+		assertEquals("Incorrect bill total", "0.00", billTotal.toPlainString());
+	}
+	
+	@Test
+	public void testGetTaxRate() {
+		// Call method under test
+		BigDecimal taxRate = initializer.getTaxRate();
+		
+		// Verify postconditions
+		assertNotNull("Tax rate may not be null", taxRate);
+		assertEquals("Incorrect tax rate", "0.00000", taxRate.toPlainString());
+	}
+	
+	@Test
+	public void testGetDiscount() {
+		// Call method under test
+		BigDecimal discount = initializer.getDiscount();
+		
+		// Verify postconditions
+		assertNotNull("Discount may not be null", discount);
+		assertEquals("Incorrect discount", "0.00", discount.toPlainString());
+	}
+	
+	@Test
+	public void testGetTipRate() {
+		// Call method under test
+		BigDecimal tipRate = initializer.getTipRate();
+		
+		// Verify postconditions
+		assertNotNull("Tip rate may not be null", tipRate);
+		assertEquals("Incorrect tip rate", "0.00000", tipRate.toPlainString());
+	}
+	
+	@Test
+	public void testGetSplitBetween() {
+		// Call method under test
+		int splitBetween = initializer.getSplitBetween();
+		
+		// Verify postconditions
+		assertEquals("Incorrect split between", 1, splitBetween);
+	}
+	
+	@Test
+	public void testGetRoundUpToAmount() {
+		// Call method under test
+		BigDecimal roundUpToAmount = initializer.getRoundUpToAmount();
+		
+		// Verify postconditions
+		assertNotNull("Round Up To Amount may not be null", roundUpToAmount);
+		assertEquals("Incorrect round up to amount", "0.01", roundUpToAmount.toPlainString());
+	}
+	
+	@Test
+	public void testGetBumps() {
+		// Call method under test
+		int bumps = initializer.getBumps();
+		
+		// Verify postconditions
+		assertEquals("Incorrect bumps", 0, bumps);
+	}
+	
 }

@@ -27,6 +27,8 @@ import com.itllp.tipOnDiscount.model.DataModelInitializer;
 
 public class SimpleDataModelInitializer implements DataModelInitializer {
 
+	private static final BigDecimal ROUND_UP_TO_AMOUNT = new BigDecimal("0.01");
+
 	@Override
 	public void initialize(DataModel dataModel, Context unused) {
 		dataModel.setBillTotal(getBillTotal());
@@ -40,37 +42,30 @@ public class SimpleDataModelInitializer implements DataModelInitializer {
 
 	@Override
 	public BigDecimal getDiscount() {
-		// TODO Auto-generated method stub
-		return null;
+		return BigDecimal.ZERO.setScale(2);
 	}
 
 	public BigDecimal getBillTotal() {
-		// TODO Auto-generated method stub
-		return null;
+		return BigDecimal.ZERO.setScale(2);
 	}
 
 	public BigDecimal getTaxRate() {
-		// TODO Auto-generated method stub
-		return null;
+		return BigDecimal.ZERO.setScale(5);
 	}
 
 	public BigDecimal getTipRate() {
-		// TODO Auto-generated method stub
-		return null;
+		return BigDecimal.ZERO.setScale(5);
 	}
 
 	public int getSplitBetween() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 1;
 	}
 
 	public BigDecimal getRoundUpToAmount() {
-		// TODO Auto-generated method stub
-		return null;
+		return ROUND_UP_TO_AMOUNT;
 	}
 
 	public int getBumps() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
