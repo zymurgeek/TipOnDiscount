@@ -29,7 +29,8 @@ import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import com.itllp.tipOnDiscount.model.DataModel;
+
+import com.itllp.tipOnDiscount.model.DataModelInitializer;
 import com.itllp.tipOnDiscount.model.DataModelObserver;
 import com.itllp.tipOnDiscount.model.impl.DataModelImpl;
 import com.itllp.tipOnDiscount.model.update.ActualTipAmountUpdate;
@@ -44,7 +45,6 @@ import com.itllp.tipOnDiscount.model.update.SplitBetweenUpdate;
 import com.itllp.tipOnDiscount.model.update.TaxAmountUpdate;
 import com.itllp.tipOnDiscount.model.update.TaxRateUpdate;
 import com.itllp.tipOnDiscount.model.update.PlannedTipAmountUpdate;
-import com.itllp.tipOnDiscount.model.update.PlannedTipRateUpdate;
 import com.itllp.tipOnDiscount.model.update.TippableAmountUpdate;
 import com.itllp.tipOnDiscount.model.update.TotalDueUpdate;
 import com.itllp.tipOnDiscount.model.update.Update;
@@ -55,9 +55,7 @@ public class DataModelImplNotificationTests {
 	private final BigDecimal taxRate = new BigDecimal(".10000");
 	private final BigDecimal taxAmount = new BigDecimal("3.86");
 	private final BigDecimal billTotal = new BigDecimal("42.42");
-	private final BigDecimal discount = new BigDecimal("4.24");
 	private final BigDecimal plannedTipRate = new BigDecimal(".20000");
-	private final BigDecimal roundUpToAmount = new BigDecimal("0.25");
 	private final BigDecimal zeroAmount = new BigDecimal("0.00");
 	private final BigDecimal oneDollarAmount = new BigDecimal("1.00");
 	private final BigDecimal oneCentAmount = new BigDecimal("0.01");
@@ -67,8 +65,6 @@ public class DataModelImplNotificationTests {
 	private DiscountUpdate expectedDiscountUpdate;
 	private TippableAmountUpdate expectedTippableAmountUpdate;
 	private PlannedTipAmountUpdate expectedPlannedTipAmountUpdate;
-	private PlannedTipRateUpdate expectedPlannedTipRateUpdate;
-	private BumpsUpdate expectedBumpsUpdate;
 	private ActualTipAmountUpdate expectedActualTipAmountUpdate;
 	private ActualTipRateUpdate expectedActualTipRateUpdate;
 	private SplitBetweenUpdate expectedSplitBetweenUpdate;
@@ -82,6 +78,9 @@ public class DataModelImplNotificationTests {
 	@Before
 	public void initialize() {
 		dataModel = new DataModelImpl();
+		DataModelInitializer dataModelInitializer = new SimpleDataModelInitializer();
+		dataModelInitializer.initialize(dataModel, null);
+		dataModel.setPlannedTipRate(new BigDecimal(".09"));
 	}
 
 	
@@ -96,14 +95,10 @@ public class DataModelImplNotificationTests {
 			= new TippableAmountUpdate(dataModel.getTippableAmount());
 		expectedPlannedTipAmountUpdate 
 			= new PlannedTipAmountUpdate(dataModel.getPlannedTipAmount());
-		expectedPlannedTipRateUpdate 
-			= new PlannedTipRateUpdate(dataModel.getPlannedTipRate());
 		expectedSplitBetweenUpdate = new SplitBetweenUpdate
 				(dataModel.getSplitBetween());
 		expectedRoundUpToNearestUpdate = new RoundUpToNearestUpdate
 				(dataModel.getRoundUpToAmount());
-		expectedBumpsUpdate
-			= new BumpsUpdate(dataModel.getBumps());
 		expectedActualTipAmountUpdate
 			= new ActualTipAmountUpdate(dataModel.getActualTipAmount());
 		expectedActualTipRateUpdate
@@ -235,66 +230,6 @@ public class DataModelImplNotificationTests {
 		
 		// Method under test
 		dataModel.bumpUp();
-	}
-
-	
-	/**
-	 * Tests notifications are received for all fields when the
-	 * data model is initialized.
-	 */
-	@Test 
-	public void testDataModelInitialize() {
-		// Preconditions
-		// Leave data model in initialized state
-		setExpectedUpdateValuesFromDataModel();
-		
-		// Set values to non-defaults so reset will change them
-		dataModel.setBillTotal(this.billTotal);  
-		dataModel.setTaxRate(taxRate);
-		dataModel.setPlannedTipRate(plannedTipRate);
-		dataModel.setDiscount(this.discount);
-		dataModel.setSplitBetween(9);
-		dataModel.setRoundUpToAmount(roundUpToAmount);
-		dataModel.setBumps(4);
-
-		final DataModelObserver observer = context.mock(DataModelObserver.class);
-		dataModel.addObserver(observer);
-
-		// Postconditions
-		context.checking(new Expectations() {{
-			oneOf (observer).update(with(any(DataModel.class)), 
-					with(equal(expectedBillTotalUpdate)));
-		    oneOf (observer).update(with(any(DataModel.class)), 
-		    		with(equal(expectedTaxAmountUpdate)));
-		    oneOf (observer).update(with(any(DataModel.class)), 
-		    		with(equal(expectedTaxRateUpdate)));
-		    oneOf (observer).update(with(any(DataModel.class)), 
-		    		with(equal(expectedBillSubtotalUpdate)));
-		    oneOf (observer).update(with(any(DataModel.class)), 
-		    		with(equal(expectedDiscountUpdate)));
-		    oneOf (observer).update(with(any(DataModel.class)), 
-		    		with(equal(expectedTippableAmountUpdate)));
-		    oneOf (observer).update(with(any(DataModel.class)), 
-		    		with(equal(expectedPlannedTipAmountUpdate)));
-		    oneOf (observer).update(with(any(DataModel.class)), 
-		    		with(equal(expectedPlannedTipRateUpdate)));
-		    oneOf (observer).update(with(any(DataModel.class)), 
-		    		with(equal(expectedBumpsUpdate)));
-		    oneOf (observer).update(with(any(DataModel.class)), 
-		    		with(equal(expectedActualTipAmountUpdate)));
-		    oneOf (observer).update(with(any(DataModel.class)), 
-		    		with(equal(expectedActualTipRateUpdate)));
-		    oneOf (observer).update(with(any(DataModel.class)), 
-		    		with(equal(expectedShareDueUpdate)));
-		    oneOf (observer).update(with(any(DataModel.class)), 
-		    		with(equal(expectedTotalDueUpdate)));
-		    allowing (observer).update(with(any(DataModel.class)), 
-		    		with(any(Update.class)));
-		}});
-		
-		// Method under test
-		dataModel.initialize();
-		dataModel.initialize(); // Test no-change
 	}
 
 	

@@ -25,6 +25,7 @@ import com.itllp.tipOnDiscount.model.DataModelFactory;
 import com.itllp.tipOnDiscount.model.DataModelInitializerFactory;
 import com.itllp.tipOnDiscount.model.impl.DataModelImpl;
 import com.itllp.tipOnDiscount.model.impl.DataModelInitializerFromPersistedDefaults;
+import com.itllp.tipOnDiscount.model.impl.SimpleDataModelInitializer;
 import com.itllp.tipOnDiscount.model.persistence.DataModelPersisterFactory;
 import com.itllp.tipOnDiscount.model.persistence.impl.DataModelPersisterImpl;
 import com.itllp.tipOnDiscount.persistence.Persister;
@@ -47,16 +48,21 @@ public class TipOnDiscountApplication extends Application {
 		DefaultsPersisterFactory.setDefaultsPersister(
 				new DefaultsPersisterImpl(defaultsPreferencesPersister));
 		
-		DataModelFactory.setDataModel(new DataModelImpl());
-		Persister dataModelPreferencesPersister = new PreferencesFilePersister
-				(TOD_PREFERENCES_FILE);
-		DataModelPersisterFactory.setDataModelPersister(
-				new DataModelPersisterImpl(dataModelPreferencesPersister));
-		
 		DefaultsPersister defaultsPersister = new DefaultsPersisterImpl(
 				defaultsPreferencesPersister);
 		DataModelInitializerFactory.setDataModelInitializer(
 				new DataModelInitializerFromPersistedDefaults(
 						defaultsPersister, new DefaultsImpl()));
+
+		DataModelImpl dataModel = new DataModelImpl();
+		SimpleDataModelInitializer simpleDataModelInitializer = new 
+				SimpleDataModelInitializer();
+		simpleDataModelInitializer.initialize(dataModel, this);
+		DataModelFactory.setDataModel(dataModel);
+		
+		Persister dataModelPreferencesPersister = new PreferencesFilePersister
+				(TOD_PREFERENCES_FILE);
+		DataModelPersisterFactory.setDataModelPersister(
+				new DataModelPersisterImpl(dataModelPreferencesPersister));
 	}
 }

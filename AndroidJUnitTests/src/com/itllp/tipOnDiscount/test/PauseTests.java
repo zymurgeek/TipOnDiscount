@@ -27,9 +27,11 @@ import android.widget.TextView;
 import com.itllp.tipOnDiscount.TipOnDiscount;
 import com.itllp.tipOnDiscount.model.DataModel;
 import com.itllp.tipOnDiscount.model.DataModelFactory;
+import com.itllp.tipOnDiscount.model.DataModelInitializerFactory;
 import com.itllp.tipOnDiscount.model.persistence.DataModelPersisterFactory;
 import com.itllp.tipOnDiscount.model.persistence.test.StubDataModelPersister;
 import com.itllp.tipOnDiscount.model.test.StubDataModel;
+import com.itllp.tipOnDiscount.model.test.StubDataModelInitializer;
 
 public class PauseTests extends
 	ActivityInstrumentationTestCase2<TipOnDiscount>{
@@ -71,6 +73,8 @@ public class PauseTests extends
         		stubDataModelPersister);
         stubDataModel = new StubDataModel();
         DataModelFactory.setDataModel(stubDataModel);
+        DataModelInitializerFactory.setDataModelInitializer(
+        		new StubDataModelInitializer());
         mInstrumentation = getInstrumentation();
         mActivity = this.getActivity();
 
@@ -105,8 +109,14 @@ public class PauseTests extends
         shareDueTextView = (TextView) mActivity.findViewById
 			(com.itllp.tipOnDiscount.R.id.share_due_text);
         
-    	final DataModel model = mActivity.getDataModel();
-    	model.initialize();
+    	mActivity.runOnUiThread(
+    			new Runnable() {
+    				public void run() {
+    			    	mActivity.reset();
+    				}
+    			}
+        	);
+    	mInstrumentation.waitForIdleSync();
     }
     
     

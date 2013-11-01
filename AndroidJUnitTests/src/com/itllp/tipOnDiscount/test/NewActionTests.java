@@ -38,10 +38,10 @@ import com.itllp.tipOnDiscount.model.DataModel;
 import com.itllp.tipOnDiscount.model.DataModelFactory;
 import com.itllp.tipOnDiscount.model.DataModelInitializer;
 import com.itllp.tipOnDiscount.model.DataModelInitializerFactory;
+import com.itllp.tipOnDiscount.model.impl.SimpleDataModelInitializer;
 import com.itllp.tipOnDiscount.model.persistence.DataModelPersisterFactory;
 import com.itllp.tipOnDiscount.model.persistence.test.StubDataModelPersister;
 import com.itllp.tipOnDiscount.model.test.StubDataModel;
-import com.itllp.tipOnDiscount.model.test.StubDataModelInitializer;
 import com.itllp.tipOnDiscount.util.BigDecimalLabelMap;
 
 /* These test are related to the New menu action only. 
@@ -49,7 +49,7 @@ import com.itllp.tipOnDiscount.util.BigDecimalLabelMap;
 //TODO Add tests to verify planned tip percent, tax percent and round-up-to are set from Defaults
 public class NewActionTests extends
 		ActivityInstrumentationTestCase2<TipOnDiscount> {
-	private StubDataModelInitializer stubDataModelInitializer;
+	private DataModelInitializer dataModelInitializer;
 	private Instrumentation mInstrumentation;
     private TipOnDiscount mActivity;
     private InputMethodManager imm;
@@ -92,8 +92,8 @@ public class NewActionTests extends
         DataModelPersisterFactory.setDataModelPersister(new StubDataModelPersister());
         StubDataModel stubDataModel = new StubDataModel();
         DataModelFactory.setDataModel(stubDataModel);
-        stubDataModelInitializer = new StubDataModelInitializer();
-        DataModelInitializerFactory.setDataModelInitializer(stubDataModelInitializer);
+        dataModelInitializer = new SimpleDataModelInitializer();
+        DataModelInitializerFactory.setDataModelInitializer(dataModelInitializer);
 
         oneDollarAmountText = "1.00";
         oneDollarAmount = new BigDecimal(oneDollarAmountText);
@@ -176,7 +176,7 @@ public class NewActionTests extends
     	// Postconditions
         assertBillTotalFieldAndModelAreCleared();    	
         assertTaxPercentFieldAndTaxRateInModelAreAtInitialValues();    	
-        assertTaxAmountFieldAndModelAreAtInitialValues();
+        assertTaxAmountFieldMatchesModel();
         assertBillSubtotalFieldAndModelAreAtInitialValues();
         assertDiscountFieldAndModelAreAtInitialValues();
         assertTippableAmountFieldAndModelAreAtInitialValues();
@@ -236,7 +236,7 @@ public class NewActionTests extends
 		runOpenNewAction();
 		
 		// Verify postconditions
-		assertTaxAmountFieldAndModelAreAtInitialValues();
+		assertTaxAmountFieldMatchesModel();
         assertTrue("Focus not in Bill Total field", 
         		billTotalEntryView.isFocused());
     	assertSoftKeyboardIsShownIfExpected();
@@ -358,12 +358,12 @@ public class NewActionTests extends
 
 
 	private void assertBumpsFieldAndModelAreAtInitialValues() {
+		int expectedBumps = dataModelInitializer.getBumps();
 		assertEquals("Wrong value in bumps field", 
-				String.valueOf(StubDataModel.INITIAL_BUMPS), 
+				String.valueOf(expectedBumps), 
 	    		bumpsTextView.getText().toString());    	
 	    assertEquals("Wrong value for bumps in data model", 
-	    		StubDataModel.INITIAL_BUMPS, 
-	    		model.getBumps());
+	    		expectedBumps, model.getBumps());
 	}
 
 	
@@ -377,14 +377,11 @@ public class NewActionTests extends
 	
 	
 	private void assertDiscountFieldAndModelAreAtInitialValues() {
-		DataModelInitializer initer = 
-				DataModelInitializerFactory.getDataModelInitializer();
 		assertEquals("Wrong value in discount field", 
-				initer.getDiscount().toPlainString(), 
+				dataModelInitializer.getDiscount().toPlainString(), 
 	    		discountEntryView.getText().toString());    	
 	    assertEquals("Wrong value for discount in data model", 
-	    		StubDataModel.INITIAL_DISCOUNT, 
-	    		model.getDiscount());
+	    		dataModelInitializer.getDiscount(), model.getDiscount());
 	}
 
 
@@ -400,26 +397,28 @@ public class NewActionTests extends
 	
 	
 	private void assertPlannedTipPercentFieldAndModelAreAtInitialValues() {
+		BigDecimal expectedTipRate = dataModelInitializer.getTipRate(null);
 		assertEquals("Wrong value in planned tip field", 
-				TipOnDiscount.formatRateToPercent(StubDataModel.INITIAL_PLANNED_TIP_RATE), 
+				TipOnDiscount.formatRateToPercent(expectedTipRate), 
 				plannedTipPercentEntryView.getText().toString());
 	    assertTrue("Wrong value for planned tip rate in data model", 
-	    		0 == StubDataModel.INITIAL_PLANNED_TIP_RATE.compareTo(model.getPlannedTipRate()));
+	    		0 == expectedTipRate.compareTo(model.getPlannedTipRate()));
 	}
 
 
 	private void assertSplitBetweenFieldAndModelAreAtInitialValues() {
+		int expectedSplitBetween = dataModelInitializer.getSplitBetween();
 		assertEquals("Wrong value in split between field", 
-				String.valueOf(StubDataModel.INITIAL_SPLIT_BETWEEN), 
+				String.valueOf(expectedSplitBetween), 
 	    		splitBetweenEntryView.getText().toString());    	
 	    assertEquals("Wrong value for split between in data model", 
-	    		StubDataModel.INITIAL_SPLIT_BETWEEN, 
+	    		expectedSplitBetween, 
 	    		model.getSplitBetween());
 	}
 
 	
 	private void assertRoundUpToNearestFieldAndModelAreAtInitialValues() {
-		BigDecimal expectedValue = StubDataModel.INITIAL_ROUND_UP_TO_AMOUNT; 
+		BigDecimal expectedValue = dataModelInitializer.getRoundUpToAmount(null); 
 		String expectedLabel = getRoundUpToLabel(expectedValue);
 		assertEquals("Wrong value in round up to nearest spinner", 
 				expectedLabel, 
@@ -453,21 +452,19 @@ public class NewActionTests extends
 	
 	
 	private void assertTaxPercentFieldAndTaxRateInModelAreAtInitialValues() {
+		BigDecimal expectedTaxRate = dataModelInitializer.getTaxRate(null);
 		assertEquals("Wrong value in tax percent field", 
-	    		TipOnDiscount.formatRateToPercent(StubDataModel.INITIAL_TAX_RATE), 
+	    		TipOnDiscount.formatRateToPercent(expectedTaxRate), 
 	    		taxPercentEntryView.getText().toString());
 	    assertTrue("Wrong value for tax rate in data model", 
-	    		0 == StubDataModel.INITIAL_TAX_RATE.compareTo(model.getTaxRate()));
+	    		0 == expectedTaxRate.compareTo(model.getTaxRate()));
 	}
 
 
-	private void assertTaxAmountFieldAndModelAreAtInitialValues() {
+	private void assertTaxAmountFieldMatchesModel() {
 		assertEquals("Wrong value in tax amount field", 
-				StubDataModel.INITIAL_TAX_AMOUNT.toPlainString(), 
+				model.getTaxAmount().toPlainString(), 
 	    		this.taxAmountEntryView.getText().toString());    	
-	    assertEquals("Wrong value for tax amount in data model", 
-	    		StubDataModel.INITIAL_TAX_AMOUNT, 
-	    		model.getTaxAmount());
 	}
 
 

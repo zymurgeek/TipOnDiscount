@@ -508,7 +508,6 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 	 * all fields in the UI.
 	 */
 	public void reset() {
-		dataModel.initialize();
 		DataModelInitializer initializer = 
 				DataModelInitializerFactory.getDataModelInitializer();
 		initializer.initialize(dataModel, this);

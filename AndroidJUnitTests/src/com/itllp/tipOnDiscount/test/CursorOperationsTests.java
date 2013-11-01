@@ -24,12 +24,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.itllp.tipOnDiscount.TipOnDiscount;
+import com.itllp.tipOnDiscount.model.DataModel;
 import com.itllp.tipOnDiscount.model.DataModelFactory;
 import com.itllp.tipOnDiscount.model.DataModelInitializerFactory;
+import com.itllp.tipOnDiscount.model.impl.SimpleDataModelInitializer;
 import com.itllp.tipOnDiscount.model.persistence.DataModelPersisterFactory;
 import com.itllp.tipOnDiscount.model.persistence.test.StubDataModelPersister;
 import com.itllp.tipOnDiscount.model.test.StubDataModel;
-import com.itllp.tipOnDiscount.model.test.StubDataModelInitializer;
 
 public class CursorOperationsTests extends
 ActivityInstrumentationTestCase2<TipOnDiscount> {
@@ -55,11 +56,15 @@ ActivityInstrumentationTestCase2<TipOnDiscount> {
     protected void setUp() throws Exception {
         super.setUp();
         
-    	DataModelFactory.setDataModel(new StubDataModel());
+        DataModel stubDataModel = new StubDataModel();
+    	DataModelFactory.setDataModel(stubDataModel);
     	DataModelPersisterFactory.setDataModelPersister(
     			new StubDataModelPersister());
+    	SimpleDataModelInitializer dataModelInitializer = 
+    			new SimpleDataModelInitializer();
     	DataModelInitializerFactory.setDataModelInitializer(
-    			new StubDataModelInitializer());
+    			dataModelInitializer);
+    	dataModelInitializer.initialize(stubDataModel, null);
         mInstrumentation = getInstrumentation();
         mActivity = this.getActivity();
 

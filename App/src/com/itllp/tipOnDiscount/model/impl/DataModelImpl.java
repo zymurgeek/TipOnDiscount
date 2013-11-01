@@ -74,26 +74,6 @@ public class DataModelImpl implements DataModel {
 	private BigDecimal actualTipRate = BigDecimal.ZERO.setScale(5);
 
 	
-	public DataModelImpl() {
-		initialize();
-	}
-	
-	
-	/* (non-Javadoc)
-	 * @see com.itllp.tipOnDiscount.model.DataModel#initialize()
-	 */
-	//TODO Move this to DataModelInitializer
-	public void initialize() {
-		setRoundUpToAmount(new BigDecimal("0.01"));
-		setBillTotal(BigDecimal.ZERO.setScale(2));
-		setTaxRate(BigDecimal.ZERO.setScale(5)); // sets usingTaxRate=true
-		setDiscount(BigDecimal.ZERO.setScale(2));
-		setPlannedTipRate(new BigDecimal("0.15000"));
-		setSplitBetween(1);
-		setBumps(0);
-	}
-	
-	
 	public void addObserver(DataModelObserver observer) {
 		this.observable.addObserver(observer);
 	}
