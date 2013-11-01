@@ -174,17 +174,17 @@ public class DataModelPersisterImplTests {
 	private void setPersisterExpectationsForSaveOfAllDataModelFieldsExceptTax() {
 		context.checking(new Expectations() {{
 			try {
-				oneOf (mockPersister).save(DataModel.BILL_TOTAL_KEY, 
+				oneOf (mockPersister).save(DataModelPersister.BILL_TOTAL_KEY, 
 						expectedBillTotal);
-				oneOf (mockPersister).save(DataModel.DISCOUNT_KEY,
+				oneOf (mockPersister).save(DataModelPersister.DISCOUNT_KEY,
 						expectedDiscount);
-				oneOf (mockPersister).save(DataModel.PLANNED_TIP_RATE_KEY, 
+				oneOf (mockPersister).save(DataModelPersister.PLANNED_TIP_RATE_KEY, 
 						expectedPlannedTipRate);
-				oneOf (mockPersister).save(DataModel.SPLIT_BETWEEN_KEY, 
+				oneOf (mockPersister).save(DataModelPersister.SPLIT_BETWEEN_KEY, 
 						expectedSplitBetween);
-				oneOf (mockPersister).save(DataModel.ROUND_UP_TO_NEAREST_AMOUNT,
+				oneOf (mockPersister).save(DataModelPersister.ROUND_UP_TO_NEAREST_AMOUNT_KEY,
 						expectedRoundUpToNearestAmount);
-				oneOf (mockPersister).save(DataModel.BUMPS_KEY, expectedBumps);
+				oneOf (mockPersister).save(DataModelPersister.BUMPS_KEY, expectedBumps);
 			} catch (Exception e) {
 				fail("Persister save threw exception");
 			}
@@ -195,7 +195,7 @@ public class DataModelPersisterImplTests {
 	private void setPersisterExpectationsForSaveOfDataModelTaxRate() {
 		context.checking(new Expectations() {{
 			try {
-				oneOf (mockPersister).save(DataModel.TAX_RATE_KEY, 
+				oneOf (mockPersister).save(DataModelPersister.TAX_RATE_KEY, 
 						expectedTaxRate);
 			} catch (Exception e) {
 				fail("Persister save threw exception");
@@ -207,7 +207,7 @@ public class DataModelPersisterImplTests {
 	private void setPersisterExpectationsForSaveOfDataModelTaxAmount() {
 		context.checking(new Expectations() {{
 			try {
-				oneOf (mockPersister).save(DataModel.TAX_AMOUNT_KEY, 
+				oneOf (mockPersister).save(DataModelPersister.TAX_AMOUNT_KEY, 
 						expectedTaxAmount);
 			} catch (Exception e) {
 				fail("Persister save threw exception");
@@ -231,31 +231,31 @@ public class DataModelPersisterImplTests {
 	private void setPersisterExpectationsToAlwaysRetrieveNull() {
 		context.checking(new Expectations() {{
 			allowing (mockPersister).retrieveBigDecimal
-			(mockAndroidContext, DataModel.BILL_TOTAL_KEY); 
+			(mockAndroidContext, DataModelPersister.BILL_TOTAL_KEY); 
 			will(returnValue(null));			
 			allowing (mockPersister).retrieveBigDecimal
-			(mockAndroidContext, DataModel.TAX_AMOUNT_KEY);
+			(mockAndroidContext, DataModelPersister.TAX_AMOUNT_KEY);
 			will(returnValue(null));
 			allowing (mockPersister).retrieveBigDecimal
-			(mockAndroidContext, DataModel.TAX_RATE_KEY);
+			(mockAndroidContext, DataModelPersister.TAX_RATE_KEY);
 			will(returnValue(null));
 			allowing (mockPersister).retrieveBigDecimal
-			(mockAndroidContext, DataModel.TAX_AMOUNT_KEY);
+			(mockAndroidContext, DataModelPersister.TAX_AMOUNT_KEY);
 			will(returnValue(null));
 			allowing (mockPersister).retrieveBigDecimal
-			(mockAndroidContext, DataModel.DISCOUNT_KEY); 
+			(mockAndroidContext, DataModelPersister.DISCOUNT_KEY); 
 			will(returnValue(null));
 			allowing (mockPersister).retrieveBigDecimal
-			(mockAndroidContext, DataModel.PLANNED_TIP_RATE_KEY);
+			(mockAndroidContext, DataModelPersister.PLANNED_TIP_RATE_KEY);
 			will(returnValue(null));
 			allowing (mockPersister).retrieveInteger
-			(mockAndroidContext, DataModel.SPLIT_BETWEEN_KEY); 
+			(mockAndroidContext, DataModelPersister.SPLIT_BETWEEN_KEY); 
 			will(returnValue(null));
 			allowing (mockPersister).retrieveBigDecimal
-			(mockAndroidContext, DataModel.ROUND_UP_TO_NEAREST_AMOUNT);
+			(mockAndroidContext, DataModelPersister.ROUND_UP_TO_NEAREST_AMOUNT_KEY);
 			will(returnValue(null));
 			allowing (mockPersister).retrieveInteger
-			(mockAndroidContext, DataModel.BUMPS_KEY);
+			(mockAndroidContext, DataModelPersister.BUMPS_KEY);
 			will(returnValue(null));
 		}});
 	}
@@ -264,22 +264,22 @@ public class DataModelPersisterImplTests {
 	private void setPersisterExpectationsForRetrievalOfAllFieldsExceptTax() {
 		context.checking(new Expectations() {{
 			allowing (mockPersister).retrieveBigDecimal
-			(mockAndroidContext, DataModel.BILL_TOTAL_KEY); 
+			(mockAndroidContext, DataModelPersister.BILL_TOTAL_KEY); 
 			will(returnValue(expectedBillTotal));			
 			allowing (mockPersister).retrieveBigDecimal
-			(mockAndroidContext, DataModel.DISCOUNT_KEY); 
+			(mockAndroidContext, DataModelPersister.DISCOUNT_KEY); 
 			will(returnValue(expectedDiscount));
 			allowing (mockPersister).retrieveBigDecimal
-			(mockAndroidContext, DataModel.PLANNED_TIP_RATE_KEY);
+			(mockAndroidContext, DataModelPersister.PLANNED_TIP_RATE_KEY);
 			will(returnValue(expectedPlannedTipRate));
 			allowing (mockPersister).retrieveInteger
-			(mockAndroidContext, DataModel.SPLIT_BETWEEN_KEY); 
+			(mockAndroidContext, DataModelPersister.SPLIT_BETWEEN_KEY); 
 			will(returnValue(expectedSplitBetween));
 			allowing (mockPersister).retrieveBigDecimal
-			(mockAndroidContext, DataModel.ROUND_UP_TO_NEAREST_AMOUNT);
+			(mockAndroidContext, DataModelPersister.ROUND_UP_TO_NEAREST_AMOUNT_KEY);
 			will(returnValue(expectedRoundUpToNearestAmount));
 			allowing (mockPersister).retrieveInteger
-			(mockAndroidContext, DataModel.BUMPS_KEY);
+			(mockAndroidContext, DataModelPersister.BUMPS_KEY);
 			will(returnValue(expectedBumps));
 		}});
 	}
@@ -288,10 +288,10 @@ public class DataModelPersisterImplTests {
 	private void setPersisterExpectationsForRetrievalOfTaxRate() {
 		context.checking(new Expectations() {{
 			allowing (mockPersister).retrieveBigDecimal
-			(mockAndroidContext, DataModel.TAX_AMOUNT_KEY);
+			(mockAndroidContext, DataModelPersister.TAX_AMOUNT_KEY);
 			will(returnValue(null));
 			allowing (mockPersister).retrieveBigDecimal
-			(mockAndroidContext, DataModel.TAX_RATE_KEY);
+			(mockAndroidContext, DataModelPersister.TAX_RATE_KEY);
 			will(returnValue(expectedTaxRate));
 		}});
 	}
@@ -300,10 +300,10 @@ public class DataModelPersisterImplTests {
 	private void setPersisterExpectationsForRetrievalOfTaxAmount() {
 		context.checking(new Expectations() {{
 			allowing (mockPersister).retrieveBigDecimal
-			(mockAndroidContext, DataModel.TAX_AMOUNT_KEY);
+			(mockAndroidContext, DataModelPersister.TAX_AMOUNT_KEY);
 			will(returnValue(expectedTaxAmount));
 			allowing (mockPersister).retrieveBigDecimal
-			(mockAndroidContext, DataModel.TAX_RATE_KEY);
+			(mockAndroidContext, DataModelPersister.TAX_RATE_KEY);
 			will(returnValue(null));
 		}});
 	}
