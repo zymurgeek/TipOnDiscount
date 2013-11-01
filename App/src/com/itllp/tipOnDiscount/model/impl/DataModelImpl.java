@@ -41,7 +41,6 @@ import com.itllp.tipOnDiscount.model.update.TippableAmountUpdate;
 import com.itllp.tipOnDiscount.model.update.TotalDueUpdate;
 import com.itllp.tipOnDiscount.model.update.Update;
 import com.itllp.tipOnDiscount.model.update.UpdateSet;
-import com.itllp.tipOnDiscount.persistence.Persister;
 import com.itllp.tipOnDiscount.util.EqualsUtil;
 
 public class DataModelImpl implements DataModel {
@@ -49,8 +48,6 @@ public class DataModelImpl implements DataModel {
 	// TODO Support tip included, maybe with help screen advice
 
 	DataModelObservable observable = new DataModelObservable();
-	//TODO Delete unused persister
-	Persister persister;
 	/* 
 	 * The following data is calculated in the order it appears here.
 	 * When updating these items in the update methods, do not use a later 
