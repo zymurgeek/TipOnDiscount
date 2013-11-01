@@ -48,7 +48,7 @@ public class StubDataModelInitializer implements DataModelInitializer {
 	}
 
 	@Override
-	public BigDecimal getRoundUpToAmount() {
+	public BigDecimal getRoundUpToAmount(Context context) {
 		return null;
 	}
 

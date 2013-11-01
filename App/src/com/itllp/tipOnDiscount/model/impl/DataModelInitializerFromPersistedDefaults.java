@@ -44,6 +44,7 @@ implements DataModelInitializer {
 	@Override
 	public BigDecimal getTaxRate(Context context) {
 		defaultsPersister.restoreState(defaults, context);
+		
 		BigDecimal taxPercent = defaults.getTaxPercent();
 		BigDecimal taxRate;
 		if (null != taxPercent) {
@@ -57,6 +58,7 @@ implements DataModelInitializer {
 	@Override
 	public BigDecimal getTipRate(Context context) {
 		defaultsPersister.restoreState(defaults, context);
+		
 		BigDecimal tipPercent = defaults.getTipPercent();
 		BigDecimal tipRate;
 		if (null != tipPercent) {
@@ -68,8 +70,13 @@ implements DataModelInitializer {
 	}
 	
 	@Override
-	public BigDecimal getRoundUpToAmount() {
+	public BigDecimal getRoundUpToAmount(Context context) {
+		defaultsPersister.restoreState(defaults, context);
+		
 		BigDecimal roundUpToAmount = defaults.getRoundUpToAmount();
+		if (null == roundUpToAmount) {
+			roundUpToAmount = super.getRoundUpToAmount(context);
+		}
 		return roundUpToAmount;
 	}
 }

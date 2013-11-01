@@ -45,7 +45,9 @@ public class DataModelInitializerFromPersistedDefaultsTests {
 	private static final BigDecimal EXPECTED_TAX_RATE = new BigDecimal(".01");
 	private static final BigDecimal EXPECTED_TIP_PERCENT = new BigDecimal("2");
 	private static final BigDecimal EXPECTED_TIP_RATE = new BigDecimal(".02");
-	private android.content.Context dummyAndroidContext = new android.content.Context();
+	private static final BigDecimal EXPECTED_ROUND_UP_TO_AMOUNT = new BigDecimal("3");
+	private android.content.Context dummyAndroidContext = new android.content
+			.Context();
 	private Sequence callSequence;
 	private SimpleDataModelInitializer parentInitializer;
 	
@@ -89,7 +91,8 @@ public class DataModelInitializerFromPersistedDefaultsTests {
 	
 	private void setTaxRateExpectations(final BigDecimal expectedTaxPercent) {
 		context.checking(new Expectations() {{
-		    oneOf (mockDefaultsPersister).restoreState(mockDefaults, dummyAndroidContext);
+		    oneOf (mockDefaultsPersister).restoreState(mockDefaults, 
+		    		dummyAndroidContext);
 		    inSequence(callSequence);
 		    allowing (mockDefaults).getTaxPercent();
 			will(returnValue(expectedTaxPercent));
@@ -128,7 +131,8 @@ public class DataModelInitializerFromPersistedDefaultsTests {
 	
 	private void setTipRateExpectations(final BigDecimal expectedTipPercent) {
 		context.checking(new Expectations() {{
-		    oneOf (mockDefaultsPersister).restoreState(mockDefaults, dummyAndroidContext);
+		    oneOf (mockDefaultsPersister).restoreState(mockDefaults, 
+		    		dummyAndroidContext);
 		    inSequence(callSequence);
 		    allowing (mockDefaults).getTipPercent();
 			will(returnValue(expectedTipPercent));
@@ -137,42 +141,49 @@ public class DataModelInitializerFromPersistedDefaultsTests {
 	}
 	
 	
-	//TODO finish tests for persisted default get methods when they exist
+	@Test
+	public void testRoundUpToWithPersistedValue() {
+		// Set up expectations for mocks
+		setRoundUpToAmountExpectations(EXPECTED_ROUND_UP_TO_AMOUNT);
+		
+		// Call method under test
+		BigDecimal actualAmount = initializer
+				.getRoundUpToAmount(dummyAndroidContext);
+		
+		// Verify postconditions
+		assertEquals("Incorrect round up to amount", 
+				EXPECTED_ROUND_UP_TO_AMOUNT, actualAmount);
+	}
 
-	//TODO finish tests for persisted default get methods when they don't exist 
 
-	//TODO delete me
-//	@Test
-//	public void testInitialize() {
-//		// Set up preconditions
-//		final DataModel mockDataModel = context.mock(DataModel.class);
-//		final android.content.Context dummyAndroidContext = new android.content.Context();
-//		final BigDecimal tipPercent = new BigDecimal("2");
-//		final BigDecimal tipRate = new BigDecimal(".02");
-//		final BigDecimal roundUpToAmount = new BigDecimal("3");
-//		
-//		// Set up expectations
-//		final States defaultsRestored = context.states("restored").startsAs("false");
-//		context.checking(new Expectations() {{
-//		    oneOf (mockDefaultsPersister).restoreState(mockDefaults, dummyAndroidContext);
-//		    then(defaultsRestored.is("true"));
-//		    allowing (mockDefaults).getTaxPercent(); when(defaultsRestored.is("true"));
-//		    will(returnValue(EXPECTED_TAX_PERCENT));
-//		    allowing (mockDefaults).getTipPercent(); when(defaultsRestored.is("true"));
-//		    will(returnValue(tipPercent));
-//		    allowing (mockDefaults).getRoundUpToAmount(); when(defaultsRestored.is("true"));
-//		    will(returnValue(roundUpToAmount));
-//		    oneOf(mockDataModel).setBillTotal(initializer.getBillTotal());
-//		    oneOf(mockDataModel).setTaxRate(EXPECTED_TAX_RATE);
-//		    oneOf(mockDataModel).setDiscount(initializer.getDiscount());
-//		    oneOf(mockDataModel).setPlannedTipRate(tipRate);
-//		    oneOf(mockDataModel).setSplitBetween(initializer.getSplitBetween());
-//		    oneOf(mockDataModel).setRoundUpToAmount(roundUpToAmount);
-//		    oneOf(mockDataModel).setBumps(initializer.getBumps());
-//		}});
-//
-//		// Call method under test
-//		initializer.initialize(mockDataModel, dummyAndroidContext);
-//	}
+	@Test
+	public void testGetRoundUpToWithoutPersistedValue() {
+		// Set up expectations for mocks
+		setRoundUpToAmountExpectations(null);
+		BigDecimal expectedAmount = parentInitializer.getRoundUpToAmount
+				(dummyAndroidContext);
+		
+		// Call method under test
+		BigDecimal actualAmount = initializer.getRoundUpToAmount
+				(dummyAndroidContext);
+
+		// Verify postconditions
+		assertEquals("Incorrect round up to amount", expectedAmount, 
+				actualAmount);
+	}
+	
+	
+	private void setRoundUpToAmountExpectations(final BigDecimal 
+			expectedRoundUpToAmount) {
+		context.checking(new Expectations() {{
+		    oneOf (mockDefaultsPersister).restoreState(mockDefaults, 
+		    		dummyAndroidContext);
+		    inSequence(callSequence);
+		    allowing (mockDefaults).getRoundUpToAmount();
+			will(returnValue(expectedRoundUpToAmount));
+		    inSequence(callSequence);
+		}});
+	}
+	
 	
 }

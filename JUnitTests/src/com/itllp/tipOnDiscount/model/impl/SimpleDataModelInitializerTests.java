@@ -51,11 +51,14 @@ public class SimpleDataModelInitializerTests {
 		// Set up expectations
 		context.checking(new Expectations() {{
 		    oneOf(mockDataModel).setBillTotal(initializer.getBillTotal());
-		    oneOf(mockDataModel).setTaxRate(initializer.getTaxRate(dummyAndroidContext));
+		    oneOf(mockDataModel).setTaxRate(initializer.getTaxRate
+		    		(dummyAndroidContext));
 		    oneOf(mockDataModel).setDiscount(initializer.getDiscount());
-		    oneOf(mockDataModel).setPlannedTipRate(initializer.getTipRate(dummyAndroidContext));
+		    oneOf(mockDataModel).setPlannedTipRate(initializer.getTipRate
+		    		(dummyAndroidContext));
 		    oneOf(mockDataModel).setSplitBetween(initializer.getSplitBetween());
-		    oneOf(mockDataModel).setRoundUpToAmount(initializer.getRoundUpToAmount());
+		    oneOf(mockDataModel).setRoundUpToAmount(initializer
+		    		.getRoundUpToAmount(dummyAndroidContext));
 		    oneOf(mockDataModel).setBumps(initializer.getBumps());
 		}});
 
@@ -115,7 +118,7 @@ public class SimpleDataModelInitializerTests {
 	@Test
 	public void testGetRoundUpToAmount() {
 		// Call method under test
-		BigDecimal roundUpToAmount = initializer.getRoundUpToAmount();
+		BigDecimal roundUpToAmount = initializer.getRoundUpToAmount(null);
 		
 		// Verify postconditions
 		assertNotNull("Round Up To Amount may not be null", roundUpToAmount);

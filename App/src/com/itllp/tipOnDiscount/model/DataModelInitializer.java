@@ -18,7 +18,7 @@ public interface DataModelInitializer {
 
 	int getSplitBetween();
 
-	BigDecimal getRoundUpToAmount();
+	BigDecimal getRoundUpToAmount(Context context);
 
 	int getBumps();
 

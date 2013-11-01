@@ -36,7 +36,7 @@ public class SimpleDataModelInitializer implements DataModelInitializer {
 		dataModel.setDiscount(getDiscount());
 		dataModel.setPlannedTipRate(getTipRate(context));
 		dataModel.setSplitBetween(getSplitBetween());
-		dataModel.setRoundUpToAmount(getRoundUpToAmount());
+		dataModel.setRoundUpToAmount(getRoundUpToAmount(context));
 		dataModel.setBumps(getBumps());
 	}
 
@@ -66,7 +66,7 @@ public class SimpleDataModelInitializer implements DataModelInitializer {
 	}
 
 	@Override
-	public BigDecimal getRoundUpToAmount() {
+	public BigDecimal getRoundUpToAmount(Context unused) {
 		return ROUND_UP_TO_AMOUNT;
 	}
 
