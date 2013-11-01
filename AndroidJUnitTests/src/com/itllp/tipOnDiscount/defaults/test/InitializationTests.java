@@ -83,6 +83,7 @@ public class InitializationTests extends
         defaults.setTipPercent(expectedTipPercent);
         defaults.setRoundUpToAmount(expectedValue);
         mActivity = getActivity();
+    	mInstrumentation.waitForIdleSync();
 
         taxPercentEntryView = (EditText) mActivity.findViewById
         	(com.itllp.tipOnDiscount.R.id.tax_percent_entry);
