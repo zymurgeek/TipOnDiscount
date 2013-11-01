@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 
 import org.jmock.Expectations;
 import org.jmock.States;
+import org.jmock.auto.Mock;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 
 import org.junit.Before;
@@ -38,14 +39,14 @@ import com.itllp.tipOnDiscount.model.DataModel;
 public class DataModelInitializerFromPersistedDefaultsTests {
 	
 	@Rule public JUnitRuleMockery context = new JUnitRuleMockery();
-	private DataModelInitializerFromPersistedDefaults initializer = null;
-	private DefaultsPersister mockDefaultsPersister;
-	private Defaults mockDefaults;
+	@Mock private DefaultsPersister mockDefaultsPersister;
+	@Mock private Defaults mockDefaults;
+	private DataModelInitializerFromPersistedDefaults initializer;
+	private static final BigDecimal EXPECTED_TAX_PERCENT = new BigDecimal("1");
+	private static final BigDecimal EXPECTED_TAX_RATE = new BigDecimal(".01");
 	
 	@Before
 	public void setUp() {
-		mockDefaultsPersister = context.mock(DefaultsPersister.class);
-		mockDefaults = context.mock(Defaults.class);
 		initializer = new DataModelInitializerFromPersistedDefaults(
 				mockDefaultsPersister, mockDefaults);
 	}
@@ -55,8 +56,6 @@ public class DataModelInitializerFromPersistedDefaultsTests {
 		// Set up preconditions
 		final DataModel mockDataModel = context.mock(DataModel.class);
 		final android.content.Context dummyAndroidContext = new android.content.Context();
-		final BigDecimal taxPercent = new BigDecimal("1");
-		final BigDecimal taxRate = new BigDecimal(".01");
 		final BigDecimal tipPercent = new BigDecimal("2");
 		final BigDecimal tipRate = new BigDecimal(".02");
 		final BigDecimal roundUpToAmount = new BigDecimal("3");
@@ -67,13 +66,13 @@ public class DataModelInitializerFromPersistedDefaultsTests {
 		    oneOf (mockDefaultsPersister).restoreState(mockDefaults, dummyAndroidContext);
 		    then(defaultsRestored.is("true"));
 		    allowing (mockDefaults).getTaxPercent(); when(defaultsRestored.is("true"));
-		    will(returnValue(taxPercent));
+		    will(returnValue(EXPECTED_TAX_PERCENT));
 		    allowing (mockDefaults).getTipPercent(); when(defaultsRestored.is("true"));
 		    will(returnValue(tipPercent));
 		    allowing (mockDefaults).getRoundUpToAmount(); when(defaultsRestored.is("true"));
 		    will(returnValue(roundUpToAmount));
 		    oneOf(mockDataModel).setBillTotal(initializer.getBillTotal());
-		    oneOf(mockDataModel).setTaxRate(taxRate);
+		    oneOf(mockDataModel).setTaxRate(EXPECTED_TAX_RATE);
 		    oneOf(mockDataModel).setDiscount(initializer.getDiscount());
 		    oneOf(mockDataModel).setPlannedTipRate(tipRate);
 		    oneOf(mockDataModel).setSplitBetween(initializer.getSplitBetween());
@@ -86,5 +85,21 @@ public class DataModelInitializerFromPersistedDefaultsTests {
 	}
 	
 	//TODO add tests for persisted default get methods when they exist
+
+	@Test
+	public void testGetTaxRateWithPersistedValue() {
+		// Set up expectations for mocks
+		context.checking(new Expectations() {{
+		    allowing (mockDefaults).getTaxPercent(); 
+		    will(returnValue(EXPECTED_TAX_PERCENT));
+		}});
+		
+		// Call method under test
+		BigDecimal actualRate = initializer.getTaxRate();
+		
+		// Verify postconditions
+		assertEquals("Incorrect tax rate", EXPECTED_TAX_RATE, actualRate);
+	}
+	
 	//TODO add tests for persisted default get methods when they don't exist 
 }

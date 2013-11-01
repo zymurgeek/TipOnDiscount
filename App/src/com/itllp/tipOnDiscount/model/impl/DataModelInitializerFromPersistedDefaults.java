@@ -45,6 +45,7 @@ implements DataModelInitializer {
 	
 	@Override
 	public void initialize(DataModel dataModel, Context context) {
+		//TODO update test so restoreState is called from each of the get methods in this class
 		defaultsPersister.restoreState(defaults, context);
 
 		super.initialize(dataModel, context);
