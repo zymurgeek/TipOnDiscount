@@ -42,20 +42,16 @@ implements DataModelInitializer {
 		defaults = d;
 	}
 	
-	//TODO delete me
-//	@Override
-//	public void initialize(DataModel dataModel, Context context) {
-//		//TODO update test so restoreState is called from each of the get methods in this class
-//		defaultsPersister.restoreState(defaults, context);
-//
-//		super.initialize(dataModel, context);
-//	}
-
 	@Override
 	public BigDecimal getTaxRate(Context context) {
 		defaultsPersister.restoreState(defaults, context);
-		BigDecimal taxRate = defaults.getTaxPercent()
-				.multiply(percentToRateMultiplicand);
+		BigDecimal taxPercent = defaults.getTaxPercent();
+		BigDecimal taxRate;
+		if (null != taxPercent) {
+			taxRate = taxPercent.multiply(percentToRateMultiplicand);
+		} else {
+			taxRate = super.getTaxRate(context);
+		}
 		return taxRate;
 	}
 	

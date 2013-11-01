@@ -44,13 +44,60 @@ public class DataModelInitializerFromPersistedDefaultsTests {
 	private DataModelInitializerFromPersistedDefaults initializer;
 	private static final BigDecimal EXPECTED_TAX_PERCENT = new BigDecimal("1");
 	private static final BigDecimal EXPECTED_TAX_RATE = new BigDecimal(".01");
+	private android.content.Context dummyAndroidContext = new android.content.Context();
+	private Sequence callSequence;
 	
 	@Before
 	public void setUp() {
 		initializer = new DataModelInitializerFromPersistedDefaults(
 				mockDefaultsPersister, mockDefaults);
+		callSequence = context.sequence("callSequence");
+	}
+	
+	
+	@Test
+	public void testGetTaxRateWithPersistedValue() {
+		// Set up expectations for mocks
+		setTaxRateExpectations(EXPECTED_TAX_PERCENT);
+		
+		// Call method under test
+		BigDecimal actualRate = initializer.getTaxRate(dummyAndroidContext);
+		
+		// Verify postconditions
+		assertEquals("Incorrect tax rate", EXPECTED_TAX_RATE, actualRate);
 	}
 
+
+	@Test
+	public void testGetTaxRateWithoutPersistedValue() {
+		// Set up expectations for mocks
+		setTaxRateExpectations(null);
+		
+		// Call method under test
+		BigDecimal actualRate = initializer.getTaxRate(dummyAndroidContext);
+		
+		// Verify postconditions
+		SimpleDataModelInitializer parent = new SimpleDataModelInitializer();
+		BigDecimal expectedRate = parent.getTaxRate(dummyAndroidContext);
+		assertEquals("Incorrect tax rate", expectedRate, actualRate);
+	}
+	
+	
+	private void setTaxRateExpectations(final BigDecimal expectedTaxPercent) {
+		context.checking(new Expectations() {{
+		    oneOf (mockDefaultsPersister).restoreState(mockDefaults, dummyAndroidContext);
+		    inSequence(callSequence);
+		    allowing (mockDefaults).getTaxPercent();
+			will(returnValue(expectedTaxPercent));
+		    inSequence(callSequence);
+		}});
+	}
+	
+	//TODO add tests for persisted default get methods when they exist
+
+	//TODO add tests for persisted default get methods when they don't exist 
+
+	//TODO delete me
 //	@Test
 //	public void testInitialize() {
 //		// Set up preconditions
@@ -84,29 +131,4 @@ public class DataModelInitializerFromPersistedDefaultsTests {
 //		initializer.initialize(mockDataModel, dummyAndroidContext);
 //	}
 	
-	//TODO add tests for persisted default get methods when they exist
-
-	@Test
-	public void testGetTaxRateWithPersistedValue() {
-		// Set up preconditions
-		final android.content.Context dummyAndroidContext = new android.content.Context();
-		final Sequence callSequence = context.sequence("callSequence");
-
-		// Set up expectations for mocks
-		context.checking(new Expectations() {{
-		    oneOf (mockDefaultsPersister).restoreState(mockDefaults, dummyAndroidContext);
-		    inSequence(callSequence);
-		    allowing (mockDefaults).getTaxPercent();
-		    will(returnValue(EXPECTED_TAX_PERCENT));
-		    inSequence(callSequence);
-		}});
-		
-		// Call method under test
-		BigDecimal actualRate = initializer.getTaxRate(dummyAndroidContext);
-		
-		// Verify postconditions
-		assertEquals("Incorrect tax rate", EXPECTED_TAX_RATE, actualRate);
-	}
-	
-	//TODO add tests for persisted default get methods when they don't exist 
 }
