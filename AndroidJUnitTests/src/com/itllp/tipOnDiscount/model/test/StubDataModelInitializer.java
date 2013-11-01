@@ -38,7 +38,7 @@ public class StubDataModelInitializer implements DataModelInitializer {
 	}
 
 	@Override
-	public BigDecimal getTipRate() {
+	public BigDecimal getTipRate(Context context) {
 		return null;
 	}
 

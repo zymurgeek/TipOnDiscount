@@ -53,7 +53,7 @@ public class SimpleDataModelInitializerTests {
 		    oneOf(mockDataModel).setBillTotal(initializer.getBillTotal());
 		    oneOf(mockDataModel).setTaxRate(initializer.getTaxRate(dummyAndroidContext));
 		    oneOf(mockDataModel).setDiscount(initializer.getDiscount());
-		    oneOf(mockDataModel).setPlannedTipRate(initializer.getTipRate());
+		    oneOf(mockDataModel).setPlannedTipRate(initializer.getTipRate(dummyAndroidContext));
 		    oneOf(mockDataModel).setSplitBetween(initializer.getSplitBetween());
 		    oneOf(mockDataModel).setRoundUpToAmount(initializer.getRoundUpToAmount());
 		    oneOf(mockDataModel).setBumps(initializer.getBumps());
@@ -96,7 +96,7 @@ public class SimpleDataModelInitializerTests {
 	@Test
 	public void testGetTipRate() {
 		// Call method under test
-		BigDecimal tipRate = initializer.getTipRate();
+		BigDecimal tipRate = initializer.getTipRate(null);
 		
 		// Verify postconditions
 		assertNotNull("Tip rate may not be null", tipRate);

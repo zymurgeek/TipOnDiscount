@@ -34,7 +34,7 @@ public class SimpleDataModelInitializer implements DataModelInitializer {
 		dataModel.setBillTotal(getBillTotal());
 		dataModel.setTaxRate(getTaxRate(context));
 		dataModel.setDiscount(getDiscount());
-		dataModel.setPlannedTipRate(getTipRate());
+		dataModel.setPlannedTipRate(getTipRate(context));
 		dataModel.setSplitBetween(getSplitBetween());
 		dataModel.setRoundUpToAmount(getRoundUpToAmount());
 		dataModel.setBumps(getBumps());
@@ -56,7 +56,7 @@ public class SimpleDataModelInitializer implements DataModelInitializer {
 	}
 
 	@Override
-	public BigDecimal getTipRate() {
+	public BigDecimal getTipRate(Context unused) {
 		return BigDecimal.ZERO.setScale(5);
 	}
 

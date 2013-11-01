@@ -14,7 +14,7 @@ public interface DataModelInitializer {
 
 	BigDecimal getTaxRate(Context context);
 
-	BigDecimal getTipRate();
+	BigDecimal getTipRate(Context context);
 
 	int getSplitBetween();
 

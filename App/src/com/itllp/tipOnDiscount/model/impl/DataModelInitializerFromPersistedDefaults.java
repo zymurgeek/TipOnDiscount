@@ -24,7 +24,6 @@ import android.content.Context;
 
 import com.itllp.tipOnDiscount.defaults.Defaults;
 import com.itllp.tipOnDiscount.defaults.persistence.DefaultsPersister;
-import com.itllp.tipOnDiscount.model.DataModel;
 import com.itllp.tipOnDiscount.model.DataModelInitializer;
 
 public class DataModelInitializerFromPersistedDefaults 
@@ -56,9 +55,15 @@ implements DataModelInitializer {
 	}
 	
 	@Override
-	public BigDecimal getTipRate() {
-		BigDecimal tipRate = defaults.getTipPercent()
-				.multiply(percentToRateMultiplicand);
+	public BigDecimal getTipRate(Context context) {
+		defaultsPersister.restoreState(defaults, context);
+		BigDecimal tipPercent = defaults.getTipPercent();
+		BigDecimal tipRate;
+		if (null != tipPercent) {
+			tipRate = tipPercent.multiply(percentToRateMultiplicand);
+		} else {
+			tipRate = super.getTipRate(context);
+		}
 		return tipRate;
 	}
 	

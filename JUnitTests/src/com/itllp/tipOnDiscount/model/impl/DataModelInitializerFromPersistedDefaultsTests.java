@@ -24,7 +24,6 @@ import java.math.BigDecimal;
 
 import org.jmock.Expectations;
 import org.jmock.Sequence;
-import org.jmock.States;
 import org.jmock.auto.Mock;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 
@@ -44,13 +43,18 @@ public class DataModelInitializerFromPersistedDefaultsTests {
 	private DataModelInitializerFromPersistedDefaults initializer;
 	private static final BigDecimal EXPECTED_TAX_PERCENT = new BigDecimal("1");
 	private static final BigDecimal EXPECTED_TAX_RATE = new BigDecimal(".01");
+	private static final BigDecimal EXPECTED_TIP_PERCENT = new BigDecimal("2");
+	private static final BigDecimal EXPECTED_TIP_RATE = new BigDecimal(".02");
 	private android.content.Context dummyAndroidContext = new android.content.Context();
 	private Sequence callSequence;
+	private SimpleDataModelInitializer parentInitializer;
+	
 	
 	@Before
 	public void setUp() {
 		initializer = new DataModelInitializerFromPersistedDefaults(
 				mockDefaultsPersister, mockDefaults);
+		parentInitializer = new SimpleDataModelInitializer();
 		callSequence = context.sequence("callSequence");
 	}
 	
@@ -72,13 +76,13 @@ public class DataModelInitializerFromPersistedDefaultsTests {
 	public void testGetTaxRateWithoutPersistedValue() {
 		// Set up expectations for mocks
 		setTaxRateExpectations(null);
+		BigDecimal expectedRate = parentInitializer.getTaxRate
+				(dummyAndroidContext);
 		
 		// Call method under test
 		BigDecimal actualRate = initializer.getTaxRate(dummyAndroidContext);
 		
 		// Verify postconditions
-		SimpleDataModelInitializer parent = new SimpleDataModelInitializer();
-		BigDecimal expectedRate = parent.getTaxRate(dummyAndroidContext);
 		assertEquals("Incorrect tax rate", expectedRate, actualRate);
 	}
 	
@@ -93,9 +97,49 @@ public class DataModelInitializerFromPersistedDefaultsTests {
 		}});
 	}
 	
-	//TODO add tests for persisted default get methods when they exist
+	
+	@Test
+	public void testGetTipRateWithPersistedValue() {
+		// Set up expectations for mocks
+		setTipRateExpectations(EXPECTED_TIP_PERCENT);
+		
+		// Call method under test
+		BigDecimal actualRate = initializer.getTipRate(dummyAndroidContext);
+		
+		// Verify postconditions
+		assertEquals("Incorrect tip rate", EXPECTED_TIP_RATE, actualRate);
+	}
 
-	//TODO add tests for persisted default get methods when they don't exist 
+
+	@Test
+	public void testGetTipRateWithoutPersistedValue() {
+		// Set up expectations for mocks
+		setTipRateExpectations(null);
+		BigDecimal expectedRate = parentInitializer.getTipRate
+				(dummyAndroidContext);
+		
+		// Call method under test
+		BigDecimal actualRate = initializer.getTipRate(dummyAndroidContext);
+
+		// Verify postconditions
+		assertEquals("Incorrect tip rate", expectedRate, actualRate);
+	}
+	
+	
+	private void setTipRateExpectations(final BigDecimal expectedTipPercent) {
+		context.checking(new Expectations() {{
+		    oneOf (mockDefaultsPersister).restoreState(mockDefaults, dummyAndroidContext);
+		    inSequence(callSequence);
+		    allowing (mockDefaults).getTipPercent();
+			will(returnValue(expectedTipPercent));
+		    inSequence(callSequence);
+		}});
+	}
+	
+	
+	//TODO finish tests for persisted default get methods when they exist
+
+	//TODO finish tests for persisted default get methods when they don't exist 
 
 	//TODO delete me
 //	@Test
