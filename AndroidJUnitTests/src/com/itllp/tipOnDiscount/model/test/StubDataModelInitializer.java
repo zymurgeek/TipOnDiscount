@@ -27,4 +27,34 @@ public class StubDataModelInitializer implements DataModelInitializer {
 		return INITIAL_DISCOUNT;
 	}
 
+	@Override
+	public BigDecimal getBillTotal() {
+		return null;
+	}
+
+	@Override
+	public BigDecimal getTaxRate(Context context) {
+		return null;
+	}
+
+	@Override
+	public BigDecimal getTipRate() {
+		return null;
+	}
+
+	@Override
+	public int getSplitBetween() {
+		return 0;
+	}
+
+	@Override
+	public BigDecimal getRoundUpToAmount() {
+		return null;
+	}
+
+	@Override
+	public int getBumps() {
+		return 0;
+	}
+
 }

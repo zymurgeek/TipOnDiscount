@@ -51,7 +51,7 @@ public class SimpleDataModelInitializerTests {
 		// Set up expectations
 		context.checking(new Expectations() {{
 		    oneOf(mockDataModel).setBillTotal(initializer.getBillTotal());
-		    oneOf(mockDataModel).setTaxRate(initializer.getTaxRate());
+		    oneOf(mockDataModel).setTaxRate(initializer.getTaxRate(dummyAndroidContext));
 		    oneOf(mockDataModel).setDiscount(initializer.getDiscount());
 		    oneOf(mockDataModel).setPlannedTipRate(initializer.getTipRate());
 		    oneOf(mockDataModel).setSplitBetween(initializer.getSplitBetween());
@@ -76,7 +76,7 @@ public class SimpleDataModelInitializerTests {
 	@Test
 	public void testGetTaxRate() {
 		// Call method under test
-		BigDecimal taxRate = initializer.getTaxRate();
+		BigDecimal taxRate = initializer.getTaxRate(null);
 		
 		// Verify postconditions
 		assertNotNull("Tax rate may not be null", taxRate);

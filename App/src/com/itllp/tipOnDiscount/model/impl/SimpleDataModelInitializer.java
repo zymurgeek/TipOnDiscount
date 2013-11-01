@@ -30,9 +30,9 @@ public class SimpleDataModelInitializer implements DataModelInitializer {
 	private static final BigDecimal ROUND_UP_TO_AMOUNT = new BigDecimal("0.01");
 
 	@Override
-	public void initialize(DataModel dataModel, Context unused) {
+	public void initialize(DataModel dataModel, Context context) {
 		dataModel.setBillTotal(getBillTotal());
-		dataModel.setTaxRate(getTaxRate());
+		dataModel.setTaxRate(getTaxRate(context));
 		dataModel.setDiscount(getDiscount());
 		dataModel.setPlannedTipRate(getTipRate());
 		dataModel.setSplitBetween(getSplitBetween());
@@ -45,26 +45,32 @@ public class SimpleDataModelInitializer implements DataModelInitializer {
 		return BigDecimal.ZERO.setScale(2);
 	}
 
+	@Override
 	public BigDecimal getBillTotal() {
 		return BigDecimal.ZERO.setScale(2);
 	}
 
-	public BigDecimal getTaxRate() {
+	@Override
+	public BigDecimal getTaxRate(Context unused) {
 		return BigDecimal.ZERO.setScale(5);
 	}
 
+	@Override
 	public BigDecimal getTipRate() {
 		return BigDecimal.ZERO.setScale(5);
 	}
 
+	@Override
 	public int getSplitBetween() {
 		return 1;
 	}
 
+	@Override
 	public BigDecimal getRoundUpToAmount() {
 		return ROUND_UP_TO_AMOUNT;
 	}
 
+	@Override
 	public int getBumps() {
 		return 0;
 	}

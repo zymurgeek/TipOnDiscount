@@ -8,6 +8,18 @@ public interface DataModelInitializer {
 
 	void initialize(DataModel dataModel, Context context);
 
+	BigDecimal getBillTotal();
+
 	BigDecimal getDiscount();
+
+	BigDecimal getTaxRate(Context context);
+
+	BigDecimal getTipRate();
+
+	int getSplitBetween();
+
+	BigDecimal getRoundUpToAmount();
+
+	int getBumps();
 
 }
