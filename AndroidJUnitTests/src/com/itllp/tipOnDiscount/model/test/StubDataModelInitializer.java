@@ -9,8 +9,6 @@ import com.itllp.tipOnDiscount.model.DataModelInitializer;
 
 public class StubDataModelInitializer implements DataModelInitializer {
 
-	private static final BigDecimal INITIAL_DISCOUNT = new BigDecimal("5.67");
-
 	private boolean wasInitializeCalled = false;
 	
 	public boolean stub_wasInitializeCalled() {
@@ -24,7 +22,7 @@ public class StubDataModelInitializer implements DataModelInitializer {
 
 	@Override
 	public BigDecimal getDiscount() {
-		return INITIAL_DISCOUNT;
+		return null;
 	}
 
 	@Override

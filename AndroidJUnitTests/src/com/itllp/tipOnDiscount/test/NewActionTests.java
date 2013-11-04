@@ -177,18 +177,18 @@ public class NewActionTests extends
         assertBillTotalFieldAndModelAreCleared();    	
         assertTaxPercentFieldAndTaxRateInModelAreAtInitialValues();    	
         assertTaxAmountFieldMatchesModel();
-        assertBillSubtotalFieldAndModelAreAtInitialValues();
+        assertBillSubtotalMatchesModel();
         assertDiscountFieldAndModelAreAtInitialValues();
-        assertTippableAmountFieldAndModelAreAtInitialValues();
+        assertTippableAmountFieldMatchesModel();
         assertPlannedTipPercentFieldAndModelAreAtInitialValues();
-        assertPlannedTipAmountFieldAndModelAreAtInitialValues();
+        assertPlannedTipAmountFieldMatchesModel();
         assertSplitBetweenFieldAndModelAreAtInitialValues();
         assertRoundUpToNearestFieldAndModelAreAtInitialValues();
         assertBumpsFieldAndModelAreAtInitialValues();
-        assertActualTipPercentFieldAndModelAreAtInitialValues();
-        assertActualTipAmountFieldAndModelAreAtActualValues();
-        assertTotalDueFieldAndModelAreAtInitialValues();
-        assertShareDueFieldAndModelAreAtInitialValues();
+        assertActualTipPercentFieldMatchesModel();
+        assertActualTipAmountFieldMatchesModel();
+        assertTotalDueFieldMatchesModel();
+        assertShareDueFieldMatchesModel();
         assertTrue("Focus not in Bill Total field", 
         		billTotalEntryView.isFocused());
         assertTrue("Bill total field is not empty", 
@@ -329,13 +329,10 @@ public class NewActionTests extends
 	}
 
 
-	private void assertActualTipAmountFieldAndModelAreAtActualValues() {
+	private void assertActualTipAmountFieldMatchesModel() {
 		assertEquals("Wrong value in actual tip amount field", 
-				StubDataModel.INITIAL_ACTUAL_TIP_AMOUNT.toPlainString(), 
+				model.getActualTipAmount().toPlainString(), 
 	    		actualTipAmountView.getText().toString());    	
-	    assertEquals("Wrong value for actual tip amount in data model", 
-	    		StubDataModel.INITIAL_ACTUAL_TIP_AMOUNT, 
-	    		model.getActualTipAmount());
 	}
 	
 	
@@ -347,13 +344,10 @@ public class NewActionTests extends
 	}
 
 
-	private void assertBillSubtotalFieldAndModelAreAtInitialValues() {
+	private void assertBillSubtotalMatchesModel() {
 		assertEquals("Wrong value in bill subtotal field", 
-				StubDataModel.INITIAL_BILL_SUBTOTAL.toPlainString(), 
+				model.getBillSubtotal().toPlainString(), 
 	    		billSubtotalView.getText().toString());    	
-	    assertEquals("Wrong value for bill subtotal in data model", 
-	    		StubDataModel.INITIAL_BILL_SUBTOTAL, 
-	    		model.getBillSubtotal());
 	}
 
 
@@ -367,32 +361,26 @@ public class NewActionTests extends
 	}
 
 	
-	private void assertActualTipPercentFieldAndModelAreAtInitialValues() {
+	private void assertActualTipPercentFieldMatchesModel() {
 		assertEquals("Wrong value in actual tip percent field", 
-				TipOnDiscount.formatRateToPercent(StubDataModel.INITIAL_ACTUAL_TIP_RATE),
+				TipOnDiscount.formatRateToPercent(model.getActualTipRate()),
 				actualTipPercentView.getText().toString());
-	    assertTrue("Wrong value for actual tip rate in data model", 
-	    		0 == StubDataModel.INITIAL_ACTUAL_TIP_RATE.compareTo(model.getActualTipRate()));
 	}
 	
 	
 	private void assertDiscountFieldAndModelAreAtInitialValues() {
 		assertEquals("Wrong value in discount field", 
-				dataModelInitializer.getDiscount().toPlainString(), 
+				model.getDiscount().toPlainString(), 
 	    		discountEntryView.getText().toString());    	
 	    assertEquals("Wrong value for discount in data model", 
 	    		dataModelInitializer.getDiscount(), model.getDiscount());
 	}
 
 
-	private void assertPlannedTipAmountFieldAndModelAreAtInitialValues() {
+	private void assertPlannedTipAmountFieldMatchesModel() {
 		assertEquals("Wrong value in planned tip amount field", 
-				StubDataModel.INITIAL_PLANNED_TIP_AMOUNT.toPlainString(), 
+				model.getPlannedTipAmount().toPlainString(), 
 	    		plannedTipAmountView.getText().toString());    	
-	    assertEquals("Wrong value for tippable amount in data model", 
-	    		StubDataModel.INITIAL_PLANNED_TIP_AMOUNT, 
-	    		model.getPlannedTipAmount());
-		
 	}
 	
 	
@@ -440,14 +428,10 @@ public class NewActionTests extends
 	}
 
 	
-	private void assertTippableAmountFieldAndModelAreAtInitialValues() {
+	private void assertTippableAmountFieldMatchesModel() {
 		assertEquals("Wrong value in tippable amount field", 
-				StubDataModel.INITIAL_TIPPABLE_AMOUNT.toPlainString(), 
+				model.getTippableAmount().toPlainString(), 
 	    		tippableAmountView.getText().toString());    	
-	    assertEquals("Wrong value for tippable amount in data model", 
-	    		StubDataModel.INITIAL_TIPPABLE_AMOUNT, 
-	    		model.getTippableAmount());
-		
 	}
 	
 	
@@ -468,23 +452,17 @@ public class NewActionTests extends
 	}
 
 
-	private void assertTotalDueFieldAndModelAreAtInitialValues() {
+	private void assertTotalDueFieldMatchesModel() {
 		assertEquals("Wrong value in total due field", 
-				StubDataModel.INITIAL_TOTAL_DUE.toPlainString(), 
+				model.getTotalDue().toPlainString(), 
 	    		this.totalDueView.getText().toString());    	
-	    assertEquals("Wrong value for total due in data model", 
-	    		StubDataModel.INITIAL_TOTAL_DUE, 
-	    		model.getTotalDue());
 	}
 	
 
-	private void assertShareDueFieldAndModelAreAtInitialValues() {
+	private void assertShareDueFieldMatchesModel() {
 		assertEquals("Wrong value in share due field", 
-				StubDataModel.INITIAL_SHARE_DUE.toPlainString(), 
+				model.getShareDue().toPlainString(), 
 	    		this.shareDueView.getText().toString());    	
-	    assertEquals("Wrong value for share due in data model", 
-	    		StubDataModel.INITIAL_SHARE_DUE, 
-	    		model.getShareDue());
 	}
 	
 	
