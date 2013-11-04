@@ -86,11 +86,11 @@ public class InitializationTests extends
     	mInstrumentation.waitForIdleSync();
 
         taxPercentEntryView = (EditText) mActivity.findViewById
-        	(com.itllp.tipOnDiscount.R.id.tax_percent_entry);
+        	(com.itllp.tipOnDiscount.R.id.defaults_tax_percent_entry);
         plannedTipPercentEntryView = (EditText) mActivity.findViewById
-			(com.itllp.tipOnDiscount.R.id.planned_tip_percent_entry);
+			(com.itllp.tipOnDiscount.R.id.defaults_planned_tip_percent_entry);
         roundUpToNearestSpinner = (Spinner)mActivity.findViewById
-        	(com.itllp.tipOnDiscount.R.id.round_up_to_nearest_spinner);
+        	(com.itllp.tipOnDiscount.R.id.defaults_round_up_to_nearest_spinner);
     }
     
     
@@ -134,7 +134,7 @@ public class InitializationTests extends
     
     private void verifyRoundUpToNearestSpinnerIsLoadedFromDefaults() {
         roundUpToNearestSpinner = (Spinner)mActivity.findViewById
-            	(com.itllp.tipOnDiscount.R.id.round_up_to_nearest_spinner);
+            	(com.itllp.tipOnDiscount.R.id.defaults_round_up_to_nearest_spinner);
     	String actualLabel = roundUpToNearestSpinner.getSelectedItem().
     			toString();
     	assertEquals("Incorrect default round up to nearest",

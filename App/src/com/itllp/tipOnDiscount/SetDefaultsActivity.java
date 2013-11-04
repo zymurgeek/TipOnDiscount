@@ -54,14 +54,14 @@ public class SetDefaultsActivity extends Activity {
         setContentView(R.layout.defaults);
 
         taxPercentEntry = (TextView)this.findViewById
-			(com.itllp.tipOnDiscount.R.id.tax_percent_entry);
+			(com.itllp.tipOnDiscount.R.id.defaults_tax_percent_entry);
         plannedTipPercentEntry = (TextView)this.findViewById
-			(com.itllp.tipOnDiscount.R.id.planned_tip_percent_entry);
+			(com.itllp.tipOnDiscount.R.id.defaults_planned_tip_percent_entry);
         map = new BigDecimalLabelMap(
         		getResources().getStringArray(R.array.round_up_to_nearest_value_array),
         		getResources().getStringArray(R.array.round_up_to_nearest_label_array));
         roundUpToNearestSpinner = (Spinner)this.findViewById
-			(com.itllp.tipOnDiscount.R.id.round_up_to_nearest_spinner);
+			(com.itllp.tipOnDiscount.R.id.defaults_round_up_to_nearest_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
         	this, R.array.round_up_to_nearest_label_array, 
         	android.R.layout.simple_spinner_item);
