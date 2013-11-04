@@ -45,4 +45,5 @@
 <string name="total_due_label">Total Due</string>
     <string name="set_defaults_name">Set Defaults</string>
     <string name="action_set_defaults">Set Defaults</string>
+    <string name="defaults_instructions">The values entered here will be applied when you create a new bill.\n\nThese defaults will be automatically saved when you leave this screen.</string>
 </resources>

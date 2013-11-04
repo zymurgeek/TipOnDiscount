@@ -26,8 +26,8 @@ import com.itllp.tipOnDiscount.defaults.persistence.DefaultsPersister;
 import com.itllp.tipOnDiscount.defaults.persistence.DefaultsPersisterFactory;
 import com.itllp.tipOnDiscount.util.BigDecimalLabelMap;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
@@ -35,7 +35,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 
-public class SetDefaultsActivity extends Activity {
+public class SetDefaultsActivity extends ActionBarActivity {
 
 	private TextView taxPercentEntry;
 	private TextView plannedTipPercentEntry;

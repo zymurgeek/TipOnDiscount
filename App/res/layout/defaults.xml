@@ -104,5 +104,27 @@
     />
 </RelativeLayout>
 
+<!-- Section break -->
+<RelativeLayout 
+	android:id="@+id/defaults_instructions_section_break_layout" 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="2sp"
+    android:layout_marginBottom="2sp">
+<View
+	android:layout_width="fill_parent"
+	android:layout_height="2dip"
+	android:background="#FF808080" 
+	/>
+</RelativeLayout>
+
+<!-- Instructions -->
+<TextView
+    android:id="@+id/defaults_instructions"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/defaults_instructions"
+    />
+
 </LinearLayout>
 </ScrollView>
