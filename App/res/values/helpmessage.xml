@@ -1,10 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-     <string name="help_title">Help!</string>
- 	<string name="help_message">\n
-  This is the help screen.\n
-  \n
-  \n
- </string>
- <string name="help_ok">OK</string>
+	<string name="help_title">Tip On Discount Help</string>
+	<string name="help_message">
+	    To calculate a tip, press the New icon (+) on the action 
+	    bar above.  Depending on your Android device, the soft keyboard 
+	    will pop up and you can enter the numbers from your bill, 
+ 	    moving between fields with the Next button on the keyboard.
+ 	    There\'s no Calculate button&#8212;all values are calculated as
+ 	    you enter them.
+ 	    \n
+ 	    \nThe Settings icon will let you enter defaults for tax
+ 	    percent, tip percent and rounding.  When you press the
+ 	    New icon, these defaults will be filled in for you.
+ 	    \n
+ 	    \nIf you normally pay with a credit card, leave rounding off.
+ 	    If you like to pay cash, set the rounding to an even amount,
+ 	    such as a dollar, and your total will be rounded up to the nearest
+ 	    dollar.  This way you won\'t have to wait for change.  When
+ 	    you use rounding, you can also use the bump buttons, which
+ 	    will raise or lower your amount due by the rounding amount.
+ 	    Look at the actual tip at the bottom to see how this works.
+ 	    \n
+ 	    \nLastly, if you\'re splitting a bill evenly, each party\'s 
+ 	    amount due will be rounded to the "round up to" amount.
+ 	</string>
+ 	<string name="help_ok">OK</string>
 </resources>
