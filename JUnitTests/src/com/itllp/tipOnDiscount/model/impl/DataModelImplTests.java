@@ -20,7 +20,7 @@ along with Tip On Discount.  If not, see <http://www.gnu.org/licenses/>.
  * This JUnit test harness verifies that the data model correctly
  * initializes, stores and calculates values.
  */
-package com.itllp.tipOnDiscount.modelimpl;
+package com.itllp.tipOnDiscount.model.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -35,6 +35,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import com.itllp.tipOnDiscount.model.DataModel;
+import com.itllp.tipOnDiscount.model.DataModelInitializer;
 import com.itllp.tipOnDiscount.model.impl.DataModelImpl;
 
 public class DataModelImplTests {
@@ -76,98 +77,14 @@ public class DataModelImplTests {
 	private BigDecimal ROUND_UP_TO_TWENTY_DOLLARS = new BigDecimal("20.00");
 	private BigDecimal ONE_CENT = new BigDecimal("0.01");
 	private BigDecimal ZERO_RATE = BigDecimal.ZERO.setScale(5);
-	private BigDecimal ZERO_AMOUNT = BigDecimal.ZERO.setScale(2);
-	private BigDecimal initialBillTotal = ZERO_AMOUNT;
-	private BigDecimal initialBillSubtotal = ZERO_AMOUNT;
-	private BigDecimal initialDiscount = ZERO_AMOUNT;
-	private BigDecimal initialTippableAmount = ZERO_AMOUNT;
-	private BigDecimal initialTaxAmount = ZERO_AMOUNT;
-	private BigDecimal initialTaxRate = ZERO_RATE;
-	private boolean initialIsUsingTaxRate = true;
-	private BigDecimal initialPlannedTipRate = FIFTEEN_PERCENT_RATE;
-	private BigDecimal initialPlannedTipAmount = ZERO_AMOUNT;
-	private int initialSplitBetween = 1;
-	private BigDecimal initialRoundUpToAmount = ONE_CENT;
-	private int initialBumps = 0;
-	private BigDecimal initialActualTipRate = ZERO_RATE;
-	private BigDecimal initialActualTipAmount = ZERO_AMOUNT;
-	private BigDecimal initialTotalDue = ZERO_AMOUNT;
-	private BigDecimal initialShareDue = ZERO_AMOUNT;
-	private BigDecimal expectedBillTotal = AMOUNT_10_00;
-	private BigDecimal expectedTaxRate = FIFTEEN_PERCENT_RATE;
-	private BigDecimal expectedTaxAmount = TAX_AMOUNT;
-	private BigDecimal expectedDiscount = AMOUNT_5_61;
-	private BigDecimal expectedTipRate = EIGHTEEN_PERCENT_RATE;
-	private BigDecimal expectedRoundTo = ROUND_UP_TO_DIME;
-	private int expectedSplits = 3;
-	private int expectedBumps = 2;
 	
 	@Before
 	public void setUp() {
 		model = new DataModelImpl();
+		DataModelInitializer dataModelInitializer = new SimpleDataModelInitializer();
+		dataModelInitializer.initialize(model, null);
 	}
 
-	/* Test the values fields have at start up. */
-	@Test 
-	public void testInitialization() {
-		// Verify postconditions
-		verifyDataModelContainsInitialValues();
-	}
-
-
-	/* Test the values fields have after the initialize function is called. */
-	@Test 
-	public void testInitializeMethod() {
-		// Set up preconditions
-		populateDataModel();
-		
-		// Call method under test
-		model.initialize();
-		
-		// Verify postconditions
-		verifyDataModelContainsInitialValues();
-	}
-
-	
-	private void verifyDataModelContainsInitialValues() {
-		assertEquals("Incorrect bill total", initialBillTotal, model.getBillTotal());
-		assertTrue("Incorrect using tax rate", initialIsUsingTaxRate == model.isUsingTaxRate());
-		assertEquals("Incorrect tax rate", initialTaxRate, model.getTaxRate());
-		assertEquals("Incorrect tax amount", initialTaxAmount, model.getTaxAmount());
-		assertEquals("Incorrect initial bill subtotal amount", 
-				initialBillSubtotal, model.getBillSubtotal());
-		assertEquals("Incorrect discount", initialDiscount, model.getDiscount());
-		assertEquals("Incorrect tippable amount", initialTippableAmount,
-				model.getTippableAmount());
-		assertEquals("Incorrect planned tip rate", initialPlannedTipRate, model.getPlannedTipRate());
-		assertEquals("Incorrect planned tip amount", initialPlannedTipAmount, 
-				model.getPlannedTipAmount());
-		assertEquals("Incorrect split between", initialSplitBetween, model.getSplitBetween());
-		assertEquals("Incorrect round up to", initialRoundUpToAmount, model.getRoundUpToAmount());
-		assertEquals("Incorrect bumps", initialBumps, model.getBumps());
-		assertEquals("Incorrect actual tip rate", initialActualTipRate,
-				model.getActualTipRate());
-		assertEquals("Incorrect actual tip amount", initialActualTipAmount,
-				model.getActualTipAmount());
-		assertEquals("Incorrect total due", initialTotalDue,
-				model.getTotalDue());
-		assertEquals("Incorrect share due", initialShareDue,
-				model.getShareDue());
-	}
-	
-	
-	private void populateDataModel() {
-		model.setBillTotal(expectedBillTotal);
-		model.setDiscount(expectedDiscount);
-		model.setPlannedTipRate(expectedTipRate);
-		model.setRoundUpToAmount(expectedRoundTo);
-		model.setSplitBetween(expectedSplits);
-		model.setTaxRate(expectedTaxRate);
-		model.setTaxAmount(expectedTaxAmount);
-		model.setBumps(expectedBumps);
-	}
-
-	
 	private BigDecimal calculateBillSubtotal
 	(BigDecimal billTotal, BigDecimal taxRate) {
 		BigDecimal taxRatio = taxRate.add(new BigDecimal("1"));

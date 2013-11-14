@@ -1,4 +1,4 @@
-// Copyright 2011-2012 David A. Greenbaum
+// Copyright 2011-2013 David A. Greenbaum
 /*
 This file is part of Tip On Discount.
 
@@ -41,7 +41,6 @@ import com.itllp.tipOnDiscount.model.update.TippableAmountUpdate;
 import com.itllp.tipOnDiscount.model.update.TotalDueUpdate;
 import com.itllp.tipOnDiscount.model.update.Update;
 import com.itllp.tipOnDiscount.model.update.UpdateSet;
-import com.itllp.tipOnDiscount.persistence.Persister;
 import com.itllp.tipOnDiscount.util.EqualsUtil;
 
 public class DataModelImpl implements DataModel {
@@ -49,7 +48,6 @@ public class DataModelImpl implements DataModel {
 	// TODO Support tip included, maybe with help screen advice
 
 	DataModelObservable observable = new DataModelObservable();
-	Persister persister;
 	/* 
 	 * The following data is calculated in the order it appears here.
 	 * When updating these items in the update methods, do not use a later 
@@ -75,25 +73,6 @@ public class DataModelImpl implements DataModel {
 	private BigDecimal actualTipAmount = BigDecimal.ZERO.setScale(2);
 	private BigDecimal actualTipRate = BigDecimal.ZERO.setScale(5);
 
-	
-	public DataModelImpl() {
-		initialize();
-	}
-	
-	
-	/* (non-Javadoc)
-	 * @see com.itllp.tipOnDiscount.model.DataModel#initialize()
-	 */
-	public void initialize() {
-		setRoundUpToAmount(new BigDecimal("0.01"));
-		setBillTotal(BigDecimal.ZERO.setScale(2));
-		setTaxRate(BigDecimal.ZERO.setScale(5)); // sets usingTaxRate=true
-		setDiscount(BigDecimal.ZERO.setScale(2));
-		setPlannedTipRate(new BigDecimal("0.15000"));
-		setSplitBetween(1);
-		setBumps(0);
-	}
-	
 	
 	public void addObserver(DataModelObserver observer) {
 		this.observable.addObserver(observer);

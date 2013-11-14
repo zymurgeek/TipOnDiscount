@@ -24,24 +24,24 @@ import com.itllp.tipOnDiscount.model.DataModel;
 import com.itllp.tipOnDiscount.model.DataModelObserver;
 
 public class StubDataModel extends Observable implements DataModel {
-	private BigDecimal actualTipAmount;
-	private BigDecimal actualTipRate;
-	private BigDecimal billSubtotal;
-	private BigDecimal billTotal;
-	private int bumpDownCallCount;
-	private int bumpUpCallCount;
-	private int bumps;
-	private BigDecimal discount;
-	private BigDecimal plannedTipAmount;
-	private BigDecimal plannedTipRate;
-	private BigDecimal roundUpToAmount;
-	private BigDecimal shareDue;
-	private int splitBetween;
-	private BigDecimal taxAmount;
-	private BigDecimal taxRate;
-	private BigDecimal tippableAmount;
-	private BigDecimal totalDue;
-	private boolean usingTaxRate;
+	private BigDecimal actualTipAmount = BigDecimal.ZERO;
+	private BigDecimal actualTipRate = BigDecimal.ZERO;
+	private BigDecimal billSubtotal = BigDecimal.ZERO;
+	private BigDecimal billTotal = BigDecimal.ZERO;
+	private int bumpDownCallCount = 0;
+	private int bumpUpCallCount = 0;
+	private int bumps = 0;
+	private BigDecimal discount = BigDecimal.ZERO;
+	private BigDecimal plannedTipAmount = BigDecimal.ZERO;
+	private BigDecimal plannedTipRate = BigDecimal.ZERO;
+	private BigDecimal roundUpToAmount = BigDecimal.ZERO;
+	private BigDecimal shareDue = BigDecimal.ZERO;
+	private int splitBetween = 1;
+	private BigDecimal taxAmount = BigDecimal.ZERO;
+	private BigDecimal taxRate = BigDecimal.ZERO;
+	private BigDecimal tippableAmount = BigDecimal.ZERO;
+	private BigDecimal totalDue = BigDecimal.ZERO;
+	private boolean usingTaxRate = false;
 	public static final BigDecimal INITIAL_ACTUAL_TIP_AMOUNT = new BigDecimal("1.23");
 	public static final BigDecimal INITIAL_ACTUAL_TIP_RATE = new BigDecimal("0.1234");
 	public static final BigDecimal INITIAL_BILL_SUBTOTAL = new BigDecimal("2.34");
@@ -59,9 +59,25 @@ public class StubDataModel extends Observable implements DataModel {
 	public static final BigDecimal INITIAL_TOTAL_DUE = new BigDecimal("12.34");
 	public static final boolean INITIAL_USING_TAX_RATE = true;
 	
-	
 	public StubDataModel() {
-		initialize();
+		actualTipAmount = INITIAL_ACTUAL_TIP_AMOUNT;
+		actualTipRate = INITIAL_ACTUAL_TIP_RATE;
+		billSubtotal = INITIAL_BILL_SUBTOTAL;
+		billTotal = INITIAL_BILL_TOTAL;
+		bumpDownCallCount = 0;
+		bumpUpCallCount = 0;
+		bumps = INITIAL_BUMPS;
+		discount = INITIAL_DISCOUNT;
+		plannedTipAmount = INITIAL_PLANNED_TIP_AMOUNT;
+		plannedTipRate = INITIAL_PLANNED_TIP_RATE;
+		roundUpToAmount = INITIAL_ROUND_UP_TO_AMOUNT;
+		shareDue = INITIAL_SHARE_DUE;
+		splitBetween = INITIAL_SPLIT_BETWEEN;
+		taxAmount = INITIAL_TAX_AMOUNT;
+		taxRate = INITIAL_TAX_RATE;
+		tippableAmount = INITIAL_TIPPABLE_AMOUNT;
+		totalDue = INITIAL_TOTAL_DUE;
+		usingTaxRate = INITIAL_USING_TAX_RATE;
 	}
 	
 	@Override
@@ -144,27 +160,6 @@ public class StubDataModel extends Observable implements DataModel {
 
 	public BigDecimal getTotalDue() {
 		return this.totalDue;
-	}
-
-	public void initialize() {
-		actualTipAmount = INITIAL_ACTUAL_TIP_AMOUNT;
-		actualTipRate = INITIAL_ACTUAL_TIP_RATE;
-		billSubtotal = INITIAL_BILL_SUBTOTAL;
-		billTotal = INITIAL_BILL_TOTAL;
-		bumpDownCallCount = 0;
-		bumpUpCallCount = 0;
-		bumps = INITIAL_BUMPS;
-		discount = INITIAL_DISCOUNT;
-		plannedTipAmount = INITIAL_PLANNED_TIP_AMOUNT;
-		plannedTipRate = INITIAL_PLANNED_TIP_RATE;
-		roundUpToAmount = INITIAL_ROUND_UP_TO_AMOUNT;
-		shareDue = INITIAL_SHARE_DUE;
-		splitBetween = INITIAL_SPLIT_BETWEEN;
-		taxAmount = INITIAL_TAX_AMOUNT;
-		taxRate = INITIAL_TAX_RATE;
-		tippableAmount = INITIAL_TIPPABLE_AMOUNT;
-		totalDue = INITIAL_TOTAL_DUE;
-		usingTaxRate = INITIAL_USING_TAX_RATE;
 	}
 
 	public boolean isUsingTaxRate() {

@@ -59,7 +59,6 @@ public class DisplayOnlyFieldTests extends
 		replace(currency.getSymbol(), "");
 	String zeroPercentString = null;
 	BigDecimal ZERO = new BigDecimal("0.00");
-	// TODO pull up common stuff into BaseTest class
 	private Instrumentation mInstrumentation;
     private TipOnDiscount mActivity;
     private TextView billSubtotalView;

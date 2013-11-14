@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" 
     xmlns:tod="http://schemas.android.com/apk/res-auto" >
-    <!-- Search, should appear as action button -->
+
     <item android:id="@+id/action_new"
-          android:icon="@drawable/ic_action_new"
+          android:icon="@drawable/ic_5_content_new"
           android:title="@string/action_new"
           tod:showAsAction="ifRoom" />
+    
+    <item android:id="@+id/action_set_defaults"
+          android:icon="@drawable/ic_2_action_settings"
+          android:title="@string/action_set_defaults"
+          tod:showAsAction="ifRoom" />
+    
+    <item android:id="@+id/action_help"
+        android:icon="@drawable/ic_2_action_help"
+        android:title="@string/action_help"
+        tod:showAsAction="ifRoom" />
 </menu>

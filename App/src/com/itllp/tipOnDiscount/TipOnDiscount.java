@@ -1,4 +1,4 @@
-// Copyright 2011-2012 David A. Greenbaum
+// Copyright 2011-2013 David A. Greenbaum
 /*
 This file is part of Tip On Discount.
 
@@ -20,11 +20,11 @@ package com.itllp.tipOnDiscount;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map.Entry;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
@@ -36,6 +36,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.View.OnFocusChangeListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -45,6 +46,8 @@ import android.widget.AdapterView.OnItemSelectedListener;
 
 import com.itllp.tipOnDiscount.model.DataModel;
 import com.itllp.tipOnDiscount.model.DataModelFactory;
+import com.itllp.tipOnDiscount.model.DataModelInitializer;
+import com.itllp.tipOnDiscount.model.DataModelInitializerFactory;
 import com.itllp.tipOnDiscount.model.DataModelObserver;
 import com.itllp.tipOnDiscount.model.persistence.DataModelPersister;
 import com.itllp.tipOnDiscount.model.persistence.DataModelPersisterFactory;
@@ -64,15 +67,11 @@ import com.itllp.tipOnDiscount.model.update.PlannedTipAmountUpdate;
 import com.itllp.tipOnDiscount.model.update.TippableAmountUpdate;
 import com.itllp.tipOnDiscount.model.update.TotalDueUpdate;
 import com.itllp.tipOnDiscount.model.update.Update;
-import com.itllp.tipOnDiscount.persistence.Persister;
-import com.itllp.tipOnDiscount.persistence.PersisterFactory;
-
-// TODO Set defaults for TIP%, Tax and Rounding
+import com.itllp.tipOnDiscount.util.BigDecimalLabelMap;
 
 public class TipOnDiscount extends ActionBarActivity implements DataModelObserver {
 	private DataModel dataModel;
 	private DataModelPersister dataModelPersister;
-	private Persister persister;
 	private TextView billTotalEntry;
 	private TextView billSubtotalText;
 	private TextView bumpsText;
@@ -84,17 +83,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 	private TextView tipAmountText;
 	private TextView splitBetweenEntry;
 	private Spinner roundUpToNearestSpinner;
-	private HashMap<String, BigDecimal> roundUpToNearestValues;
-	private BigDecimal pennyValue = new BigDecimal("0.01");
-	private BigDecimal nickelValue = new BigDecimal("0.05");
-	private BigDecimal dimeValue = new BigDecimal("0.10");
-	private BigDecimal quarterValue = new BigDecimal("0.25");
-	private BigDecimal halfDollarValue = new BigDecimal("0.50");
-	private BigDecimal oneDollarValue = new BigDecimal("1.00");
-	private BigDecimal twoDollarValue = new BigDecimal("2.00");
-	private BigDecimal fiveDollarValue = new BigDecimal("5.00");
-	private BigDecimal tenDollarValue = new BigDecimal("10.00");
-	private BigDecimal twentyDollarValue = new BigDecimal("20.00");
+	BigDecimalLabelMap spinnerMap;
 	private Button bumpDownButton;
 	private Button bumpUpButton;
 	private TextView actualTipAmountText;
@@ -236,7 +225,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 		public void onItemSelected(AdapterView<?> parent, View arg1, int pos,
 			long id) {
 			String key = parent.getItemAtPosition(pos).toString();
-			BigDecimal amount = roundUpToNearestValues.get(key);
+			BigDecimal amount = spinnerMap.getValue(key);
 			dataModel.setRoundUpToAmount(amount);
 		}
 
@@ -264,9 +253,14 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
         Window window = getWindow();  
         window.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
 
+        String[] valueStringArray = getResources().getStringArray
+        		(com.itllp.tipOnDiscount.R.array.round_up_to_nearest_value_array);
+        String[] labelArray = getResources().getStringArray
+        		(com.itllp.tipOnDiscount.R.array.round_up_to_nearest_label_array);
+		spinnerMap = new BigDecimalLabelMap(valueStringArray, labelArray);
+
         dataModel = DataModelFactory.getDataModel();
         dataModelPersister = DataModelPersisterFactory.getDataModelPersister();
-        persister = PersisterFactory.getPersister();
         
         setContentView(R.layout.main);
 
@@ -317,24 +311,12 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
         		(splitBetweenEntry));
         splitBetweenEntry.setOnFocusChangeListener(focusChangeListener);
 
-        roundUpToNearestValues = new HashMap<String, BigDecimal>();
-        //TODO Use strings.xml for these values
-        roundUpToNearestValues.put("None", this.pennyValue);
-        roundUpToNearestValues.put("Nickel", this.nickelValue);
-        roundUpToNearestValues.put("Dime", this.dimeValue);
-        roundUpToNearestValues.put("Quarter", this.quarterValue);
-        roundUpToNearestValues.put("Half Dollar", this.halfDollarValue);
-        roundUpToNearestValues.put("$1", this.oneDollarValue);
-        roundUpToNearestValues.put("$2", this.twoDollarValue);
-        roundUpToNearestValues.put("$5", this.fiveDollarValue);
-        roundUpToNearestValues.put("$10", this.tenDollarValue);
-        roundUpToNearestValues.put("$20", this.twentyDollarValue);
-
         roundUpToNearestSpinner = (Spinner)this.findViewById
 			(com.itllp.tipOnDiscount.R.id.round_up_to_nearest_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-        	this, R.array.round_up_to_nearest_array, 
-        	android.R.layout.simple_spinner_item);
+        	this, R.array.round_up_to_nearest_label_array, 
+        	R.layout.spinnertext);
+        // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         roundUpToNearestSpinner.setAdapter(adapter);
         roundUpToNearestSpinner.setOnItemSelectedListener
@@ -387,26 +369,48 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
             case R.id.action_new:
                 openNew();
                 return true;
+            case R.id.action_set_defaults:
+            	startSetDefaults();
+            	return true;
+            case R.id.action_help:
+            	openHelp();
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
     
+    
+    public void openHelp() {
+    	 new AlertDialog.Builder(this)
+    	  .setTitle(R.string.help_title)
+    	  .setMessage(R.string.help_message)
+    	  .setPositiveButton(R.string.help_ok,
+    			  new DialogInterface.OnClickListener() {
+    		  @Override
+    		  public void onClick(DialogInterface dialog, int which) {}
+    	  }
+    			  )
+    			  .show();
+    }
+    
+    
     public void openNew() {
     	reset();
-    	//TODO Set focus to bill total entry and activate soft keyboard
-    	/*
-       	billTotalEntry.requestFocus();
-    	billTotalEntry.post(new Runnable() {
-            @Override
-            public void run() {
-            	// Open the soft keyboard
-            	InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.showSoftInput(billTotalEntry, InputMethodManager.SHOW_IMPLICIT);
-            }
-        });
-        */
+
+    	setFocusToBillTotalClearFieldAndOpenSoftKeyboard();
     }
+
+	private void setFocusToBillTotalClearFieldAndOpenSoftKeyboard() {
+		billTotalEntry.requestFocus();
+		billTotalEntry.setText("");
+		openSoftKeyboardIfApplicable();
+	}
+
+	private void openSoftKeyboardIfApplicable() {
+		InputMethodManager imm = (InputMethodManager) getSystemService
+				(Context.INPUT_METHOD_SERVICE);
+		imm.showSoftInput(billTotalEntry, InputMethodManager.SHOW_FORCED);
+	}
     
     
     /**
@@ -523,7 +527,9 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 	 * all fields in the UI.
 	 */
 	public void reset() {
-		this.dataModel.initialize();
+		DataModelInitializer initializer = 
+				DataModelInitializerFactory.getDataModelInitializer();
+		initializer.initialize(dataModel, this);
 		this.updateAllFields();
 	}
 	
@@ -534,7 +540,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
      * @param context - The Activity's Context
      */
     public void restoreInstanceState(Context context) {
-    	dataModelPersister.restoreState(dataModel, persister, context);
+    	dataModelPersister.restoreState(dataModel, context);
         updateAllFields();
     }
 
@@ -838,9 +844,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 
 	
 	/**
-	 * Updates the value in the Round Up To Nearest spinner.  This does not
-	 * get changed by any means other than user input, so there's no
-	 * update notification.
+	 * Updates the value in the Round Up To Nearest spinner.
 	 */
 	private void updateRoundUpToNearestEntry(RoundUpToNearestUpdate update) {
 		BigDecimal roundUpToAmount;
@@ -850,21 +854,9 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
 			roundUpToAmount = update.getAmount();
 		}
 		
-		Iterator<Entry<String, BigDecimal>> iterator 
-			= roundUpToNearestValues.entrySet().iterator();
-		Entry<String, BigDecimal> entry;
-		String selection = "";
-        while(iterator.hasNext()){        
-            entry = iterator.next();
-            BigDecimal value = entry.getValue();
-            if (value.equals(roundUpToAmount)) {
-            	selection = entry.getKey();
-            }
-        }
-        
-        int position;
+		String selection = spinnerMap.getLabel(roundUpToAmount);
         int itemCount = roundUpToNearestSpinner.getCount();
-        for (position=0; position<itemCount; ++position) {
+        for (int position=0; position<itemCount; ++position) {
         	if (roundUpToNearestSpinner.getItemAtPosition(position)
         			.equals(selection)) {
         		roundUpToNearestSpinner.setSelection(position);
@@ -879,8 +871,13 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
      *
      */
     public void saveInstanceState(Context context) {
-    	dataModelPersister.saveState(dataModel, persister, context);
+    	dataModelPersister.saveState(dataModel, context);
     }
+
+	public void startSetDefaults() {
+		Intent intent = new Intent(this, SetDefaultsActivity.class);
+		startActivity(intent);
+	}
 
 	
 }

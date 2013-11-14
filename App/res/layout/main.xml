@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true" >
+	
+<LinearLayout
 	android:id="@+id/tip_on_discount_layout" 
-	android:layout_height="fill_parent" 
+	android:layout_height="wrap_content" 
 	android:layout_width="fill_parent" 
 	android:orientation="vertical"
 	>
@@ -15,6 +19,7 @@
     >
 <TextView
 	android:id="@+id/bill_total_label"
+	android:textSize="@dimen/textSize"
     android:layout_width="wrap_content" 
     android:layout_height="wrap_content" 
     android:layout_alignParentLeft="true"
@@ -23,6 +28,7 @@
     />
 <TextView
 	android:id="@+id/bill_total_currency_symbol_label"
+	android:textSize="@dimen/textSize"
     android:layout_width="wrap_content" 
     android:layout_height="wrap_content"
     android:layout_toLeftOf="@+id/bill_total_entry"
@@ -31,15 +37,16 @@
     />
 <EditText
 	android:id="@+id/bill_total_entry"
+	android:textSize="@dimen/textSize"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
     android:layout_alignParentRight="true"
-	android:layout_marginRight="10sp"
-	android:background="@android:drawable/editbox_background" 
 	android:inputType="number|numberDecimal"
 	android:gravity="right" 
 	android:selectAllOnFocus="true"
-	android:textColor="#000000"/>
+	android:nextFocusDown="@+id/tax_percent_entry"
+	android:nextFocusForward="@+id/tax_percent_entry"
+	/>
 </RelativeLayout>
 
 <!-- TAX -->
@@ -50,6 +57,7 @@
     >
 <TextView 
 	android:id="@+id/tax_label" 
+	android:textSize="@dimen/textSize"
 	android:layout_height="wrap_content" 
 	android:layout_width="wrap_content" 
 	android:layout_alignParentLeft="true" 
@@ -58,16 +66,19 @@
 	/>
 <EditText
 	android:id="@+id/tax_percent_entry"
+	android:textSize="@dimen/textSize"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
 	android:layout_centerHorizontal="true"
-	android:background="@android:drawable/editbox_background" 
 	android:inputType="number|numberDecimal"
 	android:gravity="right"
 	android:selectAllOnFocus="true"
-	android:textColor="#000000"/>
+	android:nextFocusDown="@+id/tax_amount_entry"
+	android:nextFocusUp="@+id/tax_amount_entry"
+	/>
 <TextView
 	android:id="@+id/percent_symbol_label"
+	android:textSize="@dimen/textSize"
     android:layout_width="wrap_content" 
     android:layout_height="wrap_content"
     android:layout_toRightOf="@+id/tax_percent_entry" 
@@ -76,6 +87,7 @@
     />
 <TextView
 	android:id="@+id/tax_currency_symbol_label"
+	android:textSize="@dimen/textSize"
     android:layout_width="wrap_content" 
     android:layout_height="wrap_content"
     android:layout_toLeftOf="@+id/tax_amount_entry"
@@ -84,15 +96,14 @@
     />
 <EditText
 	android:id="@+id/tax_amount_entry"
+	android:textSize="@dimen/textSize"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
     android:layout_alignParentRight="true"
-	android:layout_marginRight="10sp"
-	android:background="@android:drawable/editbox_background" 
 	android:inputType="number|numberDecimal" 
 	android:gravity="right"
 	android:selectAllOnFocus="true"
-	android:textColor="#000000"/>
+	/>
 </RelativeLayout>
 
 <!-- BILL SUBTOTAL -->
@@ -103,6 +114,7 @@
     >
 <TextView
 	android:id="@+id/bill_subtotal_label"
+	android:textSize="@dimen/textSize"
     android:layout_width="wrap_content" 
     android:layout_height="wrap_content" 
     android:layout_alignParentLeft="true"
@@ -111,6 +123,7 @@
     />
 <TextView
 	android:id="@+id/bill_subtotal_currency_symbol_label"
+	android:textSize="@dimen/textSize"
     android:layout_width="wrap_content" 
     android:layout_height="wrap_content"
     android:layout_toLeftOf="@+id/bill_subtotal_text"
@@ -119,6 +132,7 @@
     />
 <TextView
 	android:id="@+id/bill_subtotal_text"
+	android:textSize="@dimen/textSize"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
     android:layout_alignParentRight="true"
@@ -136,6 +150,7 @@
     >
 <TextView 
 	android:id="@+id/discount_label" 
+	android:textSize="@dimen/textSize"
 	android:layout_height="wrap_content" 
 	android:layout_width="wrap_content" 
 	android:layout_alignParentLeft="true" 
@@ -144,6 +159,7 @@
 	/>
 <TextView
 	android:id="@+id/discount_currency_symbol_label"
+	android:textSize="@dimen/textSize"
     android:layout_width="wrap_content" 
     android:layout_height="wrap_content"
     android:layout_toLeftOf="@+id/discount_entry"
@@ -152,15 +168,16 @@
     />
 <EditText
 	android:id="@+id/discount_entry"
+	android:textSize="@dimen/textSize"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
     android:layout_alignParentRight="true"
-	android:layout_marginRight="10sp"
-	android:background="@android:drawable/editbox_background" 
 	android:inputType="number|numberDecimal"
 	android:gravity="right"
 	android:selectAllOnFocus="true"
-	android:textColor="#000000"/>
+	android:nextFocusDown="@+id/planned_tip_percent_entry"
+	android:nextFocusForward="@+id/planned_tip_percent_entry"
+	/>
 </RelativeLayout>
 
 <!-- BILL INFO SECTION BREAK -->
@@ -185,6 +202,7 @@
     >
 <TextView
 	android:id="@+id/tippable_amount_label"
+	android:textSize="@dimen/textSize"
     android:layout_width="wrap_content" 
     android:layout_height="wrap_content" 
     android:layout_alignParentLeft="true"
@@ -193,6 +211,7 @@
     />
 <TextView
 	android:id="@+id/tippable_currency_symbol_label"
+	android:textSize="@dimen/textSize"
     android:layout_width="wrap_content" 
     android:layout_height="wrap_content"
     android:layout_toLeftOf="@+id/tippable_amount_text"
@@ -201,6 +220,7 @@
     />
 <TextView
 	android:id="@+id/tippable_amount_text"
+	android:textSize="@dimen/textSize"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
     android:layout_alignParentRight="true"
@@ -218,6 +238,7 @@
     >
 <TextView 
 	android:id="@+id/planned_tip_label" 
+	android:textSize="@dimen/textSize"
 	android:layout_height="wrap_content" 
 	android:layout_width="wrap_content" 
 	android:layout_alignParentLeft="true" 
@@ -226,16 +247,17 @@
 	/>
 <EditText
 	android:id="@+id/planned_tip_percent_entry"
+	android:textSize="@dimen/textSize"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
 	android:layout_centerHorizontal="true"
-	android:background="@android:drawable/editbox_background" 
 	android:inputType="number|numberDecimal"
 	android:gravity="right"
 	android:selectAllOnFocus="true"
-	android:textColor="#000000"/>
+	/>
 <TextView
 	android:id="@+id/planned_tip_percent_entry_label"
+	android:textSize="@dimen/textSize"
     android:layout_width="wrap_content" 
     android:layout_height="wrap_content"
     android:layout_alignBaseline="@+id/planned_tip_percent_entry"
@@ -244,6 +266,7 @@
     />
 <TextView
 	android:id="@+id/planned_tip_currency_symbol_label"
+	android:textSize="@dimen/textSize"
     android:layout_width="wrap_content" 
     android:layout_height="wrap_content"
     android:layout_toLeftOf="@+id/planned_tip_amount_text"
@@ -252,6 +275,7 @@
     />
 <TextView
 	android:id="@+id/planned_tip_amount_text"
+	android:textSize="@dimen/textSize"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
 	android:layout_alignParentRight="true"
@@ -278,11 +302,13 @@
 <!-- SPLIT BETWEEN -->
 <RelativeLayout 
 	android:id="@+id/split_between_tip_layout" 
+	android:textSize="@dimen/textSize"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     >
 <TextView 
 	android:id="@+id/split_between_label" 
+	android:textSize="@dimen/textSize"
 	android:layout_height="wrap_content" 
 	android:layout_width="wrap_content" 
 	android:layout_alignParentLeft="true" 
@@ -291,15 +317,15 @@
 	/>
 <EditText
 	android:id="@+id/split_between_entry"
+	android:textSize="@dimen/textSize"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
     android:layout_alignParentRight="true"
-	android:layout_marginRight="10sp"
-	android:background="@android:drawable/editbox_background" 
     android:text="@string/zero"
 	android:gravity="right"
 	android:inputType="number|numberDecimal"
-	android:textColor="#000000"/>
+	android:selectAllOnFocus="true"
+	/>
 </RelativeLayout>
 
 <!-- ROUND UP TO AMOUNT -->
@@ -310,20 +336,26 @@
     >
 <TextView
 	android:id="@+id/round_up_to_nearest_label"
+	android:textSize="@dimen/textSize"
     android:layout_width="wrap_content" 
     android:layout_height="wrap_content" 
     android:layout_alignParentLeft="true"
     android:layout_alignBaseline="@+id/round_up_to_nearest_spinner"
     android:text="@string/round_up_to_nearest_text"
     />
-<Spinner 
-	android:id="@+id/round_up_to_nearest_spinner"
-	android:layout_width="wrap_content"
-	android:layout_height="wrap_content"
+
+<Spinner
+    android:id="@+id/round_up_to_nearest_spinner"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:layout_alignParentRight="true"
-	android:layout_marginRight="10sp"
-	android:prompt="@string/round_up_to_nearest_text"
+    android:layout_toRightOf="@+id/round_up_to_nearest_label"
+    android:layout_marginLeft="10sp"
+    android:gravity="right"
+    android:prompt="@string/round_up_to_nearest_text"
+    android:textSize="@dimen/textSize"
     />
+
 </RelativeLayout>
 
 <!-- BUMP UP/DOWN -->
@@ -334,6 +366,7 @@
     >
 <Button 
 	android:id="@+id/bump_down_button" 
+	android:textSize="@dimen/textSize"
 	android:layout_alignParentLeft="true" 
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content" 
@@ -341,6 +374,7 @@
 	/>
 <TextView
 	android:id="@+id/bumps_text"
+	android:textSize="@dimen/textSize"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
     android:text="@string/zero"
@@ -348,6 +382,7 @@
 	android:layout_centerHorizontal="true" android:layout_centerVertical="true" android:layout_centerInParent="true"/>
 <Button 
 	android:id="@+id/bump_up_button" 
+	android:textSize="@dimen/textSize"
 	android:layout_alignParentRight="true" 
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content" 
@@ -377,6 +412,7 @@
     >
 <TextView 
 	android:id="@+id/actual_tip_label" 
+	android:textSize="@dimen/textSize"
 	android:layout_height="wrap_content" 
 	android:layout_width="wrap_content" 
 	android:layout_alignParentLeft="true" 
@@ -384,6 +420,7 @@
 	/>
 <TextView
 	android:id="@+id/actual_tip_percent_text"
+	android:textSize="@dimen/textSize"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
 	android:layout_centerHorizontal="true"
@@ -391,6 +428,7 @@
 	/>
 <TextView
 	android:id="@+id/actual_tip_percent_text_label"
+	android:textSize="@dimen/textSize"
     android:layout_width="wrap_content" 
     android:layout_height="wrap_content"
     android:layout_alignBaseline="@+id/actual_tip_percent_text"
@@ -399,6 +437,7 @@
     />
 <TextView
 	android:id="@+id/actual_tip_currency_symbol_label"
+	android:textSize="@dimen/textSize"
     android:layout_width="wrap_content" 
     android:layout_height="wrap_content"
     android:layout_toLeftOf="@+id/actual_tip_amount_text"
@@ -407,6 +446,7 @@
     />
 <TextView
 	android:id="@+id/actual_tip_amount_text"
+	android:textSize="@dimen/textSize"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
     android:layout_alignParentRight="true"
@@ -424,6 +464,7 @@
     >
 <TextView 
 	android:id="@+id/total_due_label" 
+	android:textSize="@dimen/textSize"
 	android:layout_height="wrap_content" 
 	android:layout_width="wrap_content" 
 	android:layout_alignParentLeft="true" 
@@ -432,6 +473,7 @@
 	/>
 <TextView
 	android:id="@+id/total_due_currency_symbol_label"
+	android:textSize="@dimen/textSize"
     android:layout_width="wrap_content" 
     android:layout_height="wrap_content"
     android:layout_toLeftOf="@+id/total_due_text"
@@ -440,6 +482,7 @@
     />
 <TextView
 	android:id="@+id/total_due_text"
+	android:textSize="@dimen/textSize"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
     android:layout_alignParentRight="true"
@@ -457,6 +500,7 @@
     >
 <TextView 
 	android:id="@+id/share_due_label" 
+	android:textSize="@dimen/textSize"
 	android:layout_height="wrap_content" 
 	android:layout_width="wrap_content" 
 	android:layout_alignParentLeft="true" 
@@ -465,6 +509,7 @@
 	/>
 <TextView
 	android:id="@+id/share_due_currency_symbol_label"
+	android:textSize="@dimen/textSize"
     android:layout_width="wrap_content" 
     android:layout_height="wrap_content"
     android:layout_toLeftOf="@+id/share_due_text"
@@ -473,6 +518,7 @@
     />
 <TextView
 	android:id="@+id/share_due_text"
+	android:textSize="@dimen/textSize"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
     android:layout_alignParentRight="true"
@@ -484,3 +530,4 @@
 
 
 </LinearLayout>
+</ScrollView>

@@ -25,6 +25,7 @@ public class PreferencesFilePersister implements Persister {
 				this.preferencesFileName, 
 				android.content.Context.MODE_PRIVATE);
 		editor = prefs.edit();
+		editor.clear();
 	}
 
 	@Override
@@ -96,6 +97,7 @@ public class PreferencesFilePersister implements Persister {
 	}
 
 	
+	@Override
 	public Boolean retrieveBoolean(Context context, String key) {
 		SharedPreferences prefs =
 				context.getSharedPreferences(

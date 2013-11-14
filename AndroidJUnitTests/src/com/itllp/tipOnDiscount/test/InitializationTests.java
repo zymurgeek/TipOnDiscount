@@ -17,7 +17,6 @@ along with Tip On Discount.  If not, see <http://www.gnu.org/licenses/>.
 */
 package com.itllp.tipOnDiscount.test;
 
-import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Currency;
 import android.app.Instrumentation;
@@ -29,9 +28,12 @@ import android.widget.TextView;
 import com.itllp.tipOnDiscount.TipOnDiscount;
 import com.itllp.tipOnDiscount.model.DataModel;
 import com.itllp.tipOnDiscount.model.DataModelFactory;
+import com.itllp.tipOnDiscount.model.DataModelInitializerFactory;
 import com.itllp.tipOnDiscount.model.persistence.DataModelPersisterFactory;
 import com.itllp.tipOnDiscount.model.persistence.test.StubDataModelPersister;
 import com.itllp.tipOnDiscount.model.test.StubDataModel;
+import com.itllp.tipOnDiscount.model.test.StubDataModelInitializer;
+import com.itllp.tipOnDiscount.util.BigDecimalLabelMap;
 
 /* These tests cover the initial values displayed in each field.
  * 
@@ -71,6 +73,7 @@ public class InitializationTests extends
     private TextView actualTipPercentTextView;
     private TextView totalDueTextView;
     private DataModel dataModel;
+    private StubDataModelInitializer stubDataModelInitializer;
     
     
 	public InitializationTests() {
@@ -87,6 +90,9 @@ public class InitializationTests extends
     protected void setUp() throws Exception {
         super.setUp();
         
+        stubDataModelInitializer = new StubDataModelInitializer();
+        DataModelInitializerFactory.setDataModelInitializer(stubDataModelInitializer);
+
         mInstrumentation = getInstrumentation();
         mActivity = this.getActivity();
 
@@ -144,6 +150,12 @@ public class InitializationTests extends
     	dataModel = DataModelFactory.getDataModel();
     }
 
+    
+    public void testDataModelInitialization() {
+    	// Verify postconditions
+    	assertTrue("Data model was not initialized", stubDataModelInitializer.
+    			stub_wasInitializeCalled());
+    }
     
     public void testInitialBillTotal() {
         assertEquals("Incorrect currency format", 
@@ -230,16 +242,19 @@ public class InitializationTests extends
 
     
     public void testInitialRoundUpToNearest() {
-    	//TODO replace constants
-    	/* This field is a spinner with None, Nickel, Dime,
-    	Quarter, Half Dollar, $1, $2, $5, $10, $20. */
+    	// Set up preconditions
+		String[] valueArray = mActivity.getResources().getStringArray
+				(com.itllp.tipOnDiscount.R.array.round_up_to_nearest_value_array);
+		String[] labelArray = mActivity.getResources().getStringArray
+				(com.itllp.tipOnDiscount.R.array.round_up_to_nearest_label_array);
+		BigDecimalLabelMap map = new BigDecimalLabelMap(valueArray, labelArray);
+		String expectedLabel = map.getLabel(StubDataModel.INITIAL_ROUND_UP_TO_AMOUNT);
+
+		// Verify postconditions
     	String selectedItem
     		= roundUpToNearestSpinner.getSelectedItem().toString();
-    	assertTrue("Initial value of round up to has changed",
-    			0==StubDataModel.INITIAL_ROUND_UP_TO_AMOUNT.compareTo(
-    					new BigDecimal("2.00")));
         assertEquals("Incorrect initial value of Round Up To Nearest", 
-        		"$2", selectedItem);    	
+        		expectedLabel, selectedItem);    	
     }
 
     

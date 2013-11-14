@@ -27,27 +27,34 @@ import com.itllp.tipOnDiscount.model.persistence.DataModelPersister;
 import com.itllp.tipOnDiscount.persistence.Persister;
 
 public class DataModelPersisterImpl implements DataModelPersister {
+	private Persister persister;
+	
+	public DataModelPersisterImpl(Persister persister) {
+		this.persister = persister;
+	}
+
+
 	/* (non-Javadoc)
 	 * @see com.itllp.tipOnDiscount.model.persistence.impl.DataModelPersister#saveState(com.itllp.tipOnDiscount.model.DataModel, com.itllp.tipOnDiscount.persistence.Persister, android.content.Context)
 	 */
 	@Override
-	public void saveState(DataModel model, Persister persister, Context context) {
+	public void saveState(DataModel model, Context context) {
 		persister.beginSave(context);
 		try {
-			persister.save(DataModel.BILL_TOTAL_KEY, model.getBillTotal());
+			persister.save(DataModelPersister.BILL_TOTAL_KEY, model.getBillTotal());
 			if (model.isUsingTaxRate()) {
-				persister.save(DataModel.TAX_RATE_KEY, model.getTaxRate());
+				persister.save(DataModelPersister.TAX_RATE_KEY, model.getTaxRate());
 			} else {
-				persister.save(DataModel.TAX_AMOUNT_KEY, model.getTaxAmount());
+				persister.save(DataModelPersister.TAX_AMOUNT_KEY, model.getTaxAmount());
 			}
-			persister.save(DataModel.DISCOUNT_KEY, model.getDiscount());
-			persister.save(DataModel.PLANNED_TIP_RATE_KEY, 
+			persister.save(DataModelPersister.DISCOUNT_KEY, model.getDiscount());
+			persister.save(DataModelPersister.PLANNED_TIP_RATE_KEY, 
 					model.getPlannedTipRate());
-			persister.save(DataModel.SPLIT_BETWEEN_KEY, 
+			persister.save(DataModelPersister.SPLIT_BETWEEN_KEY, 
 					model.getSplitBetween());
-			persister.save(DataModel.ROUND_UP_TO_NEAREST_AMOUNT, 
+			persister.save(DataModelPersister.ROUND_UP_TO_NEAREST_AMOUNT_KEY, 
 					model.getRoundUpToAmount());
-			persister.save(DataModel.BUMPS_KEY, model.getBumps());
+			persister.save(DataModelPersister.BUMPS_KEY, model.getBumps());
 			persister.endSave();
 		} catch (Exception e) {
 			Toast.makeText(context,
@@ -60,53 +67,52 @@ public class DataModelPersisterImpl implements DataModelPersister {
 	 * @see com.itllp.tipOnDiscount.model.persistence.impl.DataModelPersister#restoreState(com.itllp.tipOnDiscount.model.DataModel, com.itllp.tipOnDiscount.persistence.Persister, android.content.Context)
 	 */
 	@Override
-	public void restoreState(DataModel dataModel, Persister persister,
-			Context context) {
+	public void restoreState(DataModel dataModel, Context context) {
 		
 		BigDecimal billTotal = persister.retrieveBigDecimal(context, 
-				DataModel.BILL_TOTAL_KEY);
+				DataModelPersister.BILL_TOTAL_KEY);
 		if (null != billTotal) {
 			dataModel.setBillTotal(billTotal);
 		}
 		
 		BigDecimal taxRate = persister.retrieveBigDecimal(context, 
-				DataModel.TAX_RATE_KEY);
+				DataModelPersister.TAX_RATE_KEY);
 		if (null != taxRate) {
 			dataModel.setTaxRate(taxRate);
 		}
 		
 		BigDecimal taxAmount = persister.retrieveBigDecimal(context, 
-				DataModel.TAX_AMOUNT_KEY);
+				DataModelPersister.TAX_AMOUNT_KEY);
 		if (null != taxAmount) {
 			dataModel.setTaxAmount(taxAmount);
 		}
 		
 		BigDecimal discount = persister.retrieveBigDecimal(context, 
-				DataModel.DISCOUNT_KEY);
+				DataModelPersister.DISCOUNT_KEY);
 		if (null != discount) {
 			dataModel.setDiscount(discount);
 		}
 		
 		BigDecimal tipRate = persister.retrieveBigDecimal(context, 
-				DataModel.PLANNED_TIP_RATE_KEY);
+				DataModelPersister.PLANNED_TIP_RATE_KEY);
 		if (null != tipRate) {
 			dataModel.setPlannedTipRate(tipRate);
 		}
 		
 		Integer splits = persister.retrieveInteger(context, 
-				DataModel.SPLIT_BETWEEN_KEY);
+				DataModelPersister.SPLIT_BETWEEN_KEY);
 		if (null != splits) {
 			dataModel.setSplitBetween(splits.intValue());
 		}
 		
 		BigDecimal roundUp = persister.retrieveBigDecimal(context, 
-				DataModel.ROUND_UP_TO_NEAREST_AMOUNT);
+				DataModelPersister.ROUND_UP_TO_NEAREST_AMOUNT_KEY);
 		if (null != roundUp) {
 			dataModel.setRoundUpToAmount(roundUp);
 		}
 		
 		Integer bumps = persister.retrieveInteger(context, 
-				DataModel.BUMPS_KEY);
+				DataModelPersister.BUMPS_KEY);
 		if (null != bumps) {
 			dataModel.setBumps(bumps.intValue());
 		}

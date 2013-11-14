@@ -21,8 +21,11 @@ package com.itllp.tipOnDiscount.test;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Currency;
+import java.util.Set;
 
 import android.app.Instrumentation;
+import android.app.KeyguardManager;
+import android.content.Context;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.KeyEvent;
 import android.widget.Button;
@@ -36,6 +39,7 @@ import com.itllp.tipOnDiscount.model.DataModelFactory;
 import com.itllp.tipOnDiscount.model.persistence.DataModelPersisterFactory;
 import com.itllp.tipOnDiscount.model.persistence.test.StubDataModelPersister;
 import com.itllp.tipOnDiscount.model.test.StubDataModel;
+import com.itllp.tipOnDiscount.util.BigDecimalLabelMap;
 
 /* These test are related to user interface operation only, such as
  * data formatting and widget operations. 
@@ -79,7 +83,6 @@ public class DataEntryFieldTests extends
     		KeyEvent.KEYCODE_4,
     		KeyEvent.KEYCODE_ENTER };
 
-	// TODO pull up common stuff into BaseTest class
 	private Instrumentation mInstrumentation;
     private TipOnDiscount mActivity;
     private EditText billTotalEntryView;
@@ -102,16 +105,8 @@ public class DataEntryFieldTests extends
     private TextView totalDueTextView;
     private TextView shareDueTextView;
 	private Spinner roundUpToNearestSpinner;
-	private String roundUpToNoneSpinnerText = "None";
-	private String roundUpToNickelSpinnerText = "Nickel";
-	private String roundUpToDimeSpinnerText = "Dime";
-	private String roundUpToQuarterSpinnerText = "Quarter";
-	private String roundUpToHalfDollarSpinnerText = "Half Dollar";
-	private String roundUpToDollarSpinnerText = "$1";
-	private String roundUpToTwoDollarsSpinnerText = "$2";
-	private String roundUpToFiveDollarsSpinnerText = "$5";
-	private String roundUpToTenDollarsSpinnerText = "$10";
-	private String roundUpToTwentyDollarsSpinnerText = "$20";
+	
+	
 	@SuppressWarnings("deprecation")
 	public DataEntryFieldTests() {
 		// Using the non-deprecated version of this constructor requires API 8
@@ -225,7 +220,6 @@ public class DataEntryFieldTests extends
     	for (int keyCode : keyCodes) {
     		this.sendKeys(keyCode);
     	}
-    	mInstrumentation.waitForIdleSync();
     	mActivity.runOnUiThread(
     			new Runnable() {
     				public void run() {
@@ -242,7 +236,7 @@ public class DataEntryFieldTests extends
 
     /* Verify proper formatting of currency fields.
      */
-    public void testAmountFieldFormatting(TextView view, 
+    public void verifyAmountFieldFormatting(TextView view, 
     		final String viewName) {
     	String assertErrorMessage = "Incorrect " + viewName
     		+ " amount";
@@ -299,10 +293,19 @@ public class DataEntryFieldTests extends
     }
     
     
+    public void testAAA_ScreenMustNotBeLocked() {
+    	KeyguardManager km = (KeyguardManager)mActivity.getSystemService
+    			(Context.KEYGUARD_SERVICE);
+    	boolean isScreenLocked = km.inKeyguardRestrictedInputMode();
+    	assertFalse("Unlock the device screen to run these tests",
+    			isScreenLocked);
+    }
+    
+    
     /* Verify proper formatting of values in the bill total field.
      */
     public void testBillTotalFormatting() {
-    	testAmountFieldFormatting(billTotalEntryView, "bill total");
+    	verifyAmountFieldFormatting(billTotalEntryView, "bill total");
     }
     
    
@@ -338,7 +341,7 @@ public class DataEntryFieldTests extends
     /* Test formatting of values in the discount field.
      */
     public void testDiscountFormatting() {
-    	testAmountFieldFormatting(discountEntryView, "discount");
+    	verifyAmountFieldFormatting(discountEntryView, "discount");
     }
 
     
@@ -352,7 +355,7 @@ public class DataEntryFieldTests extends
     /* Test formatting of values in the tax amount field.
      */
     public void testTaxAmountFormatting() {
-    	testAmountFieldFormatting(this.taxAmountEntryView, "tax amount");
+    	verifyAmountFieldFormatting(this.taxAmountEntryView, "tax amount");
     }
     
     
@@ -369,38 +372,6 @@ public class DataEntryFieldTests extends
        	sendKeysToView(this.splitBetweenEntryView, keyCodes4Enter);
         assertEquals("Split between should not accept non-numeric characters", 
         		"4", this.splitBetweenEntryView.getText().toString());
-    }
-    
-    
-    /** Resets all values on the screen so that the bill total is $17.37,
-     * tax is 0, tip is 100%, split between is 1 and bump is 0.
-     */
-    private void setEachShareDue34_74NoSplit() {
-		mActivity.runOnUiThread(
-    			new Runnable() {
-    				public void run() {
-    			    	billTotalEntryView.setText("17.37");
-    			    	taxAmountEntryView.setText("0");
-    			    	plannedTipPercentEntryView.setText("100");
-    			    	splitBetweenEntryView.setText("1");
-    				}
-    			}
-        	);
-    	mInstrumentation.waitForIdleSync();
-    }
-
-    
-    /* Changes the round up to spinner to the roundUpToAmount, then returns
-     * the remainder of the bill share amount divided by mod.  If the
-     * round-up-to amount is working, the result should always be 0.
-     */
-    private BigDecimal getBillShareRemainder(String roundUpToAmount, String mod) {
-    	setEachShareDue34_74NoSplit();
-    	setRoundUpToAmount(roundUpToAmount);
-    	BigDecimal actual 
-    		= new BigDecimal(shareDueTextView.getText().toString());
-    	BigDecimal remainder = actual.remainder(new BigDecimal(mod));
-    	return remainder;
     }
     
     
@@ -423,177 +394,29 @@ public class DataEntryFieldTests extends
         	mInstrumentation.waitForIdleSync();
     }
     
-    //TODO replace string constants and values with values from strings.xml
+    
     /* Test that the Round Up To Nearest spinner sets the round up to amount in 
      * the data model. */
-    public void testRoundUpToAmountNone() {
-    	// Preconditions
+    public void testRoundUptoAmounts() {
+    	// Set up preconditions
     	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
-    	BigDecimal roundingValue = new BigDecimal("0.01");
-    	setRoundUpToAmount(roundUpToNickelSpinnerText);  // spinner must change to activate test
-    	
-    	// Method under test
-    	setRoundUpToAmount(roundUpToNoneSpinnerText);
-    	
-    	// Postconditions
-    	assertEquals("Incorrect amount for RoundUpToNearest "+roundUpToNoneSpinnerText,
-    			roundingValue, model.getRoundUpToAmount());
-    }
+		String[] valueStringArray = mActivity.getResources().getStringArray
+				(com.itllp.tipOnDiscount.R.array.round_up_to_nearest_value_array);
+		String[] labelArray = mActivity.getResources().getStringArray
+				(com.itllp.tipOnDiscount.R.array.round_up_to_nearest_label_array);
+		BigDecimalLabelMap map = new BigDecimalLabelMap(valueStringArray, labelArray);
+		Set<BigDecimal> valueSet = map.keySet();
+		setRoundUpToAmount(labelArray[1]);  // spinner must change to activate test
+		for (BigDecimal value : valueSet) {
+			String label = map.getLabel(value);
 
-
-    /* Test that the Round Up To Nearest spinner sets the round up to amount in 
-     * the data model. */
-    public void testRoundUpToAmountNickel() {
-    	// Preconditions
-    	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
-    	BigDecimal roundingValue = new BigDecimal("0.05");
-    	setRoundUpToAmount(roundUpToNoneSpinnerText);
-    	
-    	// Method under test
-    	setRoundUpToAmount(roundUpToNickelSpinnerText);
-    	
-    	// Postconditions
-    	assertEquals("Incorrect amount for RoundUpToNearest "+roundUpToNickelSpinnerText,
-    			roundingValue, model.getRoundUpToAmount());
-    }
-    
-    
-    /* Test that the Round Up To Nearest spinner sets the round up to amount in 
-     * the data model. */
-    public void testRoundUpToAmountDime() {
-    	// Preconditions
-    	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
-    	BigDecimal roundingValue = new BigDecimal("0.10");
-    	setRoundUpToAmount(roundUpToNoneSpinnerText);
-    	
-    	// Method under test
-    	setRoundUpToAmount(roundUpToDimeSpinnerText);
-    	
-    	// Postconditions
-    	assertEquals("Incorrect amount for RoundUpToNearest "+roundUpToDimeSpinnerText,
-    			roundingValue, model.getRoundUpToAmount());
-    	BigDecimal remainder = getBillShareRemainder("Dime", "0.10");
-    	assertEquals("Incorrect amount for RoundUpToNearest Dime",
-   			ZERO, remainder);
-    }
-    
-    
-    /* Test that the Round Up To Nearest spinner sets the round up to amount in 
-     * the data model. */
-    public void testRoundUpToAmountQuarter() {
-    	// Preconditions
-    	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
-    	BigDecimal roundingValue = new BigDecimal("0.25");
-    	setRoundUpToAmount(roundUpToNoneSpinnerText);
-    	
-    	// Method under test
-    	setRoundUpToAmount(roundUpToQuarterSpinnerText);
-    	
-    	// Postconditions
-    	assertEquals("Incorrect amount for RoundUpToNearest "+roundUpToQuarterSpinnerText,
-    			roundingValue, model.getRoundUpToAmount());
-    }
-    
-    
-    /* Test that the Round Up To Nearest spinner sets the round up to amount in 
-     * the data model. */
-    public void testRoundUpToAmountHalfDollar() {
-    	// Preconditions
-    	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
-    	BigDecimal roundingValue = new BigDecimal("0.50");
-    	setRoundUpToAmount(roundUpToNoneSpinnerText);
-    	
-    	// Method under test
-    	setRoundUpToAmount(roundUpToHalfDollarSpinnerText);
-    	
-    	// Postconditions
-    	assertEquals("Incorrect amount for RoundUpToNearest "+roundUpToHalfDollarSpinnerText,
-    			roundingValue, model.getRoundUpToAmount());
-    }
-    
-    
-    /* Test that the Round Up To Nearest spinner sets the round up to amount in 
-     * the data model. */
-    public void testRoundUpToAmountOneDollar() {
-    	// Preconditions
-    	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
-    	BigDecimal roundingValue = new BigDecimal("1.00");
-    	setRoundUpToAmount(roundUpToNoneSpinnerText);
-
-    	// Method under test
-    	setRoundUpToAmount(roundUpToDollarSpinnerText);
-    	
-    	// Postconditions
-    	assertEquals("Incorrect amount for RoundUpToNearest "+roundUpToDollarSpinnerText,
-    			roundingValue, model.getRoundUpToAmount());
-    }
-    
-    
-    /* Test that the Round Up To Nearest spinner sets the round up to amount in 
-     * the data model. */
-    public void testRoundUpToAmountTwoDollars() {
-    	// Preconditions
-    	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
-    	BigDecimal roundingValue = new BigDecimal("2.00");
-    	setRoundUpToAmount(roundUpToNoneSpinnerText);
-    	
-    	// Method under test
-    	setRoundUpToAmount(roundUpToTwoDollarsSpinnerText);
-    	
-    	// Postconditions
-    	assertEquals("Incorrect amount for RoundUpToNearest "+roundUpToTwoDollarsSpinnerText,
-    			roundingValue, model.getRoundUpToAmount());
-    }
-    
-    
-    /* Test that the Round Up To Nearest spinner sets the round up to amount in 
-     * the data model. */
-    public void testRoundUpToAmountFiveDollars() {
-    	// Preconditions
-    	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
-    	BigDecimal roundingValue = new BigDecimal("5.00");
-    	setRoundUpToAmount(roundUpToNoneSpinnerText);
-    	
-    	// Method under test
-    	setRoundUpToAmount(roundUpToFiveDollarsSpinnerText);
-    	
-    	// Postconditions
-    	assertEquals("Incorrect amount for RoundUpToNearest "+roundUpToFiveDollarsSpinnerText,
-    			roundingValue, model.getRoundUpToAmount());
-    }
-    
-    
-    /* Test that the Round Up To Nearest spinner sets the round up to amount in 
-     * the data model. */
-    public void testRoundUpToAmountTenDollars() {
-    	// Preconditions
-    	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
-    	BigDecimal roundingValue = new BigDecimal("10.00");
-    	setRoundUpToAmount(roundUpToNoneSpinnerText);
-    	
-    	// Method under test
-    	setRoundUpToAmount(roundUpToTenDollarsSpinnerText);
-    	
-    	// Postconditions
-    	assertEquals("Incorrect amount for RoundUpToNearest "+roundUpToTenDollarsSpinnerText,
-    			roundingValue, model.getRoundUpToAmount());
-    }
-    
-    
-    /* Test that the Round Up To Nearest spinner sets the round up to amount in 
-     * the data model. */
-    public void testRoundUpToAmountTwentyDollars() {
-    	// Preconditions
-    	final StubDataModel model = (StubDataModel)mActivity.getDataModel();
-    	BigDecimal roundingValue = new BigDecimal("20.00");
-    	setRoundUpToAmount(roundUpToNoneSpinnerText);
-    	
-    	// Method under test
-    	setRoundUpToAmount(roundUpToTwentyDollarsSpinnerText);
-    	
-    	// Postconditions
-    	assertEquals("Incorrect amount for RoundUpToNearest "+roundUpToTwentyDollarsSpinnerText,
-    			roundingValue, model.getRoundUpToAmount());
+	    	// Method under test
+	    	setRoundUpToAmount(label);
+	    	
+	    	// Postconditions
+	    	assertTrue("Incorrect amount for RoundUpToNearest "+label,
+	    			0==value.compareTo(model.getRoundUpToAmount()));
+		}
     }
     
     

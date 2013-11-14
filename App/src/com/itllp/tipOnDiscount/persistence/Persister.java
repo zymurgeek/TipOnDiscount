@@ -13,4 +13,5 @@ public interface Persister {
 	public void endSave() throws Exception;
 	public BigDecimal retrieveBigDecimal(Context context, String key);
 	public Integer retrieveInteger(Context context, String key);
+	public abstract Boolean retrieveBoolean(Context context, String key);
 }

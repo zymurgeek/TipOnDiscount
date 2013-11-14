@@ -22,9 +22,6 @@ import com.itllp.tipOnDiscount.model.DataModelFactory;
 import com.itllp.tipOnDiscount.model.persistence.DataModelPersisterFactory;
 import com.itllp.tipOnDiscount.model.persistence.test.StubDataModelPersister;
 import com.itllp.tipOnDiscount.model.test.StubDataModel;
-import com.itllp.tipOnDiscount.persistence.PersisterFactory;
-import com.itllp.tipOnDiscount.persistence.test.StubPersister;
-
 import android.content.Context;
 import android.test.ActivityInstrumentationTestCase2;
 
@@ -33,7 +30,6 @@ extends ActivityInstrumentationTestCase2<TipOnDiscount> {
 
 	private StubDataModel stubDataModel;
 	private StubDataModelPersister stubDataModelPersister;
-	private StubPersister stubPersister;
 
 
 	@SuppressWarnings("deprecation")
@@ -49,8 +45,6 @@ extends ActivityInstrumentationTestCase2<TipOnDiscount> {
         
         stubDataModel = new StubDataModel();
         DataModelFactory.setDataModel(stubDataModel);
-        stubPersister = new StubPersister();
-        PersisterFactory.setPersister(stubPersister);
         stubDataModelPersister = new StubDataModelPersister();
 		DataModelPersisterFactory.setDataModelPersister(
 				stubDataModelPersister);
@@ -75,9 +69,6 @@ extends ActivityInstrumentationTestCase2<TipOnDiscount> {
     	getInstrumentation().waitForIdleSync();
 		assertEquals("Incorrect data model restored", stubDataModel, 
 				stubDataModelPersister.mock_getLastRestoredDataModel());
-		assertEquals("Incorrect persister used to restore",
-				stubPersister, 
-				stubDataModelPersister.mock_getLastRestoredPersister());
 		assertEquals("Incorrect context used to restore", context, 
 				stubDataModelPersister.mock_getLastRestoredContext());
 	}
@@ -101,8 +92,6 @@ extends ActivityInstrumentationTestCase2<TipOnDiscount> {
     	getInstrumentation().waitForIdleSync();
 		assertEquals("Incorrect data model saved", stubDataModel, 
 				stubDataModelPersister.mock_getLastSavedDataModel());
-		assertEquals("Incorrect persister used to save", stubPersister, 
-				stubDataModelPersister.mock_getLastSavedPersister());
 		assertEquals("Incorrect context used to save", context, 
 				stubDataModelPersister.mock_getLastSavedContext());
 		

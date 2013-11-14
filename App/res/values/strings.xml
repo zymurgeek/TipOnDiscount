@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">Tip On Discount</string>
     <string name="action_new">New Bill</string>
+    <string name="action_help">Help</string>
     <string name="bill_total_label">Bill Total</string>
     <string name="currency_symbol">$</string>
     <string name="tax_label">Tax</string>
@@ -14,8 +15,8 @@
     <string name="zero">0</string>
     <string name="share_due_label">Each Share Due</string>
 	<string name="split_between_label">Split Between (# of parties)</string>
-    <string name="round_up_to_nearest_text">Round Up to Nearest</string>
-    <string-array name="round_up_to_nearest_array">
+    <string name="round_up_to_nearest_text">Round Up To</string>
+    <string-array name="round_up_to_nearest_label_array">
         <item>None</item>
         <item>Nickel</item>
         <item>Dime</item>
@@ -27,7 +28,23 @@
         <item>$10</item>
         <item>$20</item>
     </string-array>
-	<string name="bump_down_label">Bump Down</string>
+    <string-array name="round_up_to_nearest_value_array">
+        <item>.01</item>
+        <item>.05</item>
+        <item>.1</item>
+        <item>.25</item>
+        <item>.5</item>
+        <item>1</item>
+        <item>2</item>
+        <item>5</item>
+        <item>10</item>
+        <item>20</item>
+    </string-array>
+    <string name="default_round_up_to_nearest_label">Quarter</string>
+    	<string name="bump_down_label">Bump Down</string>
 	<string name="bump_up_label">Bump Up</string>
 <string name="total_due_label">Total Due</string>
+    <string name="set_defaults_name">Set Defaults</string>
+    <string name="action_set_defaults">Set Defaults</string>
+    <string name="defaults_instructions">The values entered here will be applied when you create a new bill.\n\nThese defaults will be automatically saved when you leave this screen.</string>
 </resources>
