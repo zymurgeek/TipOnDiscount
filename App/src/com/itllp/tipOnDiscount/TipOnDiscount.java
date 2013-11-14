@@ -316,6 +316,7 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
         //TODO Work out gravity of spinner options
         //TODO Fix spinner background across Droid and GNex
         //TODO Fix text size on Droid (Round Up is gets clipped)
+        // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         roundUpToNearestSpinner.setAdapter(adapter);
         roundUpToNearestSpinner.setOnItemSelectedListener
