@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">Tip On Discount</string>
     <string name="action_new">New Bill</string>
+    <string name="action_help">Help</string>
     <string name="bill_total_label">Bill Total</string>
     <string name="currency_symbol">$</string>
     <string name="tax_label">Tax</string>

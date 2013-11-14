@@ -20,7 +20,10 @@ package com.itllp.tipOnDiscount;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -313,9 +316,6 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
         	this, R.array.round_up_to_nearest_label_array, 
         	R.layout.spinnertext);
-        //TODO Work out gravity of spinner options
-        //TODO Fix spinner background across Droid and GNex
-        //TODO Fix text size on Droid (Round Up is gets clipped)
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         roundUpToNearestSpinner.setAdapter(adapter);
@@ -372,10 +372,27 @@ public class TipOnDiscount extends ActionBarActivity implements DataModelObserve
             case R.id.action_set_defaults:
             	startSetDefaults();
             	return true;
+            case R.id.action_help:
+            	openHelp();
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+    
+    
+    public void openHelp() {
+    	 new AlertDialog.Builder(this)
+    	  .setTitle(R.string.help_title)
+    	  .setMessage(R.string.help_message)
+    	  .setPositiveButton(R.string.help_ok,
+    			  new DialogInterface.OnClickListener() {
+    		  @Override
+    		  public void onClick(DialogInterface dialog, int which) {}
+    	  }
+    			  )
+    			  .show();
+    }
+    
     
     public void openNew() {
     	reset();
