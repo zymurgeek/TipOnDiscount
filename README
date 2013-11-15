@@ -1,7 +1,8 @@
-Tip On Discount is an Android tip calculator.  It figures a tip based
-on the actual cost of a meal.  The actual cost is the amount paid on
-the bill, excluding sales tax, but including any discounts that were
-applied.  This insures your server gets tipped fairly.
+Tip On Discount is an Android tip calculator with NO ADS and NO
+REQUIRED PERMISSIONS.  It figures a tip based on the actual cost of a
+meal.  The actual cost is the amount paid on the bill, excluding sales
+tax, but including any discounts that were applied.  This insures your
+server gets tipped fairly.
 
 TOD will split a bill between multiple parties and let you round each
 share to, say, the nearest dollar.  It will show you the actual tip
@@ -50,4 +51,17 @@ In Eclipse, set JMOCK_HOME to the new JMock directory, e.g.,
 do this, from the Eclipse menu, select Window -> Preferences.  In the
 left pane, expand Java and then Build Path.  Select Classpath
 Variables.  On the right, select New.  Set the Name to JMOCK_HOME and
-select Folder next to Path.  Select the new JMock directory.
+select Folder next to Path.  Select the new JMock directory.  The
+tests can be run by right-clicking on the TipOnDiscountJUnitTests
+project and selecting Run As > JUnit Test.  These tests are very
+fast--the entire suite runs in under a second even on older hardware.
+
+To run the Android JUnit tests, start an emulator supporting API 7 or
+greater.  for help, see
+http://developer.android.com/tools/help/emulator.html.  Once the
+emulator is running, right click on the TipOnDiscountAndroidJUnitTests
+project and select Run As > Android JUnit Test.  After you start the
+test, bring up the emulator window and watch as the tests put the app
+through its paces.  Since these tests are running on the emulator,
+they're a lot slower than the JUnit tests and take a few minutes to
+finish.
