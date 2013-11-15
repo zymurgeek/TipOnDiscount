@@ -254,6 +254,8 @@
 	android:inputType="number|numberDecimal"
 	android:gravity="right"
 	android:selectAllOnFocus="true"
+	android:nextFocusDown="@+id/split_between_entry"
+	android:nextFocusForward="@+id/split_between_entry"
 	/>
 <TextView
 	android:id="@+id/planned_tip_percent_entry_label"
