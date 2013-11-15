@@ -315,7 +315,7 @@
 	android:layout_width="wrap_content" 
 	android:layout_alignParentLeft="true" 
 	android:layout_alignBaseline="@+id/split_between_entry"
-	android:text="@string/split_between_label"
+	android:text="@string/split_between_label_text"
 	/>
 <EditText
 	android:id="@+id/split_between_entry"

@@ -14,7 +14,7 @@
     <string name="actual_tip_label">Actual Tip</string>
     <string name="zero">0</string>
     <string name="share_due_label">Each Share Due</string>
-	<string name="split_between_label">Split Between (# of parties)</string>
+	<string name="split_between_label_text">Split Between (# of parties)</string>
     <string name="round_up_to_nearest_text">Round Up To</string>
     <string-array name="round_up_to_nearest_label_array">
         <item>None</item>
