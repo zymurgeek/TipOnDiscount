@@ -1,21 +1,26 @@
 Tip On Discount is a free Android tip calculator with NO ADS and NO
-REQUIRED PERMISSIONS.  It figures a tip based on the actual cost of a
-meal.  The actual cost is the amount paid on the bill, excluding sales
-tax, but including any discounts that were applied.  This insures your
-server gets tipped fairly.
+REQUIRED PERMISSIONS.  
 
-TOD will split a bill between multiple parties and let you round each
-share to, say, the nearest dollar.  It will show you the actual tip
-percentage after rounding.  TOD also supports bumping the tip up
-or down to the next rounded amount.
+To calculate your tip, in most cases, all you need to do is enter the
+bill total.  TOD will subtract the tax and calculate the tip for you.
+You don't even have to press a "calculate" button.  The math is
+performed on the fly as you type.
 
-There is no "calculate" button in TOD.  All calculations are performed
-on the fly as you type.
+TOD can split a bill between multiple parties and round each share to
+any amount you like.  Say you're out to a nice dinner with friends:
+When the bill comes, someone looks it over and says, "it's $103 a
+couple".  If you don't have single bills, what kind of a tip are you
+leaving if you all throw in $105?  If you don't have fives, is $110
+too much or should you wait for change?  Maybe your server was really
+great and you decide to pay with twenties. How good should you feel
+about yourself for leaving such a great tip?  This app tells you with
+one button.  (In case you're curious, the last scenario works out to
+about a 36% tip in a state with 7% tax--you're really swell!)
 
-The code makes full use of JUnit test cases and Android JUnit test
-cases.  Since it is a relatively small application, it should be
-useful to those who want to learn Android development and automated
-unit testing.
+For techies: The code makes full use of JUnit test cases and Android
+JUnit test cases.  Since it is a relatively small application, it
+should be useful to those who want to learn Android development and
+automated unit testing.
 
 To build this software, you'll need the Android SDK.  See
 http://developer.android.com
